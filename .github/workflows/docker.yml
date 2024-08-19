@@ -1,0 +1,43 @@
+name: Docker build and deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/toy3:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: SSH to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_SSH_HOST }}
+          username: ${{ secrets.REMOTE_SSH_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/toy3:latest
+            docker stop toy3
+            docker rm toy3
+            docker run -d -p 3241:3000 -v /mnt/hdd/toy3/:/usr/src/app/upload/ --restart=unless-stopped --name toy3 ${{ secrets.DOCKERHUB_USERNAME }}/toy3:latest
