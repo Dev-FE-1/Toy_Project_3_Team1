@@ -1,0 +1,23 @@
+name: SonarQube Scan
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  AI-Server:
+    name: Build and analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          LC_ALL: "ko_KR.UTF-8"
+          LANG: "ko_KR.UTF-8"
+          # https://ai.nowon.store
