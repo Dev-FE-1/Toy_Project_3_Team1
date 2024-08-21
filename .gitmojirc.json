@@ -1,0 +1,8 @@
+{
+  "autoAdd": false,
+  "emojiFormat": "emoji",
+  "scopePrompt": false,
+  "messagePrompt": false,
+  "capitalizeTitle": false,
+  "gitmojisUrl": "https://gist.githubusercontent.com/KimPra2989/77c8048de837363a8603f280a9496a4e/raw/bbe0778239ce2a46e8f9893fcdf22418a9fbf6e1/gitmoji.json"
+}
