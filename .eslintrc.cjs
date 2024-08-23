@@ -18,7 +18,7 @@ module.exports = {
     sourceType: 'module',
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'prettier', '@typescript-eslint', 'jsx-a11y', 'emotion'],
+  plugins: ['react', 'prettier', '@typescript-eslint', 'jsx-a11y', '@emotion'],
   rules: {
     'prettier/prettier': 'error',
     'react/react-in-jsx-scope': 'off',
