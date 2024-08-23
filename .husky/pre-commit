@@ -1,2 +1,4 @@
-echo "pre-commit 훅 테스트 중입니다."
-exit 0
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
