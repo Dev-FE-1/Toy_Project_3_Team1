@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Outlet } from 'react-router-dom'
-import Navbar from '../components/layout/Navbar'
-import Header from '../components/layout/Header'
+import Navbar from '@/components/layout/Navbar'
+import Header from '@/components/layout/Header'
 
 const RootLayout = () => (
   <StyledContainer>
