@@ -2,9 +2,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import CreatePlaylist from './pages/CreatePlaylist'
 import EditProfile from './pages/EditProfile'
-import Fallow from './pages/Fallow'
+import Follow from './pages/Follow'
 import Login from './pages/Login'
-import Main from './pages/Main'
+import Home from './pages/Home'
 import Page404 from './pages/Page404'
 import Playlist from './pages/Playlist'
 import Profile from './pages/Profile'
@@ -13,24 +13,21 @@ import Search from './pages/Search'
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <Home />,
     errorElement: <Page404 />,
     children: [
       { path: '/login', element: <Login /> },
-      { path: '/main', element: <Main /> },
       { path: '/search', element: <Search /> },
+      { path: '/playlist', element: <Playlist /> },
+      { path: '/createplaylist', element: <CreatePlaylist /> },
       {
-        path: '/playlist',
-        element: <Playlist />,
+        path: '/profile',
+        element: <Profile />,
         children: [
-          {
-            path: '/createplaylist',
-            element: <CreatePlaylist />,
-          },
+          { path: 'editprofile', element: <EditProfile /> },
+          { path: 'follow', element: <Follow /> },
         ],
       },
-      { path: '/profile', element: <Profile /> },
-      { path: '/fallow', element: <Fallow /> },
-      { path: '/edit-profile', element: <EditProfile /> },
     ],
   },
 ])
