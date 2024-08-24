@@ -1,17 +1,17 @@
 import { PATH } from './constants/path'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import CreatePlaylist from './pages/CreatePlaylist'
-import EditProfile from './pages/EditProfile'
-import Follow from './pages/Follow'
-import Login from './pages/Login'
+import CreatePlaylistPage from './pages/CreatePlaylistPage'
+import EditProfilePage from './pages/EditProfilePage'
+import FollowPage from './pages/FollowPage'
+import LoginPage from './pages/LoginPage'
 import Page404 from './pages/Page404'
-import Playlist from './pages/Playlist'
-import Profile from './pages/Profile'
-import Search from './pages/Search'
+import PlaylistPage from './pages/PlaylistPage'
+import ProfilePage from './pages/ProfilePage'
+import SearchPage from './pages/SearchPage'
 import RootLayout from './layout/Root'
-import Chat from './pages/Chat'
-import Home from './pages/Home'
+import ChatPage from './pages/ChatPage'
+import HomePage from './pages/HomePage'
 
 const router = createBrowserRouter([
   {
@@ -19,20 +19,20 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <Page404 />,
     children: [
-      { index: true, element: <Home /> },
-      { path: PATH.LOGIN, element: <Login /> },
-      { path: PATH.SEARCH, element: <Search /> },
-      { path: PATH.PLAYLIST, element: <Playlist /> },
-      { path: PATH.CREATEPLAYLIST, element: <CreatePlaylist /> },
+      { index: true, element: <HomePage /> },
+      { path: PATH.LOGIN, element: <LoginPage /> },
+      { path: PATH.SEARCH, element: <SearchPage /> },
+      { path: PATH.PLAYLIST, element: <PlaylistPage /> },
+      { path: PATH.CREATEPLAYLIST, element: <CreatePlaylistPage /> },
       {
         path: PATH.PROFILE,
-        element: <Profile />,
+        element: <ProfilePage />,
         children: [
-          { path: PATH.EDITPROFILE, element: <EditProfile /> },
-          { path: PATH.FOLLOW, element: <Follow /> },
+          { path: PATH.EDITPROFILE, element: <EditProfilePage /> },
+          { path: PATH.FOLLOW, element: <FollowPage /> },
         ],
       },
-      { path: PATH.CHAT, element: <Chat /> },
+      { path: PATH.CHAT, element: <ChatPage /> },
     ],
   },
 ])
