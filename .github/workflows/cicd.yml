@@ -1,29 +1,23 @@
-name: Build Test
+name: Build Test and Deploy
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+      - feat/*
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Setup node.js 20.x
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'npm'
       - name: Install dependencies
-        run: npm install
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+        run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
