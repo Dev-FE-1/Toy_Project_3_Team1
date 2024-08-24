@@ -1,10 +1,9 @@
-name: Build Test and Deploy
+name: Firebase Hosting
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-      - feat/*
 
 jobs:
   deploy:
