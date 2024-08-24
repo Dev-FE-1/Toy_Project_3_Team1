@@ -27,7 +27,6 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@tanstack/react-query": "^5.51.24",
-    "path": "^0.12.7",
     "firebase": "^10.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
