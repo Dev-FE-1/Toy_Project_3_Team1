@@ -1,4 +1,4 @@
-import { PATH } from './layout/path'
+import { PATH } from './constants/path'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import CreatePlaylist from './pages/CreatePlaylist'

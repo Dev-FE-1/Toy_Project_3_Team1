@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { NavLink } from 'react-router-dom'
-import { PATH } from '../../layout/path'
+import { PATH } from '../../constants/path'
 
 const Navbar = () => {
   const menu = [
