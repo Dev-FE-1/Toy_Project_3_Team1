@@ -1,11 +1,15 @@
+import styled from '@emotion/styled'
+
 const Page404 = () => {
-  return (
-    <div
-      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw' }}
-    >
-      <h1>404</h1>
-    </div>
-  )
+  return <StyledContainer>404</StyledContainer>
 }
 
 export default Page404
+
+const StyledContainer = styled.div`
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+`
