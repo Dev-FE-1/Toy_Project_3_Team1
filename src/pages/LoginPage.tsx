@@ -3,6 +3,8 @@ import React from 'react'
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 import { auth } from '../firebase/firebaseConfig'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { PATH } from '../constants/path'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -51,7 +53,9 @@ const LoginPage = () => {
           로그인
         </button>
       </form>
-      <span className="forgot_password">비밀번호를 잊으셨나요?</span>
+      <Link to={PATH.EDITPW} className="forgot_password">
+        비밀번호를 잊으셨나요?
+      </Link>
       <div className="grayline" />
       <button className="google_btn" onClick={handleGoogleLogin}>
         <img
@@ -104,7 +108,6 @@ const Contaier = styled.div`
     align-items: center;
   }
   .google_btn {
-    border-radius: 0.3rem;
     padding: 10px;
     vertical-align: center;
     justify-content: center;
