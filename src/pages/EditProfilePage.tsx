@@ -2,10 +2,11 @@ import styled from '@emotion/styled'
 import useLogout from '../hooks/useLogout'
 
 const EditProfilePage = () => {
+  const logout = useLogout()
   return (
     <div>
       EditProfile
-      <LogoutButton onClick={useLogout()}>로그아웃</LogoutButton>
+      <LogoutButton onClick={logout}>로그아웃</LogoutButton>
     </div>
   )
 }

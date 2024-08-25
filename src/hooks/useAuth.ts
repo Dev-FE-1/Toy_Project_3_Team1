@@ -10,19 +10,14 @@ const useAuth = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && pathname === '/login') {
         setIsAuthenticated(true)
-        if (pathname === '/login') {
-          navigate('/')
-        }
-      } else {
+        navigate('/')
+      } else if (!user && pathname !== '/login' && pathname !== '/login/editpassword') {
         setIsAuthenticated(false)
-        if (pathname !== '/login' && pathname !== '/login/editpassword') {
-          navigate('/login')
-        }
+        navigate('/login')
       }
     })
-
     return () => {
       unsubscribe()
     }
