@@ -5,11 +5,9 @@ import { auth } from '../firebase/firebaseConfig'
 const useLogout = () => {
   const navigate = useNavigate()
   const logout = async () => {
-    await signOut(auth)
-      .then(() => {
-        navigate('/login')
-      })
-      .catch((error) => console.error(error))
+    await signOut(auth).then(() => {
+      navigate('/login')
+    })
   }
 
   return logout

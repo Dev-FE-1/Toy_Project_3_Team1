@@ -32,16 +32,16 @@ const LoginPage = () => {
 
   return (
     <Contaier>
-      <form className="email_login" onSubmit={handleEmailLogin}>
+      <form className="form_login" onSubmit={handleEmailLogin}>
         <input
-          className="login_id"
+          className="input_email"
           type="text"
           placeholder="이메일을 입력해주세요."
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          className="login_pw"
+          className="input_pw"
           type="password"
           placeholder="비밀번호를 입력해주세요."
           value={password}
@@ -51,7 +51,7 @@ const LoginPage = () => {
           <span className="login_notice">아이디 또는 비밀번호를 입력해주세요.</span>
         )}
 
-        <button className="login_btn" type="submit" disabled={!isValid}>
+        <button className="btn_login" type="submit" disabled={!isValid}>
           로그인
         </button>
       </form>
@@ -59,9 +59,9 @@ const LoginPage = () => {
         비밀번호를 잊으셨나요?
       </Link>
       <div className="grayline" />
-      <button className="google_btn" onClick={handleGoogleLogin}>
+      <button className="btn_google" onClick={handleGoogleLogin}>
         <img
-          className="google_logo"
+          className="logo_google"
           width="20"
           height="20"
           src="https://img.icons8.com/color/48/google-logo.png"
@@ -76,6 +76,7 @@ const LoginPage = () => {
 export default LoginPage
 
 const Contaier = styled.div`
+  margin: auto 0;
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -84,32 +85,33 @@ const Contaier = styled.div`
     font-size: 15px;
   }
   .forgot_password {
-    margin: 10px 0px 20px 0px;
+    text-decoration: none;
+    margin: 15px 0px;
     font-size: 15px;
     text-align: center;
   }
-  .email_login {
+  .form_login {
     display: flex;
     gap: 3px;
     flex-direction: column;
   }
-  .login_id,
-  .login_pw,
-  .login_btn {
+  .input_email,
+  .input_pw,
+  .btn_login {
     padding: 10px;
   }
-  .login_btn {
+  .btn_login {
     margin-top: 3px;
   }
   .grayline {
     background-color: gray;
     margin-bottom: 10px;
-    height: 0.3px;
+    height: 0.1px;
   }
-  .google_logo {
+  .logo_google {
     align-items: center;
   }
-  .google_btn {
+  .btn_google {
     padding: 10px;
     vertical-align: center;
     justify-content: center;

@@ -20,7 +20,7 @@ const EditPwPage = () => {
   }
   return (
     <Container>
-      <h2>비밀번호를 잊으셨나요?</h2>
+      <h3>비밀번호를 잊으셨나요?</h3>
       <h4>
         가입하신 이메일을 입력하시면
         <br /> 비밀번호 재설정 링크를 보내드립니다.
@@ -52,6 +52,7 @@ const EditPwPage = () => {
 export default EditPwPage
 
 const Container = styled.div`
+  margin: auto 0;
   .form_editpw {
     display: flex;
     flex-direction: column;
@@ -60,6 +61,9 @@ const Container = styled.div`
   .btn_editpw,
   .input_editpw {
     padding: 10px;
+  }
+  .failed {
+    color: red;
   }
   .success,
   .failed {
