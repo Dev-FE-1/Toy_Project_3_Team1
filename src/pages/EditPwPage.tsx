@@ -6,6 +6,7 @@ import { useState } from 'react'
 const EditPwPage = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState<boolean | null>(null)
+  const isValid = email
 
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -40,7 +41,7 @@ const EditPwPage = () => {
               비밀번호 재설정 링크 전송에 실패했습니다. 다시 시도해주세요.
             </span>
           ))}
-        <button type="submit" className="btn_editpw">
+        <button type="submit" className="btn_editpw" disabled={!isValid}>
           비밀번호 재설정 링크 보내기
         </button>
       </form>

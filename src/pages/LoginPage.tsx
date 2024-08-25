@@ -10,6 +10,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginSuccess, setLoginSuccess] = useState(true)
+  const isValid = email && password
 
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -49,7 +50,8 @@ const LoginPage = () => {
         {!loginSuccess && (
           <span className="login_notice">아이디 또는 비밀번호를 입력해주세요.</span>
         )}
-        <button className="login_btn" type="submit">
+
+        <button className="login_btn" type="submit" disabled={!isValid}>
           로그인
         </button>
       </form>
