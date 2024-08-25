@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
-import Navbar from '../components/layout/Navbar'
-import Header from '../components/layout/Header'
+import Navbar from '@/components/layout/Navbar'
+import Header from '@/components/layout/Header'
 
 const RootLayout = () => {
   const location = useLocation()

@@ -1,4 +1,4 @@
-import { auth } from '../firebase/firebaseConfig'
+import { auth } from '@/firebase/firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'

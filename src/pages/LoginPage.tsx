@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
-import { auth } from '../firebase/firebaseConfig'
+import { auth } from '@/firebase/firebaseConfig'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PATH } from '../constants/path'
+import { PATH } from '@/constants/path'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')

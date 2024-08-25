@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { PATH } from '../constants/path'
+import { PATH } from '@/constants/path'
 const ProfilePage = () => {
   return (
     <div>

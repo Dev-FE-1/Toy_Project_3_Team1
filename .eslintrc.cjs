@@ -29,8 +29,12 @@ module.exports = {
     'no-console': ['warn', { allow: ['warn', 'error'] }],
   },
   settings: {
-    react: {
-      version: 'detect',
+    react: { version: 'detect' },
+    'import/resolver': {
+      alias: {
+        map: [['@', './src']],
+        extensions: ['.ts', '.js', '.jsx', '.json'],
+      },
     },
   },
 }

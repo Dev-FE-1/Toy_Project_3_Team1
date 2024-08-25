@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import useLogout from '../hooks/useLogout'
+import useLogout from '@/hooks/useLogout'
 
 const EditProfilePage = () => {
   const logout = useLogout()

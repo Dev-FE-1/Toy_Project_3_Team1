@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { auth } from '../firebase/firebaseConfig'
+import { auth } from '@/firebase/firebaseConfig'
 import { useState } from 'react'
 
 const EditPwPage = () => {
