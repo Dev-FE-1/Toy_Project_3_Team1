@@ -1,5 +1,4 @@
-import React from 'react'
-import Comments from '@/components/comments'
+import Comments from '@/components/Comments'
 
 const PlaylistPage = () => {
   return <Comments />
