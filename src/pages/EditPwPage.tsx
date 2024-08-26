@@ -25,10 +25,10 @@ const EditPwPage = () => {
         가입하신 이메일을 입력하시면
         <br /> 비밀번호 재설정 링크를 보내드립니다.
       </h4>
-      <form className="form_editpw" onSubmit={handleResetPassword}>
+      <form className="form-editpw" onSubmit={handleResetPassword}>
         <input
           type="text"
-          className="input_editpw"
+          className="input-editpw"
           placeholder="이메일을 입력하세요."
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -41,7 +41,7 @@ const EditPwPage = () => {
               비밀번호 재설정 링크 전송에 실패했습니다. 다시 시도해주세요.
             </span>
           ))}
-        <button type="submit" className="btn_editpw" disabled={!isValid}>
+        <button type="submit" className="btn-editpw" disabled={!isValid}>
           비밀번호 재설정 링크 보내기
         </button>
       </form>
@@ -58,8 +58,8 @@ const Container = styled.div`
     flex-direction: column;
     gap: 10px;
   }
-  .btn_editpw,
-  .input_editpw {
+  .btn-editpw,
+  .input-editpw {
     padding: 10px;
   }
   .failed {

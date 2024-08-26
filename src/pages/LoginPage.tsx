@@ -32,36 +32,36 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <form className="form_login" onSubmit={handleEmailLogin}>
+      <form className="form-login" onSubmit={handleEmailLogin}>
         <input
-          className="input_email"
+          className="input-email"
           type="text"
           placeholder="이메일을 입력해주세요."
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          className="input_pw"
+          className="input-pw"
           type="password"
           placeholder="비밀번호를 입력해주세요."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         {!loginSuccess && (
-          <span className="login_notice">아이디 또는 비밀번호를 입력해주세요.</span>
+          <span className="login-notice">아이디 또는 비밀번호를 입력해주세요.</span>
         )}
 
-        <button className="btn_login" type="submit" disabled={!isValid}>
+        <button className="btn-login" type="submit" disabled={!isValid}>
           로그인
         </button>
       </form>
-      <Link to={PATH.EDITPW} className="forgot_password">
+      <Link to={PATH.EDITPW} className="forgot-password">
         비밀번호를 잊으셨나요?
       </Link>
       <div className="grayline" />
-      <button className="btn_google" onClick={handleGoogleLogin}>
+      <button className="btn-google" onClick={handleGoogleLogin}>
         <img
-          className="logo_google"
+          className="logo-google"
           width="20"
           height="20"
           src="https://img.icons8.com/color/48/google-logo.png"
@@ -84,23 +84,23 @@ const Container = styled.div`
     color: red;
     font-size: 15px;
   }
-  .forgot_password {
+  .forgot-password {
     text-decoration: none;
     margin: 15px 0px;
     font-size: 15px;
     text-align: center;
   }
-  .form_login {
+  .form-login {
     display: flex;
     gap: 3px;
     flex-direction: column;
   }
-  .input_email,
-  .input_pw,
-  .btn_login {
+  .input-email,
+  .input-pw,
+  .btn-login {
     padding: 10px;
   }
-  .btn_login {
+  .btn-login {
     margin-top: 3px;
   }
   .grayline {
@@ -108,10 +108,10 @@ const Container = styled.div`
     margin-bottom: 10px;
     height: 0.1px;
   }
-  .logo_google {
+  .logo-google {
     align-items: center;
   }
-  .btn_google {
+  .btn-google {
     padding: 10px;
     vertical-align: center;
     justify-content: center;
