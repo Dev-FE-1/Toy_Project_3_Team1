@@ -1,0 +1,22 @@
+{
+  "USERS": {
+    "a1B2C3D4E5F6G7H8I9J0": {
+      "bio": "안녕, 내이름 강호연",
+      "email": "kimpra@myidoru.com",
+      "name": "강호연",
+      "image": "https://example.com/images/kimpra_profile.jpg",
+      "FOLLOWERS": {
+        "s2D73Pgf4FGc827o0y5q": {
+          "followedAt": "2024-08-25T17:22:41+09:00",
+          "userRef": "/USERS/jizero"
+        }
+      },
+      "FOLLOWINGS": {
+        "s2D73Pgf4FGc827o0y5q": {
+          "followedAt": "2024-08-24T17:22:41+09:00",
+          "userRef": "/USERS/jizero"
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,8 @@
+import React from 'react'
+import Comments from '@/components/comments'
+
 const PlaylistPage = () => {
-  return <div>Playlist</div>
+  return <Comments />
 }
 
 export default PlaylistPage
