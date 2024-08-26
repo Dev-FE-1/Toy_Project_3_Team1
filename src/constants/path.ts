@@ -9,4 +9,5 @@ export const PATH = {
   EDITPROFILE: 'editprofile',
   FOLLOW: 'follow',
   CHAT: '/chat',
+  EDITPW: '/login/editpassword',
 }

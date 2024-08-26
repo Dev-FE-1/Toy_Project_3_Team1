@@ -12,6 +12,7 @@ import SearchPage from '@/pages/SearchPage'
 import RootLayout from '@/layout/Root'
 import ChatPage from '@/pages/ChatPage'
 import HomePage from '@/pages/HomePage'
+import EditPwPage from '@/pages/EditPwPage'
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: PATH.LOGIN, element: <LoginPage /> },
+      { path: PATH.EDITPW, element: <EditPwPage /> },
       { path: PATH.SEARCH, element: <SearchPage /> },
       { path: PATH.PLAYLIST, element: <PlaylistPage /> },
       { path: PATH.CREATEPLAYLIST, element: <CreatePlaylistPage /> },
