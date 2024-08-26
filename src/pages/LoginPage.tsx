@@ -31,7 +31,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Contaier>
+    <Container>
       <form className="form_login" onSubmit={handleEmailLogin}>
         <input
           className="input_email"
@@ -69,13 +69,13 @@ const LoginPage = () => {
         />
         구글 로그인
       </button>
-    </Contaier>
+    </Container>
   )
 }
 
 export default LoginPage
 
-const Contaier = styled.div`
+const Container = styled.div`
   margin: auto 0;
   display: flex;
   flex-direction: column;
