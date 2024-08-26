@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate, useLocation } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 interface HeaderProps {
   onBack?: () => void
 }
 
 const Header: React.FC<HeaderProps> = ({ onBack }) => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const pathDepth = location.pathname.split('/').filter(Boolean).length
 
   const handleBack = () => {
     if (onBack) {
@@ -17,14 +19,29 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
   }
 
   return (
-    <StyledContainer>
-      <button onClick={handleBack}>BACK</button>
-    </StyledContainer>
+    <Container>
+      {pathDepth < 2 ? (
+        <img className="logo-myidoru" src="/src/assets/myidoru_logo.svg" alt="logo" />
+      ) : (
+        <ArrowLeft className="button-back" onClick={handleBack} />
+      )}
+    </Container>
   )
 }
 
 export default Header
 
-const StyledContainer = styled.div`
-  border: 1px solid black;
+const Container = styled.div`
+  width: 100%;
+  max-width: 430px;
+  height: 52px;
+
+  .logo-myidoru {
+    width: 114px;
+    margin: 10px 20px 0;
+  }
+  .button-back {
+    cursor: pointer;
+    margin: 16px;
+  }
 `

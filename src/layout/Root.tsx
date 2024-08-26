@@ -8,32 +8,60 @@ const RootLayout = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
+  const showHeader =
+    (isAuthenticated && location.pathname !== 'login') ||
+    location.pathname === '/login/editpassword'
+  const showNavBar =
+    isAuthenticated && !['/login', '/login/editpassword'].includes(location.pathname)
 
   if (isAuthenticated && location.pathname === '/login') {
     navigate('/')
   }
 
   return (
-    <StyledContainer>
-      {isAuthenticated && location.pathname !== '/login' && <Header />}
-      <Outlet />
-      {isAuthenticated && location.pathname !== '/login' && <Navbar />}
-    </StyledContainer>
+    <Container>
+      <div className="background-overlay" />
+      <div className="root">
+        {showHeader && <Header />}
+        <div className="main">
+          <Outlet />
+        </div>
+        {showNavBar && <Navbar />}
+      </div>
+    </Container>
   )
 }
 
 export default RootLayout
 
-const StyledContainer = styled.div`
-  min-width: 500px;
-  min-height: 700px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+const Container = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  .background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+    z-index: 1;
+  }
+
+  .root {
+    position: relative;
+    z-index: 2;
+    justify-content: space-between;
+    max-width: 430px;
+    min-height: 100vh;
+    margin: 0 auto;
+    background-color: white;
+  }
+
+  .main {
+    padding: 20px;
+    flex: 1;
+  }
 `

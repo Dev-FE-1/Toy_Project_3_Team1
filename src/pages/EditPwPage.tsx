@@ -22,14 +22,14 @@ const EditPwPage = () => {
     <Container>
       <h3>비밀번호를 잊으셨나요?</h3>
       <h4>
-        가입하신 이메일을 입력하시면
+        가입하신 이메일을 입력하시면,
         <br /> 비밀번호 재설정 링크를 보내드립니다.
       </h4>
       <form className="form-editpw" onSubmit={handleResetPassword}>
         <input
           type="text"
           className="input-editpw"
-          placeholder="이메일을 입력하세요."
+          placeholder="이메일"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -52,15 +52,19 @@ const EditPwPage = () => {
 export default EditPwPage
 
 const Container = styled.div`
-  margin: auto 0;
+  padding: 62px 20px;
+  h4 {
+    margin: 22px 0;
+  }
   .form_editpw {
     display: flex;
     flex-direction: column;
-    gap: 10px;
   }
   .btn-editpw,
   .input-editpw {
-    padding: 10px;
+    width: 100%;
+    padding: 16px 18px;
+    margin-bottom: 10px;
   }
   .failed {
     color: red;
