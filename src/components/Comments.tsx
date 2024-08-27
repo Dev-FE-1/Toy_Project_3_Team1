@@ -11,23 +11,25 @@ import {
   orderBy,
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
+import styled from '@emotion/styled'
+import { colors } from '@/constants/color'
+import formatDate from '@/firebase/formatDate'
+import { NpLogo } from '@/constants/logourl'
 
-const formatDate = (timestamp: number) => {
-  if (!timestamp) return ''
-
-  const date = timestamp.toDate()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hours = date.getHours().toString().padStart(2, '0')
-  const minutes = date.getMinutes().toString().padStart(2, '0')
-
-  return `${month}.${day} ${hours}:${minutes}`
+interface Comment {
+  id: string
+  comment: string
+  createdAt: number
+  userRef: string
+  userName: string
+  userImg: string
 }
 
 const Comments = () => {
   const [comment, setComment] = useState('')
-  const [comments, setComments] = useState([])
-  const [expandedComments, setExpandedComments] = useState({})
+  const [comments, setComments] = useState<Comment[]>([])
+
+  const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
 
   const { currentUser } = auth
   const userId = currentUser?.uid
@@ -40,8 +42,8 @@ const Comments = () => {
           snapshot.docs.map(async (doc) => {
             const commentData = doc.data()
             const userDoc = await getDoc(commentData.userRef)
-            const userName = userDoc.data().name
-            const userImg = userDoc.data().img
+            const userName = userDoc.data()?.name || 'My Idoru'
+            const userImg = userDoc.data()?.img || NpLogo
             return { ...commentData, userName, userImg }
           })
         )
@@ -50,13 +52,13 @@ const Comments = () => {
     }
 
     fetchComments()
-  }, [])
+  }, []) // ${playlistId} 변경 시, [] 추가 필요
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
       if (comment.length > 400) {
-        alert('C400 자 이상은 입력 할 수 없습니다.')
+        alert('400 자 이상은 입력 할 수 없습니다.')
         return
       }
       try {
@@ -79,7 +81,7 @@ const Comments = () => {
     setComment(e.target.value)
   }
 
-  const toggleCommentExpansion = (commentId) => {
+  const toggleCommentExpansion = (commentId: string) => {
     setExpandedComments((prev) => ({
       ...prev,
       [commentId]: !prev[commentId],
@@ -87,56 +89,98 @@ const Comments = () => {
   }
 
   return (
-    <div style={{ margin: '15px' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <form onSubmit={handleComment}>
-          <input type="" onChange={handleCommentChange} value={comment} />
-          <button type="submit">게시</button>
-        </form>
-      </div>
-      <div>
+    <Container>
+      <form className="form" onSubmit={handleComment}>
+        <input
+          className="textarea"
+          type="textarea"
+          onChange={handleCommentChange}
+          value={comment}
+        />
+        <button className="button" type="submit">
+          댓글
+        </button>
+      </form>
+
+      <div className="comment-area">
         {comments.map((comment, index) => (
-          <div key={index} style={{ marginBottom: '20px', display: 'flex', maxWidth: '100%' }}>
-            <div style={{ marginRight: '10px', flexShrink: 0 }}>
-              <img
-                src={comment.userImg}
-                style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-                alt={`${comment.userName}'s profile`}
-              />
+          <div key={index} className="comment-card">
+            <div>
+              <img className="user-img" src={comment.userImg} alt="User Image" />
+              <p className="user-name">{comment.userName} </p>
+              <p className="comment-data">{formatDate(comment.createdAt)}</p>
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                <strong style={{ marginRight: '10px' }}>{comment.userName}</strong>
-                <span style={{ fontSize: '0.8em', color: 'gray' }}>
-                  {formatDate(comment.createdAt)}
-                </span>
-              </div>
-              <div
-                style={{
-                  wordWrap: 'break-word',
-                  overflowWrap: 'break-word',
-                  hyphens: 'auto',
-                  maxWidth: '400px',
-                }}
-              >
-                {comment.comment.length > 250 && !expandedComments[comment.id] ? (
-                  <>
-                    {comment.comment.slice(0, 250)}...
-                    <button onClick={() => toggleCommentExpansion(comment.id)}>자세히보기</button>
-                  </>
-                ) : (
-                  comment.comment
-                )}
-                {expandedComments[comment.id] && (
-                  <button onClick={() => toggleCommentExpansion(comment.id)}>접기</button>
-                )}{' '}
-              </div>
+
+            <div className="comment">
+              {comment.comment.length > 250 && !expandedComments[comment.id] ? (
+                <>
+                  {comment.comment.slice(0, 250)} ···
+                  <div className="show-more" onClick={() => toggleCommentExpansion(comment.id)}>
+                    자세히 보기
+                  </div>
+                </>
+              ) : (
+                comment.comment
+              )}
+              {expandedComments[comment.id]}{' '}
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </Container>
   )
 }
 
 export default Comments
+
+const Container = styled.div`
+  .form {
+    display: flex;
+    justify-content: center;
+  }
+
+  .textarea {
+    width: 80%;
+    border: none;
+    border-bottom: 1px solid;
+    &:focus {
+      outline: none;
+    }
+  }
+  .button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+  }
+  .comment-area {
+    margin-top: 20px;
+  }
+
+  .comment-card {
+    margin-bottom: 20px;
+  }
+
+  .user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .user-name {
+    font-weight: bold;
+  }
+
+  .comment-data {
+    font-size: 0.8em;
+    color: ${colors.darkGray};
+  }
+
+  .comment {
+  }
+
+  .show-more {
+    color: ${colors.darkGray};
+    cursor: pointer;
+  }
+`
