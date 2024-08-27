@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 
-const formatDate = (timestamp) => {
+const formatDate = (timestamp: number) => {
   if (!timestamp) return ''
 
   const date = timestamp.toDate()
@@ -90,12 +90,11 @@ const Comments = () => {
     <div style={{ margin: '15px' }}>
       <div style={{ marginBottom: '20px' }}>
         <form onSubmit={handleComment}>
-          <input type="text" onChange={handleCommentChange} value={comment} />
+          <input type="" onChange={handleCommentChange} value={comment} />
           <button type="submit">게시</button>
         </form>
-        <div>{400 - comment.length} characters remaining</div>
       </div>
-      <div style={{ height: '400px', overflowY: 'auto' }}>
+      <div>
         {comments.map((comment, index) => (
           <div key={index} style={{ marginBottom: '20px', display: 'flex', maxWidth: '100%' }}>
             <div style={{ marginRight: '10px', flexShrink: 0 }}>

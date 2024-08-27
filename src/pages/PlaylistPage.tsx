@@ -1,7 +1,5 @@
-import Comments from '@/components/Comments'
-
 const PlaylistPage = () => {
-  return <Comments />
+  return <></>
 }
 
 export default PlaylistPage

@@ -50,6 +50,7 @@ const StyledMenuContainer = styled.div`
   margin: 0 auto;
   height: 52px;
   border-top: 1px solid ${colors.gray};
+  background-color: ${colors.white};
 `
 
 const StyledMenuItem = styled.div`

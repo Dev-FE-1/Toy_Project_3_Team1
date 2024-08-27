@@ -1,5 +1,6 @@
+import Comments from '@/components/Comments'
 const ChatPage = () => {
-  return <div>Chat</div>
+  return <Comments />
 }
 
 export default ChatPage
