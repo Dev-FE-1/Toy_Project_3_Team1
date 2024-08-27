@@ -12,9 +12,22 @@ import {
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 
+const formatDate = (timestamp) => {
+  if (!timestamp) return ''
+
+  const date = timestamp.toDate()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+
+  return `${month}.${day} ${hours}:${minutes}`
+}
+
 const Comments = () => {
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState([])
+  const [expandedComments, setExpandedComments] = useState({})
 
   const { currentUser } = auth
   const userId = currentUser?.uid
@@ -39,17 +52,26 @@ const Comments = () => {
     fetchComments()
   }, [])
 
-  const handleComment = async () => {
+  const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (comment.trim()) {
-      const commentId = uuidv4()
-      const commentRef = doc(db, `PLAYLISTS/playlistId/COMMENTS`, commentId)
-      const userRef = doc(db, `USERS/${userId}`)
-      await setDoc(commentRef, {
-        comment,
-        createdAt: serverTimestamp(),
-        userRef,
-      })
-      setComment('')
+      if (comment.length > 400) {
+        alert('C400 자 이상은 입력 할 수 없습니다.')
+        return
+      }
+      try {
+        const commentId = uuidv4()
+        const commentRef = doc(db, `PLAYLISTS/playlistId/COMMENTS`, commentId)
+        const userRef = doc(db, `USERS/${userId}`)
+        await setDoc(commentRef, {
+          comment,
+          createdAt: serverTimestamp(),
+          userRef,
+        })
+        setComment('')
+      } catch (error) {
+        console.error('Error adding comment: ', error)
+      }
     }
   }
 
@@ -57,27 +79,60 @@ const Comments = () => {
     setComment(e.target.value)
   }
 
+  const toggleCommentExpansion = (commentId) => {
+    setExpandedComments((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }))
+  }
+
   return (
     <div style={{ margin: '15px' }}>
-      <div>comments</div>
-      <div>
-        <input type="text" onChange={handleCommentChange} value={comment} />
-        <button onClick={handleComment}>게시</button>
+      <div style={{ marginBottom: '20px' }}>
+        <form onSubmit={handleComment}>
+          <input type="text" onChange={handleCommentChange} value={comment} />
+          <button type="submit">게시</button>
+        </form>
+        <div>{400 - comment.length} characters remaining</div>
       </div>
-      <div>
+      <div style={{ height: '400px', overflowY: 'auto' }}>
         {comments.map((comment, index) => (
-          <div key={index} style={{ marginBottom: '10px' }}>
-            <div>
+          <div key={index} style={{ marginBottom: '20px', display: 'flex', maxWidth: '100%' }}>
+            <div style={{ marginRight: '10px', flexShrink: 0 }}>
               <img
                 src={comment.userImg}
-                style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                alt={`${comment.userName}'s profile`}
               />
-              <strong>{comment.userName}</strong>
-              <div style={{ fontSize: '0.8em', color: 'gray' }}>
-                {new Date(comment.createdAt.seconds * 1000).toLocaleString()}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                <strong style={{ marginRight: '10px' }}>{comment.userName}</strong>
+                <span style={{ fontSize: '0.8em', color: 'gray' }}>
+                  {formatDate(comment.createdAt)}
+                </span>
+              </div>
+              <div
+                style={{
+                  wordWrap: 'break-word',
+                  overflowWrap: 'break-word',
+                  hyphens: 'auto',
+                  maxWidth: '400px',
+                }}
+              >
+                {comment.comment.length > 250 && !expandedComments[comment.id] ? (
+                  <>
+                    {comment.comment.slice(0, 250)}...
+                    <button onClick={() => toggleCommentExpansion(comment.id)}>자세히보기</button>
+                  </>
+                ) : (
+                  comment.comment
+                )}
+                {expandedComments[comment.id] && (
+                  <button onClick={() => toggleCommentExpansion(comment.id)}>접기</button>
+                )}{' '}
               </div>
             </div>
-            {comment.comment}
           </div>
         ))}
       </div>
