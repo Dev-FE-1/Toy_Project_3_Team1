@@ -1,5 +1,5 @@
 const PlaylistPage = () => {
-  return <></>
+  return <div>Playlist</div>
 }
 
 export default PlaylistPage
