@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import Navbar from '@/components/layout/Navbar'
 import Header from '@/components/layout/Header'
+import { colors } from '@/constants/color'
 
 const RootLayout = () => {
   const location = useLocation()
@@ -46,7 +47,7 @@ const Container = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #f5f5f5;
+    background-color: ${colors.lightestGray};
     z-index: 1;
   }
 
@@ -57,7 +58,7 @@ const Container = styled.div`
     max-width: 430px;
     min-height: 100vh;
     margin: 0 auto;
-    background-color: white;
+    background-color: ${colors.white};
   }
 
   .main {

@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import logo from '@/assets/myidoru_logo.svg'
+
 interface HeaderProps {
   onBack?: () => void
 }
@@ -21,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
   return (
     <Container>
       {pathDepth < 2 ? (
-        <img className="logo-myidoru" src="/src/assets/myidoru_logo.svg" alt="logo" />
+        <img className="logo-myidoru" src={logo} alt="logo" />
       ) : (
         <ArrowLeft className="button-back" onClick={handleBack} />
       )}

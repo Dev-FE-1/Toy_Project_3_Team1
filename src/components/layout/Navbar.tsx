@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { NavLink } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { CircleUserRound, House, MessageCircleMore, Search, SquarePlus } from 'lucide-react'
+import { colors } from '@/constants/color'
 
 interface IconLinks {
   path: string
@@ -48,12 +49,12 @@ const StyledMenuContainer = styled.div`
   max-width: 430px;
   margin: 0 auto;
   height: 52px;
-  border-top: 1px solid black;
+  border-top: 1px solid ${colors.gray};
 `
 
 const StyledMenuItem = styled.div`
   padding: 10px 20px;
   .nav-link {
-    color: #cdcdcd;
+    color: ${colors.gray};
   }
 `

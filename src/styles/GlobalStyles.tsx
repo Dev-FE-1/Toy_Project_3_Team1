@@ -1,5 +1,6 @@
 import { Global, css } from '@emotion/react'
 import 'normalize.css'
+import { colors } from '@/constants/color'
 
 const GlobalStyles = () => (
   <Global
@@ -33,6 +34,8 @@ const GlobalStyles = () => (
           sans-serif;
         line-height: 1.4;
         letter-spacing: -0.14px;
+        background-color: ${colors.white};
+        color: ${colors.black};
       }
       #root {
         display: flex;

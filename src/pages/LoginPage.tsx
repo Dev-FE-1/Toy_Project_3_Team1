@@ -5,6 +5,9 @@ import { auth } from '@/firebase/firebaseConfig'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PATH } from '@/constants/path'
+import logo from '@/assets/myidoru_logo.svg'
+import { colors } from '@/constants/color'
+import { fontSize } from '@/constants/font'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -32,7 +35,7 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <img className="logo-myidoru" src="/src/assets/myidoru_logo.svg" alt="logo-myidoru" />
+      <img className="logo-myidoru" src={logo} alt="logo-myidoru" />
       <form className="form-login" onSubmit={handleEmailLogin}>
         <input
           className="input-email"
@@ -103,23 +106,37 @@ const Container = styled.div`
     width: 100%;
     padding: 16px 18px;
     box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid ${colors.lightGray};
+    font-size: ${fontSize.md};
   }
 
   .btn-login {
     margin-top: 5px;
+    border-radius: 8px;
+    border: none;
+    background-color: ${colors.primaryPurple};
+    color: ${colors.white};
+    font-size: ${fontSize.md};
+    cursor: pointer;
+  }
+
+  .btn-login:disabled {
+    pointer-events: none;
+    opacity: 0.4;
   }
 
   .forgot-password {
     text-align: center;
     margin: 15px 0;
-    font-size: 15px;
+    font-size: font-size: ${fontSize.sm};
     display: block;
   }
 
   .grayline {
     width: 100%;
     height: 1px;
-    background-color: #f5f5f5;
+    background-color: ${colors.lightestGray};
     margin: 15px 0;
   }
 
@@ -128,7 +145,10 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     gap: 10px;
-    font-size: 1rem;
+    font-size: ${fontSize.md};
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
   }
 
   .logo-google {
