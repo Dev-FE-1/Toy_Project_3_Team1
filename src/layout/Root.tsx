@@ -39,10 +39,9 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
 
   .background-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -56,8 +55,9 @@ const Container = styled.div`
     z-index: 2;
     justify-content: space-between;
     max-width: 430px;
-    min-height: 100vh;
+    min-height: 100%;
     margin: 0 auto;
+    padding-bottom: 52px;
     background-color: ${colors.white};
   }
 
