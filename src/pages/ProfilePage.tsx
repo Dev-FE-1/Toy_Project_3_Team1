@@ -5,7 +5,8 @@ const ProfilePage = () => {
   return (
     <div>
       Profile Page
-      <Link to={PATH.EDITPROFILE}>Edit Profile</Link>
+      <br />
+      <Link to={PATH.EDITPROFILE}>프로필 수정</Link>
       <Outlet />
     </div>
   )
