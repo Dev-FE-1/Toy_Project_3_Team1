@@ -5,6 +5,9 @@ import { auth } from '@/firebase/firebaseConfig'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PATH } from '@/constants/path'
+import logo from '@/assets/myidoru_logo.svg'
+import { colors } from '@/constants/color'
+import { fontSize } from '@/constants/font'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -32,6 +35,7 @@ const LoginPage = () => {
 
   return (
     <Container>
+      <img className="logo-myidoru" src={logo} alt="logo-myidoru" />
       <form className="form-login" onSubmit={handleEmailLogin}>
         <input
           className="input-email"
@@ -76,49 +80,84 @@ const LoginPage = () => {
 export default LoginPage
 
 const Container = styled.div`
-  margin: auto 0;
   display: flex;
   flex-direction: column;
-  width: 300px;
-  .login_notice {
-    color: red;
-    font-size: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 62px 20px;
+
+  .logo-myidoru {
+    margin-bottom: 40px;
+    box-sizing: border-box;
   }
-  .forgot-password {
-    text-decoration: none;
-    margin: 15px 0px;
-    font-size: 15px;
-    text-align: center;
-  }
+
   .form-login {
     display: flex;
-    gap: 3px;
     flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
   }
+
   .input-email,
   .input-pw,
-  .btn-login {
-    padding: 10px;
-  }
-  .btn-login {
-    margin-top: 3px;
-  }
-  .grayline {
-    background-color: gray;
-    margin-bottom: 10px;
-    height: 0.1px;
-  }
-  .logo-google {
-    align-items: center;
-  }
+  .btn-login,
   .btn-google {
-    padding: 10px;
-    vertical-align: center;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.8rem;
-    gap: 7px;
+    width: 100%;
+    padding: 16px 18px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid ${colors.lightGray};
+    font-size: ${fontSize.md};
+  }
+
+  .btn-login {
+    margin-top: 5px;
+    border-radius: 8px;
+    border: none;
+    background-color: ${colors.primaryPurple};
+    color: ${colors.white};
+    font-size: ${fontSize.md};
+    cursor: pointer;
+  }
+
+  .btn-login:disabled {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  .forgot-password {
+    text-align: center;
+    margin: 15px 0;
+    font-size: font-size: ${fontSize.sm};
+    display: block;
+  }
+
+  .grayline {
+    width: 100%;
+    height: 1px;
+    background-color: ${colors.lightestGray};
+    margin: 15px 0;
+  }
+
+  .btn-google {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: ${fontSize.md};
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .logo-google {
+    vertical-align: middle;
+  }
+
+  .login-notice {
+    color: red;
+    font-size: 15px;
     text-align: center;
   }
 `
