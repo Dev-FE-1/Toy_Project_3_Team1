@@ -9,6 +9,8 @@ import {
   query,
   onSnapshot,
   orderBy,
+  DocumentData,
+  limit,
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import styled from '@emotion/styled'
@@ -24,27 +26,43 @@ interface Comment {
   userName: string
   userImg: string
 }
-
+interface UserData {
+  name?: string
+  img?: string
+}
 const Comments = () => {
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState<Comment[]>([])
 
   const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
+  const [page, setPage] = useState(1)
 
   const { currentUser } = auth
   const userId = currentUser?.uid
 
   useEffect(() => {
     const fetchComments = async () => {
-      const q = query(collection(db, `PLAYLISTS/playlistId/COMMENTS`), orderBy('createdAt', 'desc'))
+      const q = query(
+        collection(db, `PLAYLISTS/playlistId/COMMENTS`),
+        orderBy('createdAt', 'desc'),
+        limit(page * 10)
+      )
       onSnapshot(q, async (snapshot) => {
         const commentsData = await Promise.all(
           snapshot.docs.map(async (doc) => {
-            const commentData = doc.data()
+            const commentData = doc.data() as DocumentData
             const userDoc = await getDoc(commentData.userRef)
-            const userName = userDoc.data()?.name || 'My Idoru'
-            const userImg = userDoc.data()?.img || NpLogo
-            return { ...commentData, userName, userImg }
+            const userData = userDoc.data() as UserData
+            const userName = userData?.name || 'My Idoru'
+            const userImg = userData?.img || NpLogo
+            return {
+              id: doc.id,
+              comment: commentData.comment,
+              createdAt: commentData.createdAt,
+              userRef: commentData.userRef.path,
+              userName,
+              userImg,
+            }
           })
         )
         setComments(commentsData)
@@ -52,7 +70,7 @@ const Comments = () => {
     }
 
     fetchComments()
-  }, []) // ${playlistId} 변경 시, [] 추가 필요
+  }, [page])
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -72,7 +90,7 @@ const Comments = () => {
         })
         setComment('')
       } catch (error) {
-        console.error('Error adding comment: ', error)
+        console.error(error)
       }
     }
   }
@@ -101,16 +119,12 @@ const Comments = () => {
           댓글
         </button>
       </form>
-
       <div className="comment-area">
         {comments.map((comment, index) => (
           <div key={index} className="comment-card">
-            <div>
-              <img className="user-img" src={comment.userImg} alt="User Image" />
-              <p className="user-name">{comment.userName} </p>
-              <p className="comment-data">{formatDate(comment.createdAt)}</p>
-            </div>
-
+            <img className="user-img" src={comment.userImg} alt="User Image" />
+            <p className="user-name">{comment.userName} </p>
+            <p className="comment-date">{formatDate(comment.createdAt)}</p>
             <div className="comment">
               {comment.comment.length > 250 && !expandedComments[comment.id] ? (
                 <>
@@ -126,6 +140,9 @@ const Comments = () => {
             </div>
           </div>
         ))}
+        <button className="more-button" onClick={() => setPage(page + 1)}>
+          +
+        </button>
       </div>
     </Container>
   )
@@ -171,7 +188,7 @@ const Container = styled.div`
     font-weight: bold;
   }
 
-  .comment-data {
+  .comment-date {
     font-size: 0.8em;
     color: ${colors.darkGray};
   }
@@ -181,6 +198,10 @@ const Container = styled.div`
 
   .show-more {
     color: ${colors.darkGray};
+    cursor: pointer;
+  }
+
+  .more-button {
     cursor: pointer;
   }
 `
