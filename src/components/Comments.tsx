@@ -1,97 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { db, auth } from '@/firebase/firebaseConfig'
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  getDoc,
-  collection,
-  query,
-  onSnapshot,
-  orderBy,
-  DocumentData,
-  limit,
-} from 'firebase/firestore'
-import { v4 as uuidv4 } from 'uuid'
+import { getComment } from '@/api/comment/getComment'
+import { addComment } from '@/api/comment/addComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
-import formatDate from '@/firebase/formatDate'
-import { NpLogo } from '@/constants/logourl'
+import { CommentType } from '@/types/commentType'
+import formatDate from '@/utils/formatDate'
 
-interface Comment {
-  id: string
-  comment: string
-  createdAt: number
-  userRef: string
-  userName: string
-  userImg: string
-}
-interface UserData {
-  name?: string
-  img?: string
-}
 const Comments = () => {
   const [comment, setComment] = useState('')
-  const [comments, setComments] = useState<Comment[]>([])
-
+  const [comments, setComments] = useState<CommentType[]>([])
   const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
   const [page, setPage] = useState(1)
-
-  const { currentUser } = auth
-  const userId = currentUser?.uid
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      const q = query(
-        collection(db, `PLAYLISTS/playlistId/COMMENTS`),
-        orderBy('createdAt', 'desc'),
-        limit(page * 10)
-      )
-      onSnapshot(q, async (snapshot) => {
-        const commentsData = await Promise.all(
-          snapshot.docs.map(async (doc) => {
-            const commentData = doc.data() as DocumentData
-            const userDoc = await getDoc(commentData.userRef)
-            const userData = userDoc.data() as UserData
-            const userName = userData?.name || 'My Idoru'
-            const userImg = userData?.img || NpLogo
-            return {
-              id: doc.id,
-              comment: commentData.comment,
-              createdAt: commentData.createdAt,
-              userRef: commentData.userRef.path,
-              userName,
-              userImg,
-            }
-          })
-        )
-        setComments(commentsData)
-      })
-    }
-
-    fetchComments()
-  }, [page])
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
-      if (comment.length > 400) {
-        alert('400 자 이상은 입력 할 수 없습니다.')
-        return
-      }
-      try {
-        const commentId = uuidv4()
-        const commentRef = doc(db, `PLAYLISTS/playlistId/COMMENTS`, commentId)
-        const userRef = doc(db, `USERS/${userId}`)
-        await setDoc(commentRef, {
-          comment,
-          createdAt: serverTimestamp(),
-          userRef,
-        })
-        setComment('')
-      } catch (error) {
-        console.error(error)
-      }
+      await addComment(comment)
+      setComment('')
+      // Optionally, refresh comments after creating a new one
+      const updatedComments = await getComment(page)
+      setComments(updatedComments)
     }
   }
 
@@ -105,6 +33,19 @@ const Comments = () => {
       [commentId]: !prev[commentId],
     }))
   }
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const fetchedComments = await getComment(page)
+        setComments(fetchedComments)
+      } catch (error) {
+        console.error('Error fetching comments:', error)
+      }
+    }
+
+    fetchComments()
+  }, [page])
 
   return (
     <Container>
@@ -194,6 +135,7 @@ const Container = styled.div`
   }
 
   .comment {
+    word-break: break-all;
   }
 
   .show-more {
