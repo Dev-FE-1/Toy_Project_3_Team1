@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Firebase
+.firebase/*
+
 Dockerfile
 docker.js
 docker.yml
