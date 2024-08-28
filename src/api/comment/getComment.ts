@@ -12,6 +12,8 @@ import {
 import { CommentType } from '@/types/commentType'
 import np_logo from '@/assets/np_logo.svg'
 
+const userCache: Record<string, { name: string; img: string }> = {}
+
 export const getComment = async (page: number, pageSize: number = 10): Promise<CommentType[]> => {
   try {
     const q = query(
@@ -28,17 +30,23 @@ export const getComment = async (page: number, pageSize: number = 10): Promise<C
 
         let userImg = np_logo
         let userName = 'My Idoru'
-
         if (commentData.userRef) {
-          try {
-            const userDoc = await getDoc(commentData.userRef)
-            const userData = userDoc.data() as { name?: string; img?: string } | undefined
-            if (userData) {
-              userName = userData.name || userName
-              userImg = userData.img || userImg
+          const userRefPath = commentData.userRef.path
+          if (userCache[userRefPath]) {
+            userName = userCache[userRefPath].name
+            userImg = userCache[userRefPath].img
+          } else {
+            try {
+              const userDoc = await getDoc(commentData.userRef)
+              const userData = userDoc.data() as { name?: string; img?: string } | undefined
+              if (userData) {
+                userName = userData.name || userName
+                userImg = userData.img || userImg
+                userCache[userRefPath] = { name: userName, img: userImg }
+              }
+            } catch (error) {
+              console.error('Error fetching user data:', error)
             }
-          } catch (error) {
-            console.error('Error fetching user data:', error)
           }
         }
 
