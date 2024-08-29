@@ -11,7 +11,8 @@ const RootLayout = () => {
   const { isAuthenticated } = useAuth()
   const showHeader =
     (isAuthenticated && location.pathname !== 'login') ||
-    location.pathname === '/login/editpassword'
+    location.pathname === '/login/editpassword' ||
+    location.pathname === '/login/signup'
   const showNavBar =
     isAuthenticated && !['/login', '/login/editpassword'].includes(location.pathname)
 

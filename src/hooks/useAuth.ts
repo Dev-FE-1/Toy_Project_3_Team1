@@ -17,7 +17,11 @@ const useAuth = () => {
         }
       } else {
         setIsAuthenticated(false)
-        if (pathname !== '/login' && pathname !== '/login/editpassword') {
+        if (
+          pathname !== '/login' &&
+          pathname !== '/login/editpassword' &&
+          pathname !== '/login/signup'
+        ) {
           navigate('/login')
         }
       }
