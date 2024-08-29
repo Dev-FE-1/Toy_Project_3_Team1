@@ -7,7 +7,7 @@ export const PATH = {
   PLAYLIST: '/playlist',
   CREATEPLAYLIST: '/createplaylist',
   PROFILE: '/profile',
-  EDITPROFILE: 'editprofile',
+  EDITPROFILE: '/profile/editprofile',
   FOLLOW: 'follow',
   CHAT: '/chat',
   EDITPW: '/login/editpassword',
