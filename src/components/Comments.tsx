@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { getComment } from '@/api/comment/getComment'
 import { addComment } from '@/api/comment/addComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
-import { CommentType } from '@/types/commentType'
 import formatDate from '@/utils/formatDate'
+import { useQuery } from '@tanstack/react-query'
 
 const Comments = () => {
   const [comment, setComment] = useState('')
-  const [comments, setComments] = useState<CommentType[]>([])
   const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
-  const [page, setPage] = useState(1)
   const [warning, setWarning] = useState('')
+
+  const { data: comments = [] } = useQuery({
+    queryKey: ['comments'],
+    queryFn: getComment,
+    staleTime: 1000 * 10 * 60 * 10, // 10 min
+  })
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
       await addComment(comment)
       setComment('')
-      const updatedComments = await getComment(page)
-      setComments(updatedComments)
     }
   }
 
@@ -40,18 +42,6 @@ const Comments = () => {
     }))
   }
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const newComments = await getComment(page)
-        setComments((prevComments) => [...prevComments, ...newComments])
-      } catch (error) {
-        console.error('Error fetching comments:', error)
-      }
-    }
-    fetchComments()
-  }, [page])
-
   return (
     <Container>
       <div>
@@ -70,29 +60,27 @@ const Comments = () => {
       </div>
 
       <div className="comment-area">
-        {comments.map((comment, index) => (
-          <div key={index} className="comment-card">
-            <img className="user-img" src={comment.userImg} alt="User Image" />
-            <p className="user-name">{comment.userName} </p>
-            <p className="comment-date">{formatDate(comment.createdAt)}</p>
-            <div className="comment">
-              {comment.comment.length > 250 && !expandedComments[comment.id] ? (
-                <>
-                  {comment.comment.slice(0, 250)} ···
-                  <div className="show-more" onClick={() => toggleCommentExpansion(comment.id)}>
-                    자세히 보기
-                  </div>
-                </>
-              ) : (
-                comment.comment
-              )}
-              {expandedComments[comment.id]}{' '}
+        {comments &&
+          comments.map((comment, index) => (
+            <div key={index} className="comment-card">
+              <img className="user-img" src={comment.userImg} alt="User Image" />
+              <p className="user-name">{comment.userName} </p>
+              <p className="comment-date">{formatDate(comment.createdAt)}</p>
+              <div className="comment">
+                {comment.comment.length > 250 && !expandedComments[comment.id] ? (
+                  <>
+                    {comment.comment.slice(0, 250)} ···
+                    <div className="show-more" onClick={() => toggleCommentExpansion(comment.id)}>
+                      자세히 보기
+                    </div>
+                  </>
+                ) : (
+                  comment.comment
+                )}
+                {expandedComments[comment.id]}{' '}
+              </div>
             </div>
-          </div>
-        ))}
-        <button className="more-button" onClick={() => setPage(page + 1)}>
-          +
-        </button>
+          ))}
       </div>
     </Container>
   )

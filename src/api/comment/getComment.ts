@@ -6,7 +6,6 @@ import {
   getDocs,
   orderBy,
   DocumentData,
-  limit,
   Timestamp,
 } from 'firebase/firestore'
 import { CommentType } from '@/types/commentType'
@@ -14,13 +13,9 @@ import np_logo from '@/assets/np_logo.svg'
 
 const userCache: Record<string, { name: string; img: string }> = {}
 
-export const getComment = async (page: number, pageSize: number = 10): Promise<CommentType[]> => {
+export const getComment = async (): Promise<CommentType[]> => {
   try {
-    const q = query(
-      collection(db, `PLAYLISTS/playlistId/COMMENTS`),
-      orderBy('createdAt', 'desc'),
-      limit(page * pageSize)
-    )
+    const q = query(collection(db, `PLAYLISTS/playlistId/COMMENTS`), orderBy('createdAt', 'desc'))
 
     const snapshot = await getDocs(q)
 
