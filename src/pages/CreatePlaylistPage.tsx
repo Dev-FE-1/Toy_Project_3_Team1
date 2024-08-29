@@ -52,6 +52,7 @@ const CreatePlaylistPage = () => {
         const videoData = {
           title: data.items[0].snippet.title,
           channelTitle: data.items[0].snippet.channelTitle,
+          url: `https://www.youtube.com/watch?v=${videoId}`,
           thumbnail: data.items[0].snippet.thumbnails.medium.url,
         }
         setVideoList((prev: videoListProps[]) => [...prev, videoData])
@@ -65,7 +66,6 @@ const CreatePlaylistPage = () => {
   const handleTag = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && currentTag.trim() !== '' && e.nativeEvent.isComposing === false) {
       e.preventDefault()
-      console.log('1', currentTag)
       const saveTag = currentTag.trim().startsWith('#')
         ? currentTag.trim()
         : `#${currentTag.trim()}`
