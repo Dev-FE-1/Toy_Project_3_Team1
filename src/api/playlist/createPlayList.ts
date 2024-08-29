@@ -4,6 +4,7 @@ import { doc, addDoc, getDocs, getDoc, collection } from 'firebase/firestore'
 export interface videoListProps {
   title: string
   thumbnail: string
+  url: string
   channelTitle: string
 }
 
@@ -38,7 +39,12 @@ export const createPlayList = async (
 
       const newPlaylistVideosRef = collection(newPlaylistRef, 'videos')
       for (const video of videoList) {
-        await addDoc(newPlaylistVideosRef, video)
+        await addDoc(newPlaylistVideosRef, {
+          title: video.title,
+          thumbnail: video.thumbnail,
+          url: video.url,
+          channelTitle: video.channelTitle,
+        })
       }
     }
   } catch (error) {
