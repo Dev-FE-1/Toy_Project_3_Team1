@@ -63,9 +63,9 @@ const CreatePlaylistPage = () => {
   }
 
   const handleTag = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && currentTag.trim() !== '') {
+    if (e.key === 'Enter' && currentTag.trim() !== '' && e.nativeEvent.isComposing === false) {
       e.preventDefault()
-
+      console.log('1', currentTag)
       const saveTag = currentTag.trim().startsWith('#')
         ? currentTag.trim()
         : `#${currentTag.trim()}`
