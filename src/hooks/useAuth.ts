@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 const useAuth = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(true)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -17,19 +17,13 @@ const useAuth = () => {
         }
       } else {
         setIsAuthenticated(false)
-        if (
-          pathname !== '/login' &&
-          pathname !== '/login/editpassword' &&
-          pathname !== '/login/signup'
-        ) {
+        if (!['/login', '/login/editpassword', '/login/signup'].includes(pathname)) {
           navigate('/login')
         }
       }
     })
-    return () => {
-      unsubscribe()
-    }
-  }, [pathname, navigate])
+    return () => unsubscribe()
+  }, [pathname])
 
   return { isAuthenticated }
 }
