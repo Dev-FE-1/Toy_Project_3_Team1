@@ -62,6 +62,9 @@ const LoginPage = () => {
       <Link to={PATH.EDITPW} className="forgot-password">
         비밀번호를 잊으셨나요?
       </Link>
+
+      <div className="grayline" />
+      <Link to={PATH.SIGNUP}>이메일로 회원가입</Link>
       <div className="grayline" />
       <button className="btn-google" onClick={handleGoogleLogin}>
         <img

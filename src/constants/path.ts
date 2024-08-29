@@ -3,6 +3,7 @@ export const PATH = {
   SEARCH: '/search',
   PAGE404: '*',
   LOGIN: '/login',
+  SIGNUP: '/login/signup',
   PLAYLIST: '/playlist',
   CREATEPLAYLIST: '/createplaylist',
   PROFILE: '/profile',
