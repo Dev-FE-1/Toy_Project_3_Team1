@@ -4,6 +4,7 @@ import useAuth from '../hooks/useAuth'
 import Navbar from '@/components/layout/Navbar'
 import Header from '@/components/layout/Header'
 import { colors } from '@/constants/color'
+import { useEffect } from 'react'
 
 const RootLayout = () => {
   const location = useLocation()
@@ -17,9 +18,11 @@ const RootLayout = () => {
   const showNavBar =
     isAuthenticated && !['/login', '/login/editpassword'].includes(location.pathname)
 
-  if (isAuthenticated && location.pathname === '/login') {
-    navigate('/')
-  }
+  useEffect(() => {
+    if (isAuthenticated && location.pathname === '/login') {
+      navigate('/')
+    }
+  }, [isAuthenticated, location.pathname, navigate])
 
   return (
     <Container>

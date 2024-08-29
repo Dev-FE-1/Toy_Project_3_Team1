@@ -17,19 +17,13 @@ const useAuth = () => {
         }
       } else {
         setIsAuthenticated(false)
-        if (
-          pathname !== '/login' &&
-          pathname !== '/login/editpassword' &&
-          pathname !== '/login/signup'
-        ) {
+        if (!['/login', '/login/editpassword', '/login/signup'].includes(pathname)) {
           navigate('/login')
         }
       }
     })
-    return () => {
-      unsubscribe()
-    }
-  }, [pathname, navigate])
+    return () => unsubscribe()
+  }, [pathname])
 
   return { isAuthenticated }
 }
