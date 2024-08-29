@@ -160,8 +160,6 @@ export default CreatePlaylistPage
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 60px);
-  padding-bottom: 52px;
 
   .section-upload {
     align-items: center;
@@ -189,7 +187,7 @@ const Container = styled.div`
   .list-music {
     padding: 20px 0;
     display: flex;
-    height: 400px;
+    height: 350px;
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
