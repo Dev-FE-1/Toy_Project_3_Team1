@@ -28,6 +28,9 @@ module.exports = {
     'no-console': 'warn',
     'no-unused-vars': 'warn',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
+    '@tanstack/query/exhaustive-deps': 'error',
+    '@tanstack/query/stable-query-client': 'error',
+    '@tanstack/query/no-rest-destructuring': 'warn',
   },
   settings: {
     react: { version: 'detect' },
