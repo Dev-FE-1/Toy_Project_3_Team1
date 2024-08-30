@@ -2,12 +2,16 @@ import styled from '@emotion/styled'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/firebase/firebaseConfig'
 import { useState } from 'react'
-import { fontSize } from '@/constants/font'
+import { fontSize, fontWeight } from '@/constants/font'
 import { colors } from '@/constants/color'
+import Input from '@/components/common/Input/Input'
+import Button from '@/components/common/Button/Button'
+import { MESSAGES } from '@/constants/messages'
 
 const EditPwPage = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState<boolean | null>(null)
+  //TODO: 이메일 유효성 검사하기
   const isValid = email
 
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,30 +26,28 @@ const EditPwPage = () => {
   }
   return (
     <Container>
-      <h3>비밀번호를 잊으셨나요?</h3>
-      <h4>
+      <h3 className="editpw-title">비밀번호를 잊으셨나요?</h3>
+      <h4 className="editpw-text">
         가입하신 이메일을 입력하시면,
         <br /> 비밀번호 재설정 링크를 보내드립니다.
       </h4>
       <form className="form-editpw" onSubmit={handleResetPassword}>
-        <input
+        <Input
           type="text"
-          className="input-editpw"
-          placeholder="이메일을 입력하세요."
+          name="email"
+          placeholder="이메일을 입력해주세요."
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
         {message !== null &&
           (message ? (
-            <span className="success">비밀번호 재설정 링크가 이메일로 전송되었습니다.</span>
+            <span className="success message">{MESSAGES.RESET_PASSWORD.SUCCESS}</span>
           ) : (
-            <span className="failed">
-              비밀번호 재설정 링크 전송에 실패했습니다. 다시 시도해주세요.
-            </span>
+            <span className="failed message">{MESSAGES.RESET_PASSWORD.FAIL}</span>
           ))}
-        <button type="submit" className="btn-editpw" disabled={!isValid}>
-          비밀번호 재설정 링크 보내기
-        </button>
+
+        <Button disabled={!isValid}>비밀번호 재설정 링크 보내기</Button>
       </form>
     </Container>
   )
@@ -56,44 +58,35 @@ export default EditPwPage
 const Container = styled.div`
   padding: 62px 20px;
 
-  h4 {
-    margin: 22px 0;
+  .editpw-title {
+    margin-bottom: 22px;
+    font-size: ${fontSize.xl};
   }
 
-  .form_editpw {
+  .editpw-text {
+    margin-bottom: 22px;
+    font-weight: ${fontWeight.medium};
+  }
+
+  .form-editpw {
     display: flex;
     flex-direction: column;
-  }
+    gap: 10px;
 
-  .btn-editpw,
-  .input-editpw {
-    width: 100%;
-    padding: 16px 18px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    border: 1px solid ${colors.lightGray};
-    font-size: ${fontSize.md};
-  }
+    input {
+      margin-bottom: 8px;
+    }
 
-  .btn-editpw {
-    background-color: ${colors.primaryPurple};
-    color: ${colors.white};
-    cursor: pointer;
-  }
+    .message {
+      font-size: ${fontSize.sm};
+    }
 
-  .btn-editpw:disabled {
-    pointer-events: none;
-    opacity: 0.4;
-  }
+    .success {
+      color: ${colors.primaryPurple};
+    }
 
-  .failed {
-    color: red;
-  }
-  .success,
-  .failed {
-    font-size: 10px;
-  }
-  .message {
-    color: blue;
+    .failed {
+      color: ${colors.red};
+    }
   }
 `
