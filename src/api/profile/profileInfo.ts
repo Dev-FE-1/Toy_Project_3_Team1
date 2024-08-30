@@ -1,12 +1,8 @@
 import { auth, db } from '@/firebase/firebaseConfig'
 import { collection, doc, getDocs, getDoc, query, where } from 'firebase/firestore'
+import { UserType } from '@/types/userType'
 
-export interface UserProps {
-  name: string
-  img: string | null
-  bio: string | null
-  email: string
-  id: string
+export interface ProfileProps extends UserType {
   follwer: FollowerProps[]
   following: FollowingProps[]
 }
@@ -34,7 +30,7 @@ export const userInfo = async () => {
         return
       }
 
-      const userData = userDoc.data() as UserProps
+      const userData = userDoc.data() as ProfileProps
 
       const [followerSnapShot, followingSnapShot, querySnapShot] = await Promise.all([
         getDocs(collection(userRef, 'Followers')),

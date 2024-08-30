@@ -3,4 +3,5 @@ export interface UserType {
   bio?: string
   email?: string
   img?: string
+  id?: string
 }

@@ -4,10 +4,11 @@ import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import profile from '@/assets/profile_logo.png'
 import { userInfo } from '@/api/profile/profileInfo'
-import { getPlayList, showplaylistProps } from '@/api/playlist/getPlayList'
+import { getPlayList } from '@/api/playlist/getPlayList'
 import { fontSize } from '@/constants/font'
 import { auth } from '@/firebase/firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth'
+import { showplaylistProps } from '@/types/playlistType'
 
 const ProfilePage = () => {
   const { userId } = useParams()
@@ -34,9 +35,9 @@ const ProfilePage = () => {
       const data = await userInfo()
       if (data) {
         setUserData({
-          userName: data?.userName,
-          userId: data?.userId,
-          userEmail: data?.userEmail,
+          userName: data?.userName || '사용자',
+          userId: data?.userId || 'Unknown',
+          userEmail: data?.userEmail || 'Unknown',
           userBio: data?.userBio || '안녕하세요.',
           followerLength: data?.followerLength || 0,
           followingLength: data?.followingLength || 0,

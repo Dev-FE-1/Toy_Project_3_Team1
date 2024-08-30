@@ -1,12 +1,6 @@
 import { auth, db } from '@/firebase/firebaseConfig'
 import { collection, getDocs, query, where } from 'firebase/firestore'
-import { videoListProps } from './createPlayList'
-
-export interface showplaylistProps {
-  playlistId: string
-  title: string
-  thumbnail: string
-}
+import { showplaylistProps, videoListProps } from '@/types/playlistType'
 
 export const getPlayList = async () => {
   try {
