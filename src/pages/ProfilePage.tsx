@@ -1,12 +1,17 @@
 import styled from '@emotion/styled'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import profile from '@/assets/profile_logo.png'
 import { userInfo } from '@/api/profile/profileInfo'
 import { getPlayList, showplaylistProps } from '@/api/playlist/getPlayList'
+import { fontSize } from '@/constants/font'
+import { auth } from '@/firebase/firebaseConfig'
+import { onAuthStateChanged } from 'firebase/auth'
 
 const ProfilePage = () => {
+  const { userId } = useParams()
+  const [isMyProfile, setIsMyProfile] = useState(false)
   const [userData, setUserData] = useState({
     userName: '',
     userId: '',
@@ -27,33 +32,41 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const data = await userInfo()
-      setUserData({
-        userName: data?.userName,
-        userId: data?.userId,
-        userEmail: data?.userEmail,
-        userBio: data?.userBio,
-        followerLength: data?.followerLength || 0,
-        followingLength: data?.followingLength || 0,
-        playlistLength: data?.playlistLength || 0,
-      })
+      if (data) {
+        setUserData({
+          userName: data?.userName,
+          userId: data?.userId,
+          userEmail: data?.userEmail,
+          userBio: data?.userBio || '안녕하세요.',
+          followerLength: data?.followerLength || 0,
+          followingLength: data?.followingLength || 0,
+          playlistLength: data?.playlistLength || 0,
+        })
+        setIsMyProfile(!userId || userId === data?.userId)
+      }
     }
-    fetchUserData()
-  }, [])
 
-  useEffect(() => {
     const fetchPlayListData = async () => {
       const data = await getPlayList()
       if (data) {
         setPlayListData(data)
       }
     }
-    fetchPlayListData()
-  }, [])
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchUserData()
+        fetchPlayListData()
+      }
+    })
+    return () => unsubscribe()
+  }, [userId])
 
   return (
     <Container>
       <Link to={PATH.EDITPROFILE}>
-        <button className="btn-editprofile">설정</button>
+        {userData.userId}
+        {isMyProfile && <button className="btn-editprofile">설정</button>}
       </Link>
       <div className="profile">
         <div className="section-img">
@@ -74,24 +87,35 @@ const ProfilePage = () => {
         </div>
       </div>
       <div className="user-bio">[{userData.userBio}]</div>
+      {!isMyProfile && <button className="btn-follow">팔로우</button>}
       <hr />
       <div className="section-playlist">
-        <div className="section-btn">
-          <button className="btn-all" onClick={handleAllLists}>
-            전체
-          </button>
-          <button className="btn-public">공개</button>
-          <button className="btn-private">비공개</button>
-        </div>
+        <div className="text-playlist">플레이리스트</div>
+        {isMyProfile && (
+          <div className="section-btn">
+            <button className="btn-all" onClick={handleAllLists}>
+              전체
+            </button>
+            <button className="btn-public">공개</button>
+            <button className="btn-private">비공개</button>
+          </div>
+        )}
         {playlistData.map((playlist, idx) => (
           <div className="title-playlist" key={idx}>
             <div className="title-thumbnail">
-              <img src={playlist.thumbnail} alt={playlist.title} />
+              <Link to={`/playlist/${playlist.playlistId}`}>
+                <img src={playlist.thumbnail} alt={playlist.title} />
+              </Link>
             </div>
             <div className="title-video">{playlist.title}</div>
           </div>
         ))}
       </div>
+      {!isMyProfile && (
+        <Link to={PATH.HOME}>
+          <button className="btn-editprofile">플레이리스트 모두 보기</button>
+        </Link>
+      )}
     </Container>
   )
 }
@@ -153,5 +177,10 @@ const Container = styled.div`
 
   .title-video {
     width: 320px;
+  }
+
+  .text-playlist {
+    margin: 10px 0px;
+    font-size: ${fontSize.lg};
   }
 `

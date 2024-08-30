@@ -29,29 +29,28 @@ export const userInfo = async () => {
       const uid = user.uid
       const userRef = doc(db, 'USERS', uid)
       const userDoc = await getDoc(userRef)
-      const userName = userDoc.exists() ? userDoc.data().name : 'Unknown User'
-      const userId = userDoc.exists() ? userDoc.data().id : 'Unknown User'
-      const userEmail = userDoc.exists() ? userDoc.data().email : 'Unknown User'
-      const userBio = userDoc.exists() ? userDoc.data().bio : 'Unknown User'
 
-      const userFollower = collection(userRef, 'Followers')
-      const followerSnapShot = await getDocs(userFollower)
+      if (!userDoc.exists()) {
+        return
+      }
+
+      const userData = userDoc.data() as UserProps
+
+      const [followerSnapShot, followingSnapShot, querySnapShot] = await Promise.all([
+        getDocs(collection(userRef, 'Followers')),
+        getDocs(collection(userRef, 'Followings')),
+        getDocs(query(collection(db, 'PLAYLISTS'), where('author', '==', `/USERS/${uid}`))),
+      ])
+
       const followerLength = followerSnapShot.size
-
-      const userFollowing = collection(userRef, 'Followings')
-      const followingSnapShot = await getDocs(userFollowing)
       const followingLength = followingSnapShot.size
-
-      const playlistRef = collection(db, 'PLAYLISTS')
-      const q = query(playlistRef, where('author', '==', `/USERS/${uid}`))
-      const querySnapShot = await getDocs(q)
       const playlistLength = querySnapShot.size
 
       return {
-        userName,
-        userId,
-        userEmail,
-        userBio,
+        userName: userData.name,
+        userId: userData.id,
+        userEmail: userData.email,
+        userBio: userData.bio,
         followerLength,
         followingLength,
         playlistLength,
