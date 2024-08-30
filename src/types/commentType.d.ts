@@ -5,5 +5,4 @@ export interface CommentType {
   userRef: string
   userName: string
   userImg: string
-  nextCursor?: undefined
 }
