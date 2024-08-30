@@ -73,10 +73,6 @@ const Container = styled.div`
     flex-direction: column;
     gap: 10px;
 
-    input {
-      margin-bottom: 8px;
-    }
-
     .message {
       font-size: ${fontSize.sm};
     }
