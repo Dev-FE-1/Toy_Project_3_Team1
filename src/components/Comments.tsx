@@ -13,10 +13,11 @@ const Comments = () => {
   const [warning, setWarning] = useState('')
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<
-    CommentType[],
+    CommentType,
     Error
   >({
     queryKey: ['comments'],
+    // TODO : 탄스택 인피니티 쿼리 사용
     queryFn: ({ pageParam }) => getComment(pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
     staleTime: 1000 * 60 * 5,
@@ -68,7 +69,7 @@ const Comments = () => {
         <>
           {data?.pages.map((page, i) => (
             <React.Fragment key={i}>
-              {page.comments.map((comment: CommentType) => (
+              {(page as { comments: CommentType[] }).comments.map((comment: CommentType) => (
                 <div key={comment.id} className="comment-card">
                   <img className="user-img" src={comment.userImg} alt="User Image" />
                   <p className="user-name">{comment.userName} </p>

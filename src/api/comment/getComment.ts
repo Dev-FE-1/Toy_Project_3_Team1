@@ -16,8 +16,10 @@ import np_logo from '@/assets/np_logo.svg'
 const userCache: Record<string, { name: string; img: string }> = {}
 
 export const getComment = async (
+  // TODO : Any ...
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pageParam?: any
+  pageParam: any
+  // TODO : Any ...
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<{ comments: CommentType[]; nextCursor: any }> => {
   try {

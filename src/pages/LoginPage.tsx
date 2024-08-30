@@ -2,26 +2,45 @@ import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 import { auth } from '@/firebase/firebaseConfig'
-import { Link } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import logo from '@/assets/myidoru_logo.svg'
-import { colors } from '@/constants/color'
 import { fontSize } from '@/constants/font'
+import Button from '@/components/common/Button/Button'
+import ButtonLink from '@/components/common/Button/ButtonLink'
+import ButtonImage from '@/components/common/Button/ButtonImage'
+import Input from '@/components/common/Input/Input'
+import { colors } from '@/constants/color'
+import { MESSAGES } from '@/constants/messages'
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [loginInfo, setLoginInfo] = useState({
+    email: '',
+    password: '',
+  })
   const [loginSuccess, setLoginSuccess] = useState(true)
-  const isValid = email && password
+  //TODO: 이메일, 비밀번호 유효성 검사하기
+  const isValid = loginInfo.email && loginInfo.password
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setLoginInfo({
+      ...loginInfo,
+      [name]: value,
+    })
+  }
 
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const { email, password } = loginInfo
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       localStorage.setItem('userData', JSON.stringify(userCredential.user))
       setLoginSuccess(true)
     } catch (error) {
-      setPassword('')
+      setLoginInfo({
+        email: '',
+        password: '',
+      })
       setLoginSuccess(false)
     }
   }
@@ -34,47 +53,47 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <img className="logo-myidoru" src={logo} alt="logo-myidoru" />
-      <form className="form-login" onSubmit={handleEmailLogin}>
-        <input
-          className="input-email"
-          type="text"
-          placeholder="이메일을 입력해주세요."
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="input-pw"
-          type="password"
-          placeholder="비밀번호를 입력해주세요."
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {!loginSuccess && (
-          <span className="login-notice">아이디 또는 비밀번호를 입력해주세요.</span>
-        )}
+      <div className="logo-container">
+        <img src={logo} alt="logo-myidoru" />
+      </div>
 
-        <button className="btn-login" type="submit" disabled={!isValid}>
-          로그인
-        </button>
-      </form>
-      <Link to={PATH.EDITPW} className="forgot-password">
-        비밀번호를 잊으셨나요?
-      </Link>
+      <div className="login-container">
+        <form className="form-login" onSubmit={handleEmailLogin}>
+          <Input
+            type="text"
+            name="email"
+            placeholder="이메일을 입력해주세요."
+            value={loginInfo.email}
+            onChange={handleChange}
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="비밀번호를 입력해주세요."
+            value={loginInfo.password}
+            onChange={handleChange}
+          />
+          {!loginSuccess && <span className="login-notice">{MESSAGES.LOGIN.FAIL}</span>}
+          <Button disabled={!isValid}>로그인</Button>
+        </form>
+        <ButtonLink size={'small'} variant="text" to={PATH.EDITPW}>
+          비밀번호를 잊으셨나요?
+        </ButtonLink>
+      </div>
 
-      <div className="grayline" />
-      <Link to={PATH.SIGNUP}>이메일로 회원가입</Link>
-      <div className="grayline" />
-      <button className="btn-google" onClick={handleGoogleLogin}>
-        <img
-          className="logo-google"
-          width="20"
-          height="20"
-          src="https://img.icons8.com/color/48/google-logo.png"
-          alt="google-logo"
-        />
-        구글 로그인
-      </button>
+      <div className="divider">
+        <span>또는</span>
+      </div>
+
+      <div className="auth-container">
+        <Button variant="outline" onClick={handleGoogleLogin}>
+          <ButtonImage alt="google-logo" src="https://img.icons8.com/color/48/google-logo.png" />
+          구글 로그인
+        </Button>
+        <ButtonLink variant="secondary" to={PATH.SIGNUP}>
+          이메일로 회원가입
+        </ButtonLink>
+      </div>
     </Container>
   )
 }
@@ -82,84 +101,62 @@ const LoginPage = () => {
 export default LoginPage
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 62px 20px;
 
-  .logo-myidoru {
+  .logo-container {
     margin-bottom: 40px;
-    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
   }
 
-  .form-login {
+  .login-container {
+    margin-bottom: 22px;
+    .form-login {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .login-notice {
+      color: ${colors.red};
+      font-size: ${fontSize.sm};
+    }
+  }
+
+  .divider {
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid ${colors.lightGray};
+    }
+
+    &::before {
+      margin-right: 16px;
+    }
+
+    &::after {
+      margin-left: 16px;
+    }
+
+    & span {
+      color: ${colors.gray};
+      font-size: ${fontSize.sm};
+      white-space: nowrap;
+    }
+  }
+
+  .auth-container {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .input-email,
-  .input-pw,
-  .btn-login,
-  .btn-google {
-    width: 100%;
-    padding: 16px 18px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: 1px solid ${colors.lightGray};
-    font-size: ${fontSize.md};
-  }
-
-  .btn-login {
-    margin-top: 5px;
-    border-radius: 8px;
-    border: none;
-    background-color: ${colors.primaryPurple};
-    color: ${colors.white};
-    font-size: ${fontSize.md};
-    cursor: pointer;
-  }
-
-  .btn-login:disabled {
-    pointer-events: none;
-    opacity: 0.4;
-  }
-
-  .forgot-password {
-    text-align: center;
-    margin: 15px 0;
-    font-size: font-size: ${fontSize.sm};
-    display: block;
-  }
-
-  .grayline {
-    width: 100%;
-    height: 1px;
-    background-color: ${colors.lightestGray};
-    margin: 15px 0;
-  }
-
-  .btn-google {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: ${fontSize.md};
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-  }
-
-  .logo-google {
-    vertical-align: middle;
-  }
-
-  .login-notice {
-    color: red;
-    font-size: 15px;
-    text-align: center;
   }
 `

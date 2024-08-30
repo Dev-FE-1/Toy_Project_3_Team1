@@ -1,5 +1,5 @@
 import { auth, db } from '@/firebase/firebaseConfig'
-import { doc, addDoc, getDocs, getDoc, collection } from 'firebase/firestore'
+import { doc, addDoc, getDoc, collection } from 'firebase/firestore'
 
 export interface videoListProps {
   title: string
@@ -23,13 +23,8 @@ export const createPlayList = async (
       const userName = userDoc.exists() ? userDoc.data().name : 'Unknown User'
 
       const playlistCollectionRef = collection(db, 'PLAYLISTS')
-      const playlistsSnapshot = await getDocs(playlistCollectionRef)
-      const playlistCount = playlistsSnapshot.size
-
-      const playlistId = playlistCount + 1
 
       const newPlaylistRef = await addDoc(playlistCollectionRef, {
-        playlistId: playlistId,
         title: title,
         tags: tags,
         createdAt: new Date(),
