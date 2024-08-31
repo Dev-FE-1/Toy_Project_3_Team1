@@ -15,10 +15,9 @@ const PlaylistSearch: React.FC = () => {
   const handleSearch = async () => {
     if (!searchTerm.trim()) return
 
-    const playlistsRef = collection(db, 'PLAYSLISTS')
-    console.log('playlistsRef:', playlistsRef)
+    const playlistsRef = collection(db, 'playlists')
     const q = query(playlistsRef, where('tags', 'array-contains', searchTerm.toLowerCase()))
-    console.log('q:', q)
+
     try {
       const querySnapshot = await getDocs(q)
       const results: Playlist[] = []
