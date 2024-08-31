@@ -1,15 +1,5 @@
-import LikeButton from '@/api/like'
-
 const SearchPage = () => {
-  return (
-    <>
-      <br />
-      <br />
-      <center>
-        <LikeButton playlistId="playlistId" />
-      </center>
-    </>
-  )
+  return <div>Search</div>
 }
 
 export default SearchPage
