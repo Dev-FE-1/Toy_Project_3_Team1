@@ -13,6 +13,7 @@ const SearchPlaylist = () => {
     const results = await SearchTag(searchTag)
     setPlaylists(results)
     setHasSearched(true)
+    setSearchTag('')
   }
 
   return (
@@ -22,7 +23,7 @@ const SearchPlaylist = () => {
           type="text"
           value={searchTag}
           onChange={(e) => setSearchTag(e.target.value)}
-          placeholder="태그를 입력하세요 (예: 힙합)"
+          placeholder="검색어를 입력하세요."
         />
         <button onClick={handleSearch}>검색</button>
       </div>
@@ -41,7 +42,7 @@ const SearchPlaylist = () => {
                     <Link to={`/playlist/${playlist.id}`}>
                       <h3>{playlist.title}</h3>
                     </Link>
-                    <div>태그: {playlist.tags.join(' ')}</div>
+                    <div>{playlist.tags.join(' ')}</div>
                   </li>
                 ))}
               </ul>
