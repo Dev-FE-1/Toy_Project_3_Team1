@@ -5,6 +5,8 @@ import { colors } from '@/constants/color'
 import { fontSize } from '@/constants/font'
 import { createPlayList } from '@/api/playlist/createPlayList'
 import { videoListProps } from '@/types/playlistType'
+import Button from '@/components/common/Button/Button'
+import Input from '@/components/common/Input/Input'
 
 const CreatePlaylistPage = () => {
   const [title, setTitle] = useState('')
@@ -13,16 +15,18 @@ const CreatePlaylistPage = () => {
   const [url, setUrl] = useState('')
   const [isValid, setIsValid] = useState(true)
   const [videoList, setVideoList] = useState<videoListProps[]>([])
+  const [isPrivate, setIsPrivate] = useState(false)
 
   const handleUploadMusic = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await createPlayList(title, tag, videoList)
+      await createPlayList(title, tag, videoList, isPrivate)
       setTitle('')
       setTag([])
       setUrl('')
       setVideoList([])
       setCurrentTag('')
+      setIsPrivate(false)
     } catch (error) {
       console.error('Error adding playlist: ', error)
     }
@@ -64,7 +68,7 @@ const CreatePlaylistPage = () => {
     }
   }
 
-  const handleTag = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleTag = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && currentTag.trim() !== '' && e.nativeEvent.isComposing === false) {
       e.preventDefault()
       const saveTag = currentTag.trim().startsWith('#')
@@ -83,20 +87,24 @@ const CreatePlaylistPage = () => {
     setTag((prev) => prev.filter((_, index) => index !== id))
   }
 
+  const handlePrivate = () => {
+    setIsPrivate(!isPrivate)
+  }
+
   const isUploadDisabled = title.trim() === '' || tag.length === 0 || videoList.length === 0
 
   return (
     <Container>
       <form onSubmit={handleUploadMusic}>
         <div className="section-input">
-          <input
+          <Input
             className="input-title"
             type="text"
             placeholder="플레이리스트의 제목을 입력하세요."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <input
+          <Input
             className="input-tag"
             type="text"
             placeholder="태그를 입력하세요."
@@ -134,8 +142,12 @@ const CreatePlaylistPage = () => {
           ))}
         </div>
         <div className="section-upload">
+          <div className="check-private">
+            <input type="checkbox" onChange={handlePrivate} checked={isPrivate} />
+            비공개
+          </div>
           <div className="input-youtube">
-            <input
+            <Input
               className="input-link"
               type="text"
               placeholder="유튜브 링크를 입력하세요."
@@ -147,9 +159,7 @@ const CreatePlaylistPage = () => {
             </button>
           </div>
           {!isValid && <span className="text-warning">유튜브 링크를 입력해주세요.</span>}
-          <button className="btn-upload" type="submit" disabled={isUploadDisabled}>
-            등록하기
-          </button>
+          <Button disabled={isUploadDisabled}>등록하기</Button>
         </div>
       </form>
     </Container>
