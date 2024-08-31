@@ -45,6 +45,7 @@ export const userInfo = async () => {
       return {
         userName: userData.name,
         userId: userData.id,
+        userImg: userData.img,
         userEmail: userData.email,
         userBio: userData.bio,
         followerLength,
