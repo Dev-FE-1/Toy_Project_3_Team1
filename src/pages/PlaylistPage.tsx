@@ -12,19 +12,6 @@ const PlaylistPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<videoListProps>()
   const [view, setView] = useState<'videos' | 'comments'>('videos')
 
-  useEffect(() => {
-    const fetchPlaylistDetails = async () => {
-      if (playlistId) {
-        const playlistDetails = await getPlayListDetails(playlistId)
-        setVideos(playlistDetails)
-        if (playlistDetails.length > 0) {
-          setSelectedVideo(playlistDetails[0])
-        }
-      }
-    }
-    fetchPlaylistDetails()
-  }, [playlistId])
-
   const renderVideos = () => (
     <VideoList>
       {videos.map((video, idx) => (
@@ -49,6 +36,19 @@ const PlaylistPage = () => {
       <div className="comment-item">댓글 들어가야함</div>
     </CommentList>
   )
+
+  useEffect(() => {
+    const fetchPlaylistDetails = async () => {
+      if (playlistId) {
+        const playlistDetails = await getPlayListDetails(playlistId)
+        setVideos(playlistDetails)
+        if (playlistDetails.length > 0) {
+          setSelectedVideo(playlistDetails[0])
+        }
+      }
+    }
+    fetchPlaylistDetails()
+  }, [playlistId])
 
   return (
     <Container>
