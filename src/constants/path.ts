@@ -4,7 +4,7 @@ export const PATH = {
   PAGE404: '*',
   LOGIN: '/login',
   SIGNUP: '/login/signup',
-  PLAYLIST: '/playlist',
+  PLAYLIST: '/playlist/:playlistId',
   CREATEPLAYLIST: '/createplaylist',
   PROFILE: '/profile',
   USER_PROFILE: '/profile/:userId',

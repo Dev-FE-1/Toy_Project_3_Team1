@@ -3,6 +3,7 @@ export const colors = {
   red: '#EE1010',
   primaryPurple: '#612FF1',
   primaryPurpleHover: '#5C33D0',
+  lightPurPle: 'rgba(97, 47, 241, 0.1)',
   lightestGray: '#F7F7F7',
   brightGray: '#EEEEEE',
   brightGrayHover: '#E4E4E4',
