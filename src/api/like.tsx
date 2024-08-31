@@ -1,42 +1,67 @@
-import { useState, useEffect } from 'react'
-import { getFirestore, doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  deleteDoc,
+  getDoc,
+  getCountFromServer,
+  collection,
+} from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { Heart } from 'lucide-react'
 
-const LikeButton = ({ playlistId }) => {
-  const [isLiked, setIsLiked] = useState(false)
+const LikeButton = ({ playlistId }: { playlistId: string }) => {
   const db = getFirestore()
   const auth = getAuth()
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    checkLikeStatus()
-  }, [playlistId])
+  const likeDocRef = doc(db, `PLAYLISTS/${playlistId}/LIKERS/${auth.currentUser?.uid}`)
+  const likersCollectionRef = collection(db, `PLAYLISTS/${playlistId}/LIKERS`)
 
-  const checkLikeStatus = async () => {
-    const likeDoc = doc(db, `PLAYLISTS/${playlistId}/LIKERS/${auth.currentUser?.uid}`)
-    const docSnap = await getDoc(likeDoc)
-    setIsLiked(docSnap.exists())
-  }
+  const { data: isLiked } = useQuery({
+    queryKey: ['like', playlistId, auth.currentUser?.uid],
+    queryFn: async () => {
+      const docSnap = await getDoc(likeDocRef)
+      return docSnap.exists()
+    },
+  })
 
-  const toggleLike = async () => {
-    const likeDoc = doc(db, `PLAYLISTS/${playlistId}/LIKERS/${auth.currentUser?.uid}`)
+  const { data: likeCount } = useQuery({
+    queryKey: ['likeCount', playlistId],
+    queryFn: async () => {
+      const snapshot = await getCountFromServer(likersCollectionRef)
+      return snapshot.data().count
+    },
+  })
 
-    try {
+  const likeMutation = useMutation({
+    mutationFn: async () => {
       if (isLiked) {
-        await deleteDoc(likeDoc)
+        await deleteDoc(likeDocRef)
       } else {
-        await setDoc(likeDoc, {
+        await setDoc(likeDocRef, {
           userRef: doc(db, `users/${auth.currentUser?.uid}`),
           timestamp: new Date(),
         })
       }
-      setIsLiked(!isLiked)
-    } catch (error) {
-      console.error('좋아요 토글 중 오류 발생:', error)
-    }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['like', playlistId, auth.currentUser?.uid])
+      queryClient.invalidateQueries(['likeCount', playlistId])
+    },
+  })
+
+  const toggleLike = () => {
+    likeMutation.mutate()
   }
 
-  return <Heart onClick={toggleLike} style={{ color: isLiked ? 'red' : 'initial' }} />
+  return (
+    <>
+      <Heart onClick={toggleLike} style={{ color: isLiked ? 'red' : 'initial' }} />
+      <span>{likeCount} </span>
+    </>
+  )
 }
 
 export default LikeButton
