@@ -1,72 +1,25 @@
 import styled from '@emotion/styled'
-import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
-import { userInfo } from '@/api/profile/profileInfo'
-import { getPlayList } from '@/api/playlist/getPlayList'
 import { fontSize, fontWeight } from '@/constants/font'
-import { auth } from '@/firebase/firebaseConfig'
-import { onAuthStateChanged } from 'firebase/auth'
-import { showplaylistProps } from '@/types/playlistType'
 import Button from '@/components/common/Button/Button'
 import ButtonLink from '@/components/common/Button/ButtonLink'
 import { colors } from '@/constants/color'
 import Profile from '@/assets/profile_logo.jpg'
+import { useUserData } from '@/hooks/useUserData'
+import { usePlaylistData } from '@/hooks/usePlaylistData'
 
 const ProfilePage = () => {
   const { userId } = useParams()
-  const [isMyProfile, setIsMyProfile] = useState(false)
-  const [userData, setUserData] = useState({
-    userName: '',
-    userId: '',
-    userImg: '',
-    userEmail: '',
-    userBio: '',
-    followerLength: 0,
-    followingLength: 0,
-    playlistLength: 0,
-  })
-  const [playlistData, setPlayListData] = useState<showplaylistProps[]>([])
+  const userData = useUserData(userId)
+  const playlistData = usePlaylistData()
+  const isMyProfile = !userId || userId === userData.userId
 
   const handleAllLists = () => {}
 
   //const handlePublicLists = () => {}
 
   //const handlePrivateLists = () => {}
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await userInfo()
-      if (data) {
-        setUserData({
-          userName: data?.userName || '사용자',
-          userId: data?.userId || 'Unknown',
-          userImg: data?.userImg || Profile,
-          userEmail: data?.userEmail || 'Unknown',
-          userBio: data?.userBio || '안녕하세요.',
-          followerLength: data?.followerLength || 0,
-          followingLength: data?.followingLength || 0,
-          playlistLength: data?.playlistLength || 0,
-        })
-        setIsMyProfile(!userId || userId === data?.userId)
-      }
-    }
-
-    const fetchPlayListData = async () => {
-      const data = await getPlayList()
-      if (data) {
-        setPlayListData(data)
-      }
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        fetchUserData()
-        fetchPlayListData()
-      }
-    })
-    return () => unsubscribe()
-  }, [userId])
 
   return (
     <Container>
