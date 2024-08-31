@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { db } from '@/firebase/firebaseConfig'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 
@@ -9,26 +9,46 @@ interface Playlist {
 }
 
 const PlaylistSearch: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTag, setSearchTag] = useState('')
   const [playlists, setPlaylists] = useState<Playlist[]>([])
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) return
+  useEffect(() => {
+    const fetchAllPlaylists = async () => {
+      const playlistsRef = collection(db, 'PLAYLISTS')
+      const snapshot = await getDocs(playlistsRef)
+      const allPlaylists = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Playlist)
+      console.log('모든 플레이리스트:', allPlaylists)
+    }
+    fetchAllPlaylists()
+  }, [])
 
-    const playlistsRef = collection(db, 'PLAYSLISTS')
-    console.log('playlistsRef:', playlistsRef)
-    const q = query(playlistsRef, where('tags', 'array-contains', searchTerm.toLowerCase()))
-    console.log('q:', q)
+  const handleSearch = async () => {
+    if (!searchTag.trim()) return
+
+    const formattedTag = formatTag(searchTag)
+    const playlistsRef = collection(db, 'PLAYLISTS')
+    console.log('검색 태그:', formattedTag)
+
+    const q = query(playlistsRef, where('tags', 'array-contains', formattedTag))
+
     try {
       const querySnapshot = await getDocs(q)
       const results: Playlist[] = []
       querySnapshot.forEach((doc) => {
-        results.push({ id: doc.id, ...doc.data() } as Playlist)
+        const playlist = { id: doc.id, ...doc.data() } as Playlist
+        console.log('찾은 플레이리스트:', playlist)
+        results.push(playlist)
       })
       setPlaylists(results)
+      console.log('검색 결과:', results)
     } catch (error) {
-      console.error('Error searching playlists:', error)
+      console.error('플레이리스트 검색 중 오류 발생:', error)
     }
+  }
+
+  const formatTag = (tag: string): string => {
+    // 앞뒤 공백을 제거하고 '#'을 추가
+    return `#${tag.trim()}`
   }
 
   return (
@@ -36,9 +56,9 @@ const PlaylistSearch: React.FC = () => {
       <h1>플레이리스트 검색</h1>
       <input
         type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="태그를 입력하세요"
+        value={searchTag}
+        onChange={(e) => setSearchTag(e.target.value)}
+        placeholder="태그를 입력하세요 (예: 힙합)"
       />
       <button onClick={handleSearch}>검색</button>
 

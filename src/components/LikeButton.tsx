@@ -36,4 +36,5 @@ const StyledHeart = styled(Heart)`
 `
 const StyledCount = styled.div`
   color: ${(props) => (props.isLiked ? 'red' : 'initial')};
+  display: inline-block;
 `
