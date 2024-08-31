@@ -6,21 +6,38 @@ import {
   getDocs,
   orderBy,
   DocumentData,
-  limit,
   Timestamp,
+  limit,
+  startAfter,
 } from 'firebase/firestore'
 import { CommentType } from '@/types/commentType'
 import np_logo from '@/assets/np_logo.svg'
 
 const userCache: Record<string, { name: string; img: string }> = {}
 
-export const getComment = async (page: number, pageSize: number = 10): Promise<CommentType[]> => {
+export const getComment = async (
+  // TODO : Any ...
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pageParam: any
+  // TODO : Any ...
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<{ comments: CommentType[]; nextCursor: any }> => {
   try {
-    const q = query(
+    const pageSize = 5
+    let q = query(
       collection(db, `PLAYLISTS/playlistId/COMMENTS`),
       orderBy('createdAt', 'desc'),
-      limit(page * pageSize)
+      limit(pageSize)
     )
+
+    if (pageParam) {
+      q = query(
+        collection(db, `PLAYLISTS/playlistId/COMMENTS`),
+        orderBy('createdAt', 'desc'),
+        startAfter(pageParam),
+        limit(pageSize)
+      )
+    }
 
     const snapshot = await getDocs(q)
 
@@ -61,7 +78,9 @@ export const getComment = async (page: number, pageSize: number = 10): Promise<C
       })
     )
 
-    return commentsData
+    const nextCursor = snapshot.docs[snapshot.docs.length - 1]
+
+    return { comments: commentsData, nextCursor }
   } catch (error) {
     console.error('Error fetching comments:', error)
     throw new Error('Failed to fetch comments')

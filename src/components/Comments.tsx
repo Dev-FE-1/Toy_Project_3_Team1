@@ -1,25 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { getComment } from '@/api/comment/getComment'
 import { addComment } from '@/api/comment/addComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
-import { CommentType } from '@/types/commentType'
 import formatDate from '@/utils/formatDate'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { CommentType } from '@/types/commentType'
 
 const Comments = () => {
   const [comment, setComment] = useState('')
-  const [comments, setComments] = useState<CommentType[]>([])
   const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
-  const [page, setPage] = useState(1)
   const [warning, setWarning] = useState('')
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<
+    CommentType,
+    Error
+  >({
+    queryKey: ['comments'],
+    // TODO : 탄스택 인피니티 쿼리 사용
+    queryFn: ({ pageParam }) => getComment(pageParam),
+    getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+    staleTime: 1000 * 60 * 5,
+  })
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
       await addComment(comment)
       setComment('')
-      const updatedComments = await getComment(page)
-      setComments(updatedComments)
     }
   }
 
@@ -40,18 +48,6 @@ const Comments = () => {
     }))
   }
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const newComments = await getComment(page)
-        setComments((prevComments) => [...prevComments, ...newComments])
-      } catch (error) {
-        console.error('Error fetching comments:', error)
-      }
-    }
-    fetchComments()
-  }, [page])
-
   return (
     <Container>
       <div>
@@ -62,7 +58,7 @@ const Comments = () => {
             onChange={handleCommentChange}
             value={comment}
           />
-          <button className="button" type="submit">
+          <button className="submit-button" type="submit">
             댓글
           </button>
         </form>
@@ -70,29 +66,44 @@ const Comments = () => {
       </div>
 
       <div className="comment-area">
-        {comments.map((comment, index) => (
-          <div key={index} className="comment-card">
-            <img className="user-img" src={comment.userImg} alt="User Image" />
-            <p className="user-name">{comment.userName} </p>
-            <p className="comment-date">{formatDate(comment.createdAt)}</p>
-            <div className="comment">
-              {comment.comment.length > 250 && !expandedComments[comment.id] ? (
-                <>
-                  {comment.comment.slice(0, 250)} ···
-                  <div className="show-more" onClick={() => toggleCommentExpansion(comment.id)}>
-                    자세히 보기
+        <>
+          {data?.pages.map((page, i) => (
+            <React.Fragment key={i}>
+              {(page as { comments: CommentType[] }).comments.map((comment: CommentType) => (
+                <div key={comment.id} className="comment-card">
+                  <img className="user-img" src={comment.userImg} alt="User Image" />
+                  <p className="user-name">{comment.userName} </p>
+                  <p className="comment-date">{formatDate(comment.createdAt)}</p>
+                  <div className="comment">
+                    {comment.comment.length > 250 && !expandedComments[comment.id] ? (
+                      <>
+                        {comment.comment.slice(0, 250)} ···
+                        <div
+                          className="over250-letters"
+                          onClick={() => toggleCommentExpansion(comment.id)}
+                        >
+                          자세히 보기
+                        </div>
+                      </>
+                    ) : (
+                      comment.comment
+                    )}
+                    {expandedComments[comment.id]}{' '}
                   </div>
-                </>
-              ) : (
-                comment.comment
-              )}
-              {expandedComments[comment.id]}{' '}
-            </div>
-          </div>
-        ))}
-        <button className="more-button" onClick={() => setPage(page + 1)}>
-          +
-        </button>
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+          {hasNextPage && (
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="more-comments"
+            >
+              {isFetchingNextPage ? '불러오는 중' : '+'}
+            </button>
+          )}
+        </>
       </div>
     </Container>
   )
@@ -106,10 +117,11 @@ const Container = styled.div`
     justify-content: center;
   }
 
-  .warning {
-    text-align: center;
-    color: red;
-    font-size: 0.8em;
+  .submit-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
   }
 
   .textarea {
@@ -122,12 +134,13 @@ const Container = styled.div`
       outline: none;
     }
   }
-  .button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
+
+  .warning {
+    text-align: center;
+    color: red;
+    font-size: 0.8em;
   }
+
   .comment-area {
     margin-top: 20px;
   }
@@ -155,12 +168,14 @@ const Container = styled.div`
     word-break: break-all;
   }
 
-  .show-more {
+  .over250-letters {
     color: ${colors.darkGray};
     cursor: pointer;
   }
-
-  .more-button {
+  .more-comments {
+    display: block;
     cursor: pointer;
-  }
+    &:disabled {
+      cursor: not-allowed;
+    }
 `

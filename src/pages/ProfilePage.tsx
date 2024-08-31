@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, Outlet } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
