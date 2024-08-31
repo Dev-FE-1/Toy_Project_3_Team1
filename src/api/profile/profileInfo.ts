@@ -17,13 +17,12 @@ export interface FollowingProps {
   img: string | null
 }
 
-export const userInfo = async () => {
+export const userInfo = async (uid?: string) => {
   try {
-    const user = auth.currentUser
+    const user = uid ? { uid } : auth.currentUser
 
-    if (user) {
-      const uid = user.uid
-      const userRef = doc(db, 'USERS', uid)
+    if (user && user.uid) {
+      const userRef = doc(db, 'USERS', user.uid)
       const userDoc = await getDoc(userRef)
 
       if (!userDoc.exists()) {
@@ -35,7 +34,7 @@ export const userInfo = async () => {
       const [followerSnapShot, followingSnapShot, querySnapShot] = await Promise.all([
         getDocs(collection(userRef, 'Followers')),
         getDocs(collection(userRef, 'Followings')),
-        getDocs(query(collection(db, 'PLAYLISTS'), where('author', '==', `/USERS/${uid}`))),
+        getDocs(query(collection(db, 'PLAYLISTS'), where('author', '==', `/USERS/${user.uid}`))),
       ])
 
       const followerLength = followerSnapShot.size

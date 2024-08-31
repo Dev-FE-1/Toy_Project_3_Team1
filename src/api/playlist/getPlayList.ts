@@ -3,11 +3,11 @@ import { collection, getDocs, getDoc, query, where, doc } from 'firebase/firesto
 import { showplaylistProps, videoListProps } from '@/types/playlistType'
 import formatDate from '@/utils/formatDate'
 
-export const getPlayList = async () => {
+export const getPlayList = async (userId: string | undefined) => {
   try {
-    const user = auth.currentUser
-    if (user) {
-      const uid = user.uid
+    const uid = userId || auth.currentUser?.uid
+
+    if (uid) {
       const playlistRef = collection(db, 'PLAYLISTS')
       const q = query(playlistRef, where('author', '==', `/USERS/${uid}`))
       const querySnapShot = await getDocs(q)
@@ -30,7 +30,6 @@ export const getPlayList = async () => {
           thumbnail: thumbnail || 'not valid thumbnail',
         })
       }
-
       return playlists
     }
   } catch (error) {
