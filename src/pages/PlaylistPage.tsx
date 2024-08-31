@@ -1,16 +1,14 @@
 import styled from '@emotion/styled'
-import { getPlayListDetails } from '@/api/playlist/getPlayList'
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { videoListProps } from '@/types/playlistType'
+import { useState } from 'react'
 import { colors } from '@/constants/color'
 import Button from '@/components/common/Button/Button'
+import { usePlaylistdetail } from '@/hooks/usePlaylistDetail'
 
 const PlaylistPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>()
-  const [videos, setVideos] = useState<videoListProps[]>([])
-  const [selectedVideo, setSelectedVideo] = useState<videoListProps>()
   const [view, setView] = useState<'videos' | 'comments'>('videos')
+  const { videos, selectedVideo, setSelectedVideo } = usePlaylistdetail(playlistId)
 
   const renderVideos = () => (
     <VideoList>
@@ -36,19 +34,6 @@ const PlaylistPage = () => {
       <div className="comment-item">댓글 들어가야함</div>
     </CommentList>
   )
-
-  useEffect(() => {
-    const fetchPlaylistDetails = async () => {
-      if (playlistId) {
-        const playlistDetails = await getPlayListDetails(playlistId)
-        setVideos(playlistDetails)
-        if (playlistDetails.length > 0) {
-          setSelectedVideo(playlistDetails[0])
-        }
-      }
-    }
-    fetchPlaylistDetails()
-  }, [playlistId])
 
   return (
     <Container>
