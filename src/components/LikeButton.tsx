@@ -8,14 +8,10 @@ const LikeButton = ({ playlistId }: { playlistId: string }) => {
   return (
     <>
       <Container>
-        <Heart
-          className="like-button"
-          onClick={toggleLike}
-          style={{ color: isLiked ? 'red' : 'initial' }}
-        />
-        <span className="like-count" style={{ color: isLiked ? 'red' : 'initial' }}>
+        <StyledHeart className="like-button" onClick={toggleLike} isLiked={isLiked} />
+        <StyledCount className="like-count" isLiked={isLiked}>
           {likeCount}
-        </span>
+        </StyledCount>
       </Container>
     </>
   )
@@ -33,4 +29,11 @@ const Container = styled.div`
   .like-count {
     font-size: 0.8em;
   }
+`
+
+const StyledHeart = styled(Heart)`
+  color: ${(props) => (props.isLiked ? 'red' : 'initial')};
+`
+const StyledCount = styled.div`
+  color: ${(props) => (props.isLiked ? 'red' : 'initial')};
 `

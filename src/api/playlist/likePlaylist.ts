@@ -34,7 +34,7 @@ export const useLikeButton = (playlistId: string) => {
   }, [playlistId])
 
   const isLiked = likeData.likers.includes(auth.currentUser?.uid)
-  const likeCount = likeData.likeCount
+  const { likeCount } = likeData
 
   const likeMutation = useMutation({
     mutationFn: async () => {
