@@ -1,6 +1,7 @@
 import { auth, db } from '@/firebase/firebaseConfig'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDocs, getDoc, query, where, doc } from 'firebase/firestore'
 import { showplaylistProps, videoListProps } from '@/types/playlistType'
+import formatDate from '@/utils/formatDate'
 
 export const getPlayList = async () => {
   try {
@@ -39,13 +40,34 @@ export const getPlayList = async () => {
 
 export const getPlayListDetails = async (playlistId: string) => {
   try {
+    const playlistInfoRef = doc(db, 'PLAYLISTS', `${playlistId}`)
+    const InfoSnapShot = await getDoc(playlistInfoRef)
+
     const videosRef = collection(db, `PLAYLISTS/${playlistId}/videos`)
     const videoSnapShot = await getDocs(videosRef)
+
+    if (!InfoSnapShot.exists()) {
+      console.error('Playlist not found')
+      return []
+    }
+    const playlistData = InfoSnapShot.data()
+
+    const authorUID = playlistData?.author?.split('/').pop()
+
+    const userDocRef = doc(db, 'USERS', authorUID)
+    const userDoc = await getDoc(userDocRef)
+    const userData = userDoc.data()
+
     const videos: videoListProps[] = videoSnapShot.docs.map((item) => ({
       channelTitle: item.data().channelTitle,
-      title: item.data().channelTitle,
+      title: item.data().title,
       thumbnail: item.data().thumbnail,
       url: item.data().url,
+      author: userData?.id,
+      authorImg: userData?.img,
+      uploadDate: playlistData.createdAt ? formatDate(playlistData?.createdAt) : '',
+      tags: playlistData.tags,
+      playlistTitle: playlistData.title,
     }))
 
     return videos

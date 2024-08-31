@@ -1,12 +1,16 @@
-export interface videoListProps {
+export interface showplaylistProps {
+  playlistId?: string
   title: string
   thumbnail: string
-  url: string
-  channelTitle: string
 }
 
-export interface showplaylistProps {
-  playlistId: string
-  title: string
-  thumbnail: string
+export interface videoListProps extends showplaylistProps {
+  url: string
+  channelTitle: string
+  uploadDate?: string
+  author?: string
+  authorImg?: string
+  tags?: string[]
+  playlistTitle?: string
+  likes?: number
 }
