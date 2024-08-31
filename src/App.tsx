@@ -27,6 +27,7 @@ const router = createBrowserRouter([
       { path: PATH.EDITPW, element: <EditPwPage /> },
       { path: PATH.SEARCH, element: <SearchPage /> },
       { path: PATH.PLAYLIST, element: <PlaylistPage /> },
+      { path: PATH.USER_PROFILE, element: <ProfilePage /> },
       { path: PATH.CREATEPLAYLIST, element: <CreatePlaylistPage /> },
       { path: PATH.PROFILE, element: <ProfilePage /> },
       { path: PATH.EDITPROFILE, element: <EditProfilePage /> },

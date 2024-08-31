@@ -1,12 +1,6 @@
 import { auth, db } from '@/firebase/firebaseConfig'
 import { doc, addDoc, getDoc, collection } from 'firebase/firestore'
-
-export interface videoListProps {
-  title: string
-  thumbnail: string
-  url: string
-  channelTitle: string
-}
+import { videoListProps } from '@/types/playlistType'
 
 export const createPlayList = async (
   title: string,
