@@ -3,7 +3,8 @@ import styled from '@emotion/styled'
 import { X } from 'lucide-react'
 import { colors } from '@/constants/color'
 import { fontSize } from '@/constants/font'
-import { videoListProps, createPlayList } from '@/api/playlist/createPlayList'
+import { createPlayList } from '@/api/playlist/createPlayList'
+import { videoListProps } from '@/types/playlistType'
 
 const CreatePlaylistPage = () => {
   const [title, setTitle] = useState('')
