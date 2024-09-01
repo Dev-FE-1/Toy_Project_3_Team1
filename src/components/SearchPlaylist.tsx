@@ -70,9 +70,6 @@ const SearchPlaylist = () => {
 export default SearchPlaylist
 
 const Container = styled.div`
-  root. {
-    display: flex;
-  }
   .recomand-search {
     display: flex;
   }
