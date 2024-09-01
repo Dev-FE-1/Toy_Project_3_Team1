@@ -9,7 +9,7 @@ import { colors } from '@/constants/color'
 import Profile from '@/assets/profile_logo.jpg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
-import { filterPlaylist } from '@/types/playlistType'
+import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
@@ -22,12 +22,30 @@ const ProfilePage = () => {
     setFilter(newFilter)
   }
 
+  const filteredMap = {
+    all: () => true,
+    public: (playlistData: showplaylistProps) => !playlistData.isPrivate,
+    private: (playlistData: showplaylistProps) => playlistData.isPrivate,
+  }
+
   const filteredLists = playlistData.filter((playlistData) => {
-    if (!isMyProfile && playlistData.isPrivate) return false
-    if (filter == 'all') return true
-    if (filter === 'public') return !playlistData.isPrivate
-    if (filter === 'private') return playlistData.isPrivate
+    return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
   })
+
+  const filterBtns = [
+    {
+      label: '전체',
+      value: 'all' as filterPlaylist,
+    },
+    {
+      label: '공개',
+      value: 'public' as filterPlaylist,
+    },
+    {
+      label: '비공개',
+      value: 'private' as filterPlaylist,
+    },
+  ]
 
   return (
     <Container>
@@ -66,15 +84,11 @@ const ProfilePage = () => {
         <div className="text-playlist">플레이리스트</div>
         {isMyProfile && (
           <div className="section-btn">
-            <Button size="small" onClick={() => handleFilterChange('all')}>
-              전체
-            </Button>
-            <Button size="small" onClick={() => handleFilterChange('public')}>
-              공개
-            </Button>
-            <Button size="small" onClick={() => handleFilterChange('private')}>
-              비공개
-            </Button>
+            {filterBtns.map((btn) => (
+              <Button key={btn.value} size="small" onClick={() => handleFilterChange(btn.value)}>
+                {btn.label}
+              </Button>
+            ))}
           </div>
         )}
         {filteredLists.map((playlist, idx) => (
