@@ -28,6 +28,7 @@ export const getPlayList = async (userId?: string) => {
           playlistId: doc.id,
           title: playlistData.title || 'Untitled',
           thumbnail: thumbnail || 'not valid thumbnail',
+          isPrivate: playlistData.isPrivate,
         })
       }
       return playlists

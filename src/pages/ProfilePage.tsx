@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
@@ -8,18 +9,44 @@ import { colors } from '@/constants/color'
 import Profile from '@/assets/profile_logo.jpg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
+import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
   const userData = useUserData(userId)
   const playlistData = usePlaylistData(userId)
   const isMyProfile = !userId || userId === userData.userId
+  const [filter, setFilter] = useState<filterPlaylist>('all')
 
-  const handleAllLists = () => {}
+  const handleFilterChange = (newFilter: filterPlaylist) => {
+    setFilter(newFilter)
+  }
 
-  //const handlePublicLists = () => {}
+  const filteredMap = {
+    all: () => true,
+    public: (playlistData: showplaylistProps) => !playlistData.isPrivate,
+    private: (playlistData: showplaylistProps) => playlistData.isPrivate,
+  }
 
-  //const handlePrivateLists = () => {}
+  const filteredLists = playlistData.filter((playlistData) => {
+    return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
+  })
+
+  const filterBtns = [
+    {
+      label: '전체',
+      value: 'all' as filterPlaylist,
+    },
+    {
+      label: '공개',
+      value: 'public' as filterPlaylist,
+    },
+    {
+      label: '비공개',
+      value: 'private' as filterPlaylist,
+    },
+  ]
+
   return (
     <Container>
       <div className="section-head">
@@ -57,21 +84,24 @@ const ProfilePage = () => {
         <div className="text-playlist">플레이리스트</div>
         {isMyProfile && (
           <div className="section-btn">
-            <Button size="small" onClick={handleAllLists}>
-              전체
-            </Button>
-            <Button size="small">공개</Button>
-            <Button size="small">비공개</Button>
+            {filterBtns.map((btn) => (
+              <Button key={btn.value} size="small" onClick={() => handleFilterChange(btn.value)}>
+                {btn.label}
+              </Button>
+            ))}
           </div>
         )}
-        {playlistData.map((playlist, idx) => (
+        {filteredLists.map((playlist, idx) => (
           <div className="title-playlist" key={idx}>
             <div className="title-thumbnail">
               <Link to={`/playlist/${playlist.playlistId}`}>
                 <img src={playlist.thumbnail} alt={playlist.title} />
               </Link>
             </div>
-            <div className="title-video">{playlist.title}</div>
+            <div className="title-video">
+              {playlist.title}
+              {playlist.isPrivate && <div className="tag-private">비공개</div>}
+            </div>
           </div>
         ))}
       </div>
@@ -157,6 +187,13 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+
+    .tag-private {
+      background-color: ${colors.lightPurPle};
+      width: 54px;
+      border-radius: 15px;
+      text-align: center;
+    }
   }
 
   .title-thumbnail {
