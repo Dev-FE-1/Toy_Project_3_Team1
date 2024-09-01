@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { getComment } from '@/api/comment/getComment'
 import { addComment } from '@/api/comment/addComment'
+import { deleteComment } from '@/api/comment/deleteComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
 import formatDate from '@/utils/formatDate'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CommentType } from '@/types/commentType'
+import { auth } from '@/firebase/firebaseConfig'
+import { Trash2 } from 'lucide-react'
 
 const COMMENTS_QUERY_KEY = 'comments'
 
@@ -46,6 +49,17 @@ const Comments = () => {
     }))
   }
 
+  const handleDeleteComment = async (commentId: string) => {
+    if (window.confirm('삭제하시겠습니까?')) {
+      await deleteComment(commentId)
+      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY] })
+    }
+  }
+
+  const isCurrentUserComment = (comment: CommentType) => {
+    return auth.currentUser?.uid === comment.userRef.split('/')[1]
+  }
+
   return (
     <Container>
       <div>
@@ -65,14 +79,21 @@ const Comments = () => {
 
       <div className="comment-area">
         {isLoading ? (
-          <p>댓글을 불러오는 중입니다...</p>
+          <p>댓글을 불러오는 중입니다.</p>
         ) : (
           <>
             {comments?.map((comment: CommentType) => (
               <div key={comment.id} className="comment-card">
                 <img className="user-img" src={comment.userImg} alt="User Image" />
                 <p className="user-name">{comment.userName} </p>
-                <p className="comment-date">{formatDate(comment.createdAt)}</p>
+                <div className="comment-date">
+                  {formatDate(comment.createdAt)}
+                  {isCurrentUserComment(comment) && (
+                    <div className="delete-comment">
+                      <StyledTrash onClick={() => handleDeleteComment(comment.id)} size={14} />
+                    </div>
+                  )}
+                </div>
                 <div className="comment">
                   {comment.comment.length > 250 && !expandedComments[comment.id] ? (
                     <>
@@ -81,7 +102,7 @@ const Comments = () => {
                         className="over250-letters"
                         onClick={() => toggleCommentExpansion(comment.id)}
                       >
-                        자세히 보기
+                        댓글 더보기
                       </div>
                     </>
                   ) : (
@@ -165,13 +186,16 @@ const Container = styled.div`
   }
 
   .over250-letters {
-    color: ${colors.darkGray};
+    color: ${colors.gray};
     cursor: pointer;
   }
-  .more-comments {
-    display: block;
+  .delete-comment {
+    display: inline-block;
     cursor: pointer;
-    &:disabled {
-      cursor: not-allowed;
-    }
+  }
+`
+const StyledTrash = styled(Trash2)`
+  padding-top: 4px;
+  color: ${colors.darkGray};
+  cursor: pointer;
 `
