@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
 import { CSSProperties } from 'react'
 
-export interface IInputProps {
+export interface InputProps {
   value: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent) => void
@@ -15,8 +15,10 @@ export interface IInputProps {
   className?: string
 }
 
+type InputComponentProps = Pick<InputProps, 'inputWidth'>
+
 const Input = React.memo(
-  forwardRef<HTMLInputElement, IInputProps>(
+  forwardRef<HTMLInputElement, InputProps>(
     (
       {
         value,
@@ -47,7 +49,7 @@ const Input = React.memo(
   )
 )
 
-const InputComponent = styled.input<Pick<IInputProps, 'inputWidth'>>`
+const InputComponent = styled.input<InputComponentProps>`
   width: ${(props) => props.inputWidth};
   height: 50px;
   padding: 12px;
