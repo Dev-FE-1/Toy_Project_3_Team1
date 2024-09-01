@@ -9,19 +9,21 @@ import { colors } from '@/constants/color'
 import Profile from '@/assets/profile_logo.jpg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
+import { filterPlaylist } from '@/types/playlistType'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
   const userData = useUserData(userId)
   const playlistData = usePlaylistData(userId)
   const isMyProfile = !userId || userId === userData.userId
-  const [filter, setFilter] = useState<'all' | 'public' | 'private'>('all')
+  const [filter, setFilter] = useState<filterPlaylist>('all')
 
-  const handleFilterChange = (newFilter: 'all' | 'public' | 'private') => {
+  const handleFilterChange = (newFilter: filterPlaylist) => {
     setFilter(newFilter)
   }
 
   const filteredLists = playlistData.filter((playlistData) => {
+    if (!isMyProfile && playlistData.isPrivate) return false
     if (filter == 'all') return true
     if (filter === 'public') return !playlistData.isPrivate
     if (filter === 'private') return playlistData.isPrivate

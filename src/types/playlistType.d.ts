@@ -15,3 +15,5 @@ export interface videoListProps extends showplaylistProps {
   playlistTitle?: string
   likes?: number
 }
+
+export type filterPlaylist = 'all' | 'public' | 'private'
