@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Link, useParams, Outlet } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
@@ -10,9 +10,9 @@ import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 
 const ProfilePage = () => {
-  const { userId } = useParams()
+  const { userId } = useParams<{ userId?: string }>()
   const userData = useUserData(userId)
-  const playlistData = usePlaylistData()
+  const playlistData = usePlaylistData(userId)
   const isMyProfile = !userId || userId === userData.userId
 
   const handleAllLists = () => {}
@@ -20,7 +20,6 @@ const ProfilePage = () => {
   //const handlePublicLists = () => {}
 
   //const handlePrivateLists = () => {}
-
   return (
     <Container>
       <div className="section-head">

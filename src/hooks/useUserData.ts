@@ -4,7 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { userInfo } from '@/api/profile/profileInfo'
 import Profile from '@/assets/profile_logo.jpg'
 
-export const useUserData = (userId: string | undefined) => {
+export const useUserData = (userId?: string) => {
   const [userData, setUserData] = useState({
     userName: '',
     userId: '',
@@ -18,7 +18,7 @@ export const useUserData = (userId: string | undefined) => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const data = await userInfo()
+      const data = await userInfo(userId)
       if (data) {
         setUserData({
           userName: data?.userName || '사용자',
@@ -33,12 +33,16 @@ export const useUserData = (userId: string | undefined) => {
       }
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        fetchUserData()
-      }
-    })
-    return () => unsubscribe()
+    if (userId) {
+      fetchUserData()
+    } else {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          fetchUserData()
+        }
+      })
+      return () => unsubscribe()
+    }
   }, [userId])
 
   return userData

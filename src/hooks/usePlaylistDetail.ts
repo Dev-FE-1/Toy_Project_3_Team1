@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getPlayListDetails } from '@/api/playlist/getPlayList'
 import { videoListProps } from '@/types/playlistType'
 
-export const usePlaylistdetail = (playlistId: string | undefined) => {
+export const usePlaylistdetail = (playlistId?: string) => {
   const [videos, setVideos] = useState<videoListProps[]>([])
   const [selectedVideo, setSelectedVideo] = useState<videoListProps>()
   useEffect(() => {
