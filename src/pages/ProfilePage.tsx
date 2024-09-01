@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
@@ -14,12 +15,18 @@ const ProfilePage = () => {
   const userData = useUserData(userId)
   const playlistData = usePlaylistData(userId)
   const isMyProfile = !userId || userId === userData.userId
+  const [filter, setFilter] = useState<'all' | 'public' | 'private'>('all')
 
-  const handleAllLists = () => {}
+  const handleFilterChange = (newFilter: 'all' | 'public' | 'private') => {
+    setFilter(newFilter)
+  }
 
-  //const handlePublicLists = () => {}
+  const filteredLists = playlistData.filter((playlistData) => {
+    if (filter == 'all') return true
+    if (filter === 'public') return !playlistData.isPrivate
+    if (filter === 'private') return playlistData.isPrivate
+  })
 
-  //const handlePrivateLists = () => {}
   return (
     <Container>
       <div className="section-head">
@@ -57,21 +64,28 @@ const ProfilePage = () => {
         <div className="text-playlist">플레이리스트</div>
         {isMyProfile && (
           <div className="section-btn">
-            <Button size="small" onClick={handleAllLists}>
+            <Button size="small" onClick={() => handleFilterChange('all')}>
               전체
             </Button>
-            <Button size="small">공개</Button>
-            <Button size="small">비공개</Button>
+            <Button size="small" onClick={() => handleFilterChange('public')}>
+              공개
+            </Button>
+            <Button size="small" onClick={() => handleFilterChange('private')}>
+              비공개
+            </Button>
           </div>
         )}
-        {playlistData.map((playlist, idx) => (
+        {filteredLists.map((playlist, idx) => (
           <div className="title-playlist" key={idx}>
             <div className="title-thumbnail">
               <Link to={`/playlist/${playlist.playlistId}`}>
                 <img src={playlist.thumbnail} alt={playlist.title} />
               </Link>
             </div>
-            <div className="title-video">{playlist.title}</div>
+            <div className="title-video">
+              {playlist.title}
+              {playlist.isPrivate && <div className="tag-private">비공개</div>}
+            </div>
           </div>
         ))}
       </div>
@@ -157,6 +171,13 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+
+    .tag-private {
+      background-color: ${colors.lightPurPle};
+      width: 54px;
+      border-radius: 15px;
+      text-align: center;
+    }
   }
 
   .title-thumbnail {

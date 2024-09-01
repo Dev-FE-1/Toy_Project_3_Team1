@@ -1,5 +1,6 @@
 export interface showplaylistProps {
   playlistId?: string
+  isPrivate?: boolean
   title: string
   thumbnail: string
 }
