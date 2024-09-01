@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { CSSProperties, FC, ReactNode } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
@@ -8,16 +8,21 @@ import { fontSize, fontWeight } from '@/constants/font'
 type ButtonSize = 'small' | 'normal'
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text'
 
-export interface IButtonLinkProps {
+export interface ButtonLinkProps {
   children: ReactNode
   to: string
   size?: ButtonSize
   variant?: ButtonVariant
-  buttonWidth?: string
+  buttonWidth?: CSSProperties['width']
   disabled?: boolean
 }
 
-const ButtonLink: FC<IButtonLinkProps> = ({
+type ButtonLinkComponentProps = Pick<
+  ButtonLinkProps,
+  'size' | 'variant' | 'buttonWidth' | 'disabled'
+>
+
+const ButtonLink: FC<ButtonLinkProps> = ({
   children,
   to,
   size = 'normal',
@@ -86,21 +91,19 @@ const sizeStyles = {
   },
 }
 
-const ButtonLinkComponent = styled(Link)<{
-  size: ButtonSize
-  variant: ButtonVariant
-  buttonWidth?: string
-  disabled?: boolean
-}>`
+const ButtonLinkComponent = styled(Link, {
+  shouldForwardProp: (prop) =>
+    prop !== 'size' && prop !== 'variant' && prop !== 'buttonWidth' && prop !== 'disabled',
+})<ButtonLinkComponentProps>`
   ${baseStyles};
   width: ${({ buttonWidth }) => buttonWidth};
-  height: ${({ size }) => sizeStyles[size].height};
-  padding: ${({ size }) => sizeStyles[size].padding};
-  background-color: ${({ variant }) => themeColors[variant]};
-  color: ${({ variant }) => themeTextColors[variant]};
+  height: ${({ size = 'normal' }) => sizeStyles[size].height};
+  padding: ${({ size = 'normal' }) => sizeStyles[size].padding};
+  background-color: ${({ variant = 'primary' }) => themeColors[variant]};
+  color: ${({ variant = 'primary' }) => themeTextColors[variant]};
   border: ${({ variant }) => (variant === 'outline' ? `1px solid ${colors.black}` : 'none')};
   font-weight: ${({ variant }) => (variant === 'primary' ? fontWeight.bold : fontWeight.medium)};
-  font-size: ${({ size }) => sizeStyles[size].fontSize};
+  font-size: ${({ size = 'normal' }) => sizeStyles[size].fontSize};
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -112,7 +115,7 @@ const ButtonLinkComponent = styled(Link)<{
       `
       color: ${themeHoverColors.text};
     `}
-    ${({ variant, disabled }) =>
+    ${({ variant = 'primary', disabled }) =>
       variant !== 'text' &&
       !disabled &&
       `

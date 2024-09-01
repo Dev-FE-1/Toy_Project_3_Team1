@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { CSSProperties, FC, ReactNode } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
@@ -7,16 +7,18 @@ import { fontSize, fontWeight } from '@/constants/font'
 type ButtonSize = 'small' | 'normal'
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text'
 
-export interface IButtonProps {
+export interface ButtonProps {
   children: ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
   size?: ButtonSize
   variant?: ButtonVariant
-  buttonWidth?: string
+  buttonWidth?: CSSProperties['width']
   disabled?: boolean
 }
 
-const Button: FC<IButtonProps> = ({
+type ButtonComponentProps = Pick<ButtonProps, 'size' | 'variant' | 'buttonWidth' | 'disabled'>
+
+const Button: FC<ButtonProps> = ({
   children,
   onClick,
   size = 'normal',
@@ -85,21 +87,16 @@ const sizeStyles = {
   },
 }
 
-const ButtonComponent = styled.button<{
-  size: ButtonSize
-  variant: ButtonVariant
-  buttonWidth?: string
-  disabled?: boolean
-}>`
+const ButtonComponent = styled.button<ButtonComponentProps>`
   ${baseStyles};
   width: ${({ buttonWidth }) => buttonWidth};
-  height: ${({ size }) => sizeStyles[size].height};
-  padding: ${({ size }) => sizeStyles[size].padding};
-  background-color: ${({ variant }) => themeColors[variant]};
-  color: ${({ variant }) => themeTextColors[variant]};
+  height: ${({ size = 'normal' }) => sizeStyles[size].height};
+  padding: ${({ size = 'normal' }) => sizeStyles[size].padding};
+  background-color: ${({ variant = 'primary' }) => themeColors[variant]};
+  color: ${({ variant = 'primary' }) => themeTextColors[variant]};
   border: ${({ variant }) => (variant === 'outline' ? `1px solid ${colors.black}` : 'none')};
   font-weight: ${({ variant }) => (variant === 'primary' ? fontWeight.bold : fontWeight.medium)};
-  font-size: ${({ size }) => sizeStyles[size].fontSize};
+  font-size: ${({ size = 'normal' }) => sizeStyles[size].fontSize};
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -111,7 +108,7 @@ const ButtonComponent = styled.button<{
       `
       color: ${themeHoverColors.text};
     `}
-    ${({ variant, disabled }) =>
+    ${({ variant = 'primary', disabled }) =>
       variant !== 'text' &&
       !disabled &&
       `
