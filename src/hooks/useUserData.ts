@@ -4,7 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { userInfo } from '@/api/profile/profileInfo'
 import Profile from '@/assets/profile_logo.jpg'
 
-export const useUserData = (userId: string | undefined) => {
+export const useUserData = (userId?: string) => {
   const [userData, setUserData] = useState({
     userName: '',
     userId: '',
