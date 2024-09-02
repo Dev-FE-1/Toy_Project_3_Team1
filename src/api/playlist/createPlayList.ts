@@ -5,7 +5,8 @@ import { videoListProps } from '@/types/playlistType'
 export const createPlayList = async (
   title: string,
   tags: string[],
-  videoList: videoListProps[]
+  videoList: videoListProps[],
+  isPrivate: boolean
 ) => {
   try {
     const user = auth.currentUser
@@ -24,6 +25,7 @@ export const createPlayList = async (
         createdAt: new Date(),
         author: `/USERS/${uid}`,
         authorName: userName,
+        isPrivate: isPrivate,
       })
 
       const newPlaylistVideosRef = collection(newPlaylistRef, 'videos')
