@@ -6,7 +6,6 @@ export const PATH = {
   SIGNUP: '/login/signup',
   PLAYLIST: '/playlist/:playlistId',
   CREATEPLAYLIST: '/createplaylist',
-  PROFILE: '/profile',
   USER_PROFILE: '/profile/:userId',
   EDITPROFILE: '/profile/editprofile',
   FOLLOW: 'follow',

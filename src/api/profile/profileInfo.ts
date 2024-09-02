@@ -3,7 +3,7 @@ import { collection, doc, getDocs, getDoc, query, where } from 'firebase/firesto
 import { UserType } from '@/types/userType'
 
 export interface ProfileProps extends UserType {
-  follwer: FollowerProps[]
+  followers: FollowerProps[]
   following: FollowingProps[]
 }
 
@@ -17,12 +17,37 @@ export interface FollowingProps {
   img: string | null
 }
 
-export const userInfo = async (uid?: string) => {
-  try {
-    const user = uid ? { uid } : auth.currentUser
+export const getUIDFromUserId = async (userId: string) => {
+  const userQuery = query(collection(db, 'USERS'), where('id', '==', userId))
+  const querySnapshot = await getDocs(userQuery)
 
-    if (user && user.uid) {
-      const userRef = doc(db, 'USERS', user.uid)
+  if (!querySnapshot.empty) {
+    return querySnapshot.docs[0].id
+  }
+  throw new Error('User not found')
+}
+
+export const getUserIdFromUID = async (uid: string) => {
+  const userRef = doc(db, 'USERS', uid)
+  const userDoc = await getDoc(userRef)
+
+  if (!userDoc.exists()) {
+    throw new Error('User document not found')
+  }
+  const userData = userDoc.data()
+  return userData?.id
+}
+
+export const userInfo = async (userId?: string) => {
+  try {
+    let uid = auth.currentUser?.uid
+
+    if (userId && userId !== uid) {
+      uid = await getUIDFromUserId(userId)
+    }
+
+    if (uid) {
+      const userRef = doc(db, 'USERS', uid)
       const userDoc = await getDoc(userRef)
 
       if (!userDoc.exists()) {
@@ -30,16 +55,13 @@ export const userInfo = async (uid?: string) => {
       }
 
       const userData = userDoc.data() as ProfileProps
-
-      const [followerSnapShot, followingSnapShot, querySnapShot] = await Promise.all([
-        getDocs(collection(userRef, 'Followers')),
-        getDocs(collection(userRef, 'Followings')),
-        getDocs(query(collection(db, 'PLAYLISTS'), where('author', '==', `/USERS/${user.uid}`))),
+      const [querySnapShot] = await Promise.all([
+        getDocs(query(collection(db, 'PLAYLISTS'), where('author', '==', `/USERS/${uid}`))),
       ])
 
-      const followerLength = followerSnapShot.size
-      const followingLength = followingSnapShot.size
       const playlistLength = querySnapShot.size
+      const followers = userData.followers || []
+      const followings = userData.following || []
 
       return {
         userName: userData.name,
@@ -47,8 +69,8 @@ export const userInfo = async (uid?: string) => {
         userImg: userData.img,
         userEmail: userData.email,
         userBio: userData.bio,
-        followerLength,
-        followingLength,
+        followerLength: followers.length,
+        followingLength: followings.length,
         playlistLength,
       }
     }
