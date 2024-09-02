@@ -1,26 +1,26 @@
 import React, { useState } from 'react'
 import { getComment } from '@/api/comment/getComment'
 import { addComment } from '@/api/comment/addComment'
+import { deleteComment } from '@/api/comment/deleteComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
 import formatDate from '@/utils/formatDate'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CommentType } from '@/types/commentType'
+import { auth } from '@/firebase/firebaseConfig'
+import { Trash2 } from 'lucide-react'
+
+const COMMENTS_QUERY_KEY = 'comments'
 
 const Comments = () => {
   const [comment, setComment] = useState('')
   const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
   const [warning, setWarning] = useState('')
+  const queryClient = useQueryClient()
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<
-    CommentType,
-    Error
-  >({
-    queryKey: ['comments'],
-    // TODO : 탄스택 인피니티 쿼리 사용
-    queryFn: ({ pageParam }) => getComment(pageParam),
-    getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
-    staleTime: 1000 * 60 * 5,
+  const { data: comments, isLoading } = useQuery<CommentType[]>({
+    queryKey: [COMMENTS_QUERY_KEY],
+    queryFn: () => getComment(),
   })
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,6 +28,7 @@ const Comments = () => {
     if (comment.trim()) {
       await addComment(comment)
       setComment('')
+      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY] })
     }
   }
 
@@ -48,6 +49,17 @@ const Comments = () => {
     }))
   }
 
+  const handleDeleteComment = async (commentId: string) => {
+    if (window.confirm('삭제하시겠습니까?')) {
+      await deleteComment(commentId)
+      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY] })
+    }
+  }
+
+  const isCurrentUserComment = (comment: CommentType) => {
+    return auth.currentUser?.uid === comment.userRef.split('/')[1]
+  }
+
   return (
     <Container>
       <div>
@@ -66,44 +78,49 @@ const Comments = () => {
       </div>
 
       <div className="comment-area">
-        <>
-          {data?.pages.map((page, i) => (
-            <React.Fragment key={i}>
-              {(page as { comments: CommentType[] }).comments.map((comment: CommentType) => (
-                <div key={comment.id} className="comment-card">
-                  <img className="user-img" src={comment.userImg} alt="User Image" />
-                  <p className="user-name">{comment.userName} </p>
-                  <p className="comment-date">{formatDate(comment.createdAt)}</p>
-                  <div className="comment">
-                    {comment.comment.length > 250 && !expandedComments[comment.id] ? (
-                      <>
-                        {comment.comment.slice(0, 250)} ···
-                        <div
-                          className="over250-letters"
-                          onClick={() => toggleCommentExpansion(comment.id)}
-                        >
-                          자세히 보기
-                        </div>
-                      </>
-                    ) : (
-                      comment.comment
-                    )}
-                    {expandedComments[comment.id]}{' '}
-                  </div>
+        {isLoading ? (
+          <p>댓글을 불러오는 중입니다.</p>
+        ) : (
+          <>
+            {comments?.map((comment: CommentType) => (
+              <div key={comment.id} className="comment-card">
+                <img className="user-img" src={comment.userImg} alt="User Image" />
+                <p className="user-name">{comment.userName} </p>
+                <div className="comment-date">
+                  {formatDate(comment.createdAt)}
+                  {isCurrentUserComment(comment) && (
+                    <div className="delete-comment">
+                      <StyledTrash onClick={() => handleDeleteComment(comment.id)} size={14} />
+                    </div>
+                  )}
                 </div>
-              ))}
-            </React.Fragment>
-          ))}
-          {hasNextPage && (
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-              className="more-comments"
-            >
-              {isFetchingNextPage ? '불러오는 중' : '+'}
-            </button>
-          )}
-        </>
+                <div className="comment">
+                  {comment.comment.length > 250 && !expandedComments[comment.id] ? (
+                    <>
+                      {comment.comment.slice(0, 250)} ···
+                      <div
+                        className="over250-letters"
+                        onClick={() => toggleCommentExpansion(comment.id)}
+                      >
+                        댓글 더보기
+                      </div>
+                    </>
+                  ) : (
+                    comment.comment
+                  )}
+                  {expandedComments[comment.id] && (
+                    <div
+                      className="over250-letters"
+                      onClick={() => toggleCommentExpansion(comment.id)}
+                    >
+                      접기
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </Container>
   )
@@ -169,13 +186,16 @@ const Container = styled.div`
   }
 
   .over250-letters {
-    color: ${colors.darkGray};
+    color: ${colors.gray};
     cursor: pointer;
   }
-  .more-comments {
-    display: block;
+  .delete-comment {
+    display: inline-block;
     cursor: pointer;
-    &:disabled {
-      cursor: not-allowed;
-    }
+  }
+`
+const StyledTrash = styled(Trash2)`
+  padding-top: 4px;
+  color: ${colors.darkGray};
+  cursor: pointer;
 `
