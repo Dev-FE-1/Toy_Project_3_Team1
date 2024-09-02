@@ -1,5 +1,6 @@
+import SearchPlaylist from '@/components/SearchPlaylist'
 const SearchPage = () => {
-  return <div>Search</div>
+  return <SearchPlaylist />
 }
 
 export default SearchPage
