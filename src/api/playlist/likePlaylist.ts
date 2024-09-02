@@ -1,20 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import {
-  getFirestore,
-  doc,
-  updateDoc,
-  onSnapshot,
-  arrayUnion,
-  arrayRemove,
-} from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
+import { doc, onSnapshot, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore'
+import { auth, db } from '@/firebase/firebaseConfig'
 
 export const useLikeButton = (playlistId: string) => {
-  const db = getFirestore()
-  const auth = getAuth()
-
-  const [likeData, setLikeData] = useState({ likers: [], likeCount: 0 })
+  const [likeData, setLikeData] = useState({ likers: [] as string[], likeCount: 0 })
   const likeDocRef = doc(db, `PLAYLISTS/${playlistId}`)
 
   useEffect(() => {
@@ -33,15 +23,18 @@ export const useLikeButton = (playlistId: string) => {
     return () => unsubscribe()
   }, [playlistId])
 
-  const isLiked = likeData.likers.includes(auth.currentUser?.uid)
+  const currentUserId = auth.currentUser?.uid
+  const isLiked = currentUserId ? likeData.likers.includes(currentUserId) : false
   const { likeCount } = likeData
 
   const likeMutation = useMutation({
     mutationFn: async () => {
       const userId = auth.currentUser?.uid
-      await updateDoc(likeDocRef, {
-        likers: isLiked ? arrayRemove(userId) : arrayUnion(userId),
-      })
+      if (userId) {
+        await updateDoc(likeDocRef, {
+          likers: isLiked ? arrayRemove(userId) : arrayUnion(userId),
+        })
+      }
     },
   })
 
@@ -51,9 +44,5 @@ export const useLikeButton = (playlistId: string) => {
     }
   }
 
-  return {
-    isLiked,
-    likeCount,
-    toggleLike,
-  }
+  return { isLiked, likeCount, toggleLike }
 }
