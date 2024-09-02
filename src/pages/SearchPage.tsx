@@ -154,18 +154,20 @@ const Container = styled.div`
     cursor: pointer;
   }
   .search-fail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(80vh - 100px);
+    min-height: 300px;
+    text-align: center;
   }
   .fail-title {
-    padding: 15% 0 15% 0;
-    align-items: center;
-    text-align: center;
+    padding: 15% 0;
     font-size: ${fontSize.xl};
   }
-
   .fail-text {
     font-size: ${fontSize.lg};
-    justify-content: center;
-    text-align: center;
     font-weight: ${fontWeight.medium};
     line-height: 2;
   }

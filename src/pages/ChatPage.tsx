@@ -1,15 +1,19 @@
-import { lazy, Suspense } from 'react'
-import LikeButton from '@/components/LikeButton'
-
-const Comments = lazy(() => import('@/components/Comments'))
+import styled from '@emotion/styled'
 
 const ChatPage = () => {
   return (
-    <Suspense fallback={<div>Loading comments...</div>}>
-      <LikeButton playlistId="playlistId" />
-      <Comments />
-    </Suspense>
+    <Container>
+      <h3>서비스 준비 중 입니다.</h3>
+    </Container>
   )
 }
 
 export default ChatPage
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(90vh - 100px);
+  min-height: 300px;
+`
