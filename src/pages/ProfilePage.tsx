@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
@@ -10,12 +10,15 @@ import Profile from '@/assets/profile_logo.jpg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
+import useUserId from '@/hooks/useUserId'
+import { getUserIdFromUID } from '@/api/profile/profileInfo'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
+  const currentUser = useUserId()
   const userData = useUserData(userId)
   const playlistData = usePlaylistData(userId)
-  const isMyProfile = !userId || userId === userData.userId
+  const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
   const [filter, setFilter] = useState<filterPlaylist>('all')
 
   const handleFilterChange = (newFilter: filterPlaylist) => {
@@ -46,6 +49,22 @@ const ProfilePage = () => {
       value: 'private' as filterPlaylist,
     },
   ]
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (currentUser && userData.userId) {
+        try {
+          const currentUserId = await getUserIdFromUID(currentUser)
+          if (currentUserId === userData.userId) {
+            setIsMyProfile(true)
+          }
+        } catch (error) {
+          console.error('Failed to fetch user ID:', error)
+        }
+      }
+    }
+    fetchData()
+  }, [currentUser, userData.userId])
 
   return (
     <Container>

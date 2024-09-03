@@ -2,10 +2,15 @@ import { auth, db } from '@/firebase/firebaseConfig'
 import { collection, getDocs, getDoc, query, where, doc } from 'firebase/firestore'
 import { showplaylistProps, videoListProps } from '@/types/playlistType'
 import formatDate from '@/utils/formatDate'
+import { getUIDFromUserId } from '../profile/profileInfo'
 
 export const getPlayList = async (userId?: string) => {
   try {
-    const uid = userId || auth.currentUser?.uid
+    let uid = auth.currentUser?.uid
+
+    if (userId) {
+      uid = await getUIDFromUserId(userId)
+    }
 
     if (uid) {
       const playlistRef = collection(db, 'PLAYLISTS')

@@ -29,7 +29,6 @@ const router = createBrowserRouter([
       { path: PATH.PLAYLIST, element: <PlaylistPage /> },
       { path: PATH.USER_PROFILE, element: <ProfilePage /> },
       { path: PATH.CREATEPLAYLIST, element: <CreatePlaylistPage /> },
-      { path: PATH.PROFILE, element: <ProfilePage /> },
       { path: PATH.EDITPROFILE, element: <EditProfilePage /> },
       { path: PATH.FOLLOW, element: <FollowPage /> },
       { path: PATH.CHAT, element: <ChatPage /> },

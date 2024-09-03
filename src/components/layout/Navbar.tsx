@@ -3,6 +3,9 @@ import { NavLink } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { CircleUserRound, House, MessageCircleMore, Search, SquarePlus } from 'lucide-react'
 import { colors } from '@/constants/color'
+import useUserId from '@/hooks/useUserId'
+import { getUserIdFromUID } from '@/api/profile/profileInfo'
+import { useState, useEffect } from 'react'
 
 interface IconLinks {
   path: string
@@ -10,12 +13,30 @@ interface IconLinks {
 }
 
 const Navbar = () => {
+  const uid = useUserId()
+
+  const [userId, setUserId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      if (uid) {
+        try {
+          const id = await getUserIdFromUID(uid)
+          setUserId(id)
+        } catch (error) {
+          console.error('Failed to fetch user ID:', error)
+        }
+      }
+    }
+    fetchUserId()
+  }, [uid])
+
   const menu: Array<IconLinks> = [
     { path: PATH.HOME, icon: <House /> },
     { path: PATH.SEARCH, icon: <Search /> },
     { path: PATH.CREATEPLAYLIST, icon: <SquarePlus /> },
     { path: PATH.CHAT, icon: <MessageCircleMore /> },
-    { path: PATH.PROFILE, icon: <CircleUserRound /> },
+    { path: `profile/${userId}`, icon: <CircleUserRound /> },
   ]
 
   return (
