@@ -7,6 +7,8 @@ import { createPlayList } from '@/api/playlist/createPlayList'
 import { videoListProps } from '@/types/playlistType'
 import Button from '@/components/common/Button/Button'
 import Input from '@/components/common/Input/Input'
+import { Trash2 } from 'lucide-react'
+import PLlogo from '@/assets/createlist_logo.svg'
 
 const CreatePlaylistPage = () => {
   const [title, setTitle] = useState('')
@@ -127,20 +129,33 @@ const CreatePlaylistPage = () => {
             ))}
           </div>
         </div>
-        <div className="list-music">
-          {videoList.map((item: videoListProps, idx) => (
-            <div key={idx} className="item-video">
-              <img src={item.thumbnail} alt={`${item.title}`} />
-              <div>
-                <p>{item.title}</p>
-                <span>{item.channelTitle}</span>
+        {videoList.length > 0 ? (
+          <div className="list-music">
+            {videoList.map((item: videoListProps, idx) => (
+              <div key={idx} className="item-video">
+                <img src={item.thumbnail} alt={`${item.title}`} />
+                <div>
+                  <p>{item.title}</p>
+                  <span>{item.channelTitle}</span>
+                </div>
+                <button className="btn-delete" type="button" onClick={() => handleDelete(idx)}>
+                  <Trash2 color={colors.lightGray} />
+                </button>
               </div>
-              <button className="btn-delete" type="button" onClick={() => handleDelete(idx)}>
-                삭제
-              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="list-music">
+            <div className="pl-notice">
+              <img className="pl-logo" src={PLlogo} alt="링크 입력" />
+              <span>
+                추가하고 싶은 곡의
+                <br />
+                유튜브 링크를 남겨주세요.
+              </span>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
         <div className="section-upload">
           <div className="check-private">
             <input type="checkbox" onChange={handlePrivate} checked={isPrivate} />
@@ -172,7 +187,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
+  .section-input,
+  .list-music {
+    margin: 0 20px;
+  }
+
   .section-upload {
+    position: fixed;
+    bottom: 55px;
+    width: 100%;
+    max-width: 430px;
     align-items: center;
   }
 
@@ -202,13 +226,26 @@ const Container = styled.div`
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
+
+    .pl-notice {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: ${colors.gray};
+      font-size: ${fontSize.md};
+      text-align: center;
+    }
+    .pl-logo {
+      width: 73px;
+      height: 73px;
+      margin: 60px 0 26px 0;
+    }
   }
 
   .item-video {
     display: flex;
     align-items: center;
     padding: 10px;
-    border: 1px solid ${colors.lightGray};
     border-radius: 5px;
     background-color: ${colors.white};
   }
@@ -218,12 +255,14 @@ const Container = styled.div`
     height: 90px;
     object-fit: cover;
     border-radius: 5px;
-    margin-right: 16px;
+    margin-right: 14px;
   }
 
   .item-video div {
     display: flex;
     flex-direction: column;
+    width: 210px;
+    margin-right: 14px;
   }
 
   .item-video p {
@@ -257,9 +296,10 @@ const Container = styled.div`
   }
 
   .btn-delete {
-    width: 100px;
-    border: 1px solid ${colors.lightGray};
-    border-radius: 5px;
+    width: 38px;
+    height: 37px;
+    border: 1px solid ${colors.lightestGray};
+    border-radius: 50px;
     padding: 5px;
     cursor: pointer;
   }
