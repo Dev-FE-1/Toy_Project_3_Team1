@@ -1,38 +1,32 @@
-import styled from '@emotion/styled'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
-import Navbar from '@/components/layout/Navbar'
+import { Outlet, useLocation } from 'react-router-dom'
 import Header from '@/components/layout/Header'
+import Navbar from '@/components/layout/Navbar'
+import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
-import { useEffect } from 'react'
+import { PATH } from '@/constants/path'
+import BackHeader from '@/components/layout/header/BackHeader'
+import checkAuth from '@/service/auth/checkAuth'
 
 const RootLayout = () => {
   const location = useLocation()
-  const navigate = useNavigate()
-  const { isAuthenticated } = useAuth()
-
-  const showHeader = isAuthenticated
-    ? location.pathname !== '/login'
-    : ['/login/editpassword', '/login/signup'].includes(location.pathname)
-
-  const showNavBar =
-    isAuthenticated && !['/login', '/login/editpassword'].includes(location.pathname)
-
-  useEffect(() => {
-    if (isAuthenticated && location.pathname === '/login') {
-      navigate('/')
-    }
-  }, [isAuthenticated, location.pathname, navigate])
+  const showBackButton = location.pathname === PATH.SIGNUP || location.pathname === PATH.EDITPW
 
   return (
     <Container>
       <div className="background-overlay" />
       <div className="root">
-        {showHeader && <Header />}
-        <div className="main">
-          <Outlet />
-        </div>
-        {showNavBar && <Navbar />}
+        {checkAuth() ? (
+          <>
+            <Header />
+            <Outlet />
+            <Navbar />
+          </>
+        ) : (
+          <>
+            {showBackButton && <BackHeader />}
+            <Outlet />
+          </>
+        )}
       </div>
     </Container>
   )
@@ -64,9 +58,5 @@ const Container = styled.div`
     margin: 0 auto;
     padding-bottom: 52px;
     background-color: ${colors.white};
-  }
-
-  .main {
-    flex: 1;
   }
 `
