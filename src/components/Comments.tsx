@@ -10,25 +10,29 @@ import { CommentType } from '@/types/commentType'
 import { auth } from '@/firebase/firebaseConfig'
 import { Trash2 } from 'lucide-react'
 
+interface CommentsProps {
+  playlistId: string
+}
+
 const COMMENTS_QUERY_KEY = 'comments'
 
-const Comments = () => {
+const Comments: React.FC<CommentsProps> = ({ playlistId }) => {
   const [comment, setComment] = useState('')
   const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({})
   const [warning, setWarning] = useState('')
   const queryClient = useQueryClient()
 
   const { data: comments, isLoading } = useQuery<CommentType[]>({
-    queryKey: [COMMENTS_QUERY_KEY],
-    queryFn: () => getComment(),
+    queryKey: [COMMENTS_QUERY_KEY, playlistId],
+    queryFn: () => getComment(playlistId),
   })
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
-      await addComment(comment)
+      await addComment(playlistId, comment)
       setComment('')
-      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY, playlistId] })
     }
   }
 
@@ -51,8 +55,8 @@ const Comments = () => {
 
   const handleDeleteComment = async (commentId: string) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      await deleteComment(commentId)
-      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY] })
+      await deleteComment(playlistId, commentId)
+      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY, playlistId] })
     }
   }
 
@@ -62,65 +66,68 @@ const Comments = () => {
 
   return (
     <Container>
-      <div>
-        <form className="form" onSubmit={handleComment}>
+      <div className="comments-container">
+        <form className="comment-form" onSubmit={handleComment}>
           <textarea
-            className="textarea"
             maxLength={400}
             onChange={handleCommentChange}
             value={comment}
+            placeholder="댓글을 입력하세요..."
           />
-          <button className="submit-button" type="submit">
-            댓글
-          </button>
+          <button type="submit">댓글</button>
         </form>
-        {warning && <p className="warning">{warning}</p>}
-      </div>
+        {warning && <p className="warning-text">{warning}</p>}
 
-      <div className="comment-area">
-        {isLoading ? (
-          <p>댓글을 불러오는 중입니다.</p>
-        ) : (
-          <>
-            {comments?.map((comment: CommentType) => (
-              <div key={comment.id} className="comment-card">
-                <img className="user-img" src={comment.userImg} alt="User Image" />
-                <p className="user-name">{comment.userName} </p>
-                <div className="comment-date">
-                  {formatDate(comment.createdAt)}
-                  {isCurrentUserComment(comment) && (
-                    <div className="delete-comment">
-                      <StyledTrash onClick={() => handleDeleteComment(comment.id)} size={14} />
+        <div className="comment-area">
+          {isLoading ? (
+            <p>댓글을 불러오는 중입니다.</p>
+          ) : (
+            <>
+              {comments?.map((comment: CommentType) => (
+                <div key={comment.id} className="comment-card">
+                  <img className="profile-img" src={comment.userImg} alt="User Image" />
+                  <div className="comment-content">
+                    <div className="comment-header">
+                      <span className="user-name">{comment.userName}</span>
+                      <span className="comment-date">{formatDate(comment.createdAt)}</span>
+                      {isCurrentUserComment(comment) && (
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDeleteComment(comment.id)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
-                  )}
+                    <p className="comment-text">
+                      {comment.comment.length > 250 && !expandedComments[comment.id] ? (
+                        <>
+                          {comment.comment.slice(0, 250)} ···
+                          <span
+                            className="expand-button"
+                            onClick={() => toggleCommentExpansion(comment.id)}
+                          >
+                            댓글 더보기
+                          </span>
+                        </>
+                      ) : (
+                        comment.comment
+                      )}
+                      {expandedComments[comment.id] && (
+                        <span
+                          className="expand-button"
+                          onClick={() => toggleCommentExpansion(comment.id)}
+                        >
+                          접기
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </div>
-                <div className="comment">
-                  {comment.comment.length > 250 && !expandedComments[comment.id] ? (
-                    <>
-                      {comment.comment.slice(0, 250)} ···
-                      <div
-                        className="over250-letters"
-                        onClick={() => toggleCommentExpansion(comment.id)}
-                      >
-                        댓글 더보기
-                      </div>
-                    </>
-                  ) : (
-                    comment.comment
-                  )}
-                  {expandedComments[comment.id] && (
-                    <div
-                      className="over250-letters"
-                      onClick={() => toggleCommentExpansion(comment.id)}
-                    >
-                      접기
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+              ))}
+            </>
+          )}
+        </div>
       </div>
     </Container>
   )
@@ -129,47 +136,68 @@ const Comments = () => {
 export default Comments
 
 const Container = styled.div`
-  .form {
+  .comments-container {
+    /* Container 스타일 */
+  }
+
+  .comment-form {
     display: flex;
-    justify-content: center;
-  }
-
-  .submit-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-  }
-
-  .textarea {
-    width: 80%;
-    border: none;
-    max-width: 80%;
-    max-height: 100px;
-    border-bottom: 1px solid;
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .warning {
-    text-align: center;
-    color: red;
-    font-size: 0.8em;
-  }
-
-  .comment-area {
-    margin-top: 20px;
-  }
-
-  .comment-card {
     margin-bottom: 20px;
   }
 
-  .user-img {
+  .comment-form textarea {
+    flex-grow: 1;
+    padding: 10px;
+    height: 40px;
+    border: none;
+    resize: vertical;
+  }
+
+  .comment-form button {
+    height: 40px;
+    margin-left: 10px;
+    padding: 0 20px;
+    background-color: ${colors.primaryPurple};
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+  .warning-text {
+    text-align: center;
+    color: red;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
+  .comment-area {
+    /* Comment area 스타일 */
+  }
+
+  .comment-card {
+    display: flex;
+    gap: 15px;
+    padding: 5px;
+    padding-bottom: 15px;
+  }
+
+  .profile-img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .comment-content {
+    flex-grow: 1;
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
   }
 
   .user-name {
@@ -181,21 +209,22 @@ const Container = styled.div`
     color: ${colors.darkGray};
   }
 
-  .comment {
-    word-break: break-all;
+  .delete-button {
+    background: none;
+    border: none;
+    height: 14px;
+    cursor: pointer;
+    color: ${colors.lightGray};
   }
 
-  .over250-letters {
-    color: ${colors.gray};
-    cursor: pointer;
+  .comment-text {
+    margin: 0;
+    word-break: break-word;
   }
-  .delete-comment {
-    display: inline-block;
+
+  .expand-button {
+    color: ${colors.lightGray};
     cursor: pointer;
+    margin-left: 5px;
   }
-`
-const StyledTrash = styled(Trash2)`
-  padding-top: 4px;
-  color: ${colors.darkGray};
-  cursor: pointer;
 `
