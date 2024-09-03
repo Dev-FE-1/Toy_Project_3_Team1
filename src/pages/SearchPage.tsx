@@ -5,6 +5,7 @@ import Input from '@/components/common/Input/Input'
 import { colors } from '@/constants/color'
 import { fontSize, fontWeight } from '@/constants/font'
 import RecommendSearch from '@/components/search/RecommendSearch'
+import { Keywords } from '@/components/search/RecommendKeyword'
 import SearchFail from '@/components/search/SearchFail'
 import SearchSuccess from '@/components/search/SearchSuccess'
 
@@ -24,16 +25,7 @@ const SearchPage = () => {
     setSearchTag('')
   }
 
-  const recommendedKeywords = [
-    '뉴진스',
-    '르쎄라핌',
-    '데이식스',
-    '김민태',
-    '에스파',
-    '(여자)아이들',
-    '이무진',
-    '방탄소년단',
-  ]
+  const recommendedKeywords = Keywords
 
   return (
     <Container>

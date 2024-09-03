@@ -1,4 +1,4 @@
-import RecommendedKeyword from '@/components/search/RecommendKeyword'
+import { RecommendedKeyword } from '@/components/search/RecommendKeyword'
 
 type RecommendSearchProps = {
   recommendedKeywords: string[]
