@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { colors } from '@/constants/color'
 import Button from '@/components/common/Button/Button'
 import { usePlaylistdetail } from '@/hooks/usePlaylistDetail'
-import Comments from '@/components/Comments'
+import Comments from '@/components/comments/Comments'
 import LikeButton from '@/components/LikeButton'
 
 const PlaylistPage = () => {
