@@ -13,6 +13,7 @@ import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
 import { getUserIdFromUID } from '@/api/profile/profileInfo'
 import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
+import { useFollowButton } from '@/hooks/useFollowStatus'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
@@ -22,6 +23,10 @@ const ProfilePage = () => {
   const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
   const [filter, setFilter] = useState<filterPlaylist>('all')
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const { isFollowing, toggleFollow, followerCount } = useFollowButton(
+    userData.userId,
+    currentUser || ''
+  )
 
   const handleFilterChange = (newFilter: filterPlaylist) => {
     setFilter(newFilter)
@@ -59,11 +64,11 @@ const ProfilePage = () => {
     },
     {
       label: '팔로워',
-      value: userData.playlistLength,
+      value: followerCount,
     },
     {
       label: '팔로잉',
-      value: userData.playlistLength,
+      value: userData.followingLength,
     },
   ]
 
@@ -114,7 +119,11 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="user-bio">{userData.userBio}</div>
-        {!isMyProfile && <Button size="small">팔로우</Button>}
+        {!isMyProfile && (
+          <Button size="small" onClick={toggleFollow} variant={isFollowing ? 'outline' : 'primary'}>
+            {isFollowing ? '팔로잉' : '팔로우'}
+          </Button>
+        )}
       </div>
       <div className="divider" />
       <div className="section-playlist">
