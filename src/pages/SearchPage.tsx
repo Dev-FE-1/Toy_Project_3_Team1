@@ -1,69 +1,12 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Playlist, SearchTag } from '@/api/playlist/searchTag'
 import styled from '@emotion/styled'
 import Input from '@/components/common/Input/Input'
 import { colors } from '@/constants/color'
 import { fontSize, fontWeight } from '@/constants/font'
-import RecommendedKeyword from '@/components/search/RecommandKeyword'
-import PlaylistThumbnails from '@/components/search/PlaylistThumbnails'
-
-type RecommendedSearchProps = {
-  recommendedKeywords: string[]
-  setSearchTag: (tag: string) => void
-}
-
-const RecommendedSearch = ({ recommendedKeywords, setSearchTag }: RecommendedSearchProps) => (
-  <div className="recomand-search">
-    <h3>추천 검색어</h3>
-    <div className="recomand-keyword">
-      {recommendedKeywords.map((keyword) => (
-        <RecommendedKeyword key={keyword} keyword={keyword} onClick={setSearchTag} />
-      ))}
-    </div>
-  </div>
-)
-
-const SearchFail = ({ previousSearchTag }: { previousSearchTag: string }) => (
-  <div className="search-fail">
-    <h3 className="fail-title">검색 태그 : {previousSearchTag}</h3>
-    <div className="fail-text">
-      죄송합니다.
-      <br />
-      &quot;{previousSearchTag}&quot; 에 <br />
-      해당하는 플레이리스트를 <br />
-      찾을 수 없습니다.
-    </div>
-  </div>
-)
-
-const PlaylistItem = ({ playlist }: { playlist: Playlist }) => (
-  <Link to={`/playlist/${playlist.id}`}>
-    <div className="success-img">
-      <PlaylistThumbnails playlistId={playlist.id} />
-    </div>
-    <li className="success-title" key={playlist.id}>
-      <h4>{playlist.title}</h4>
-    </li>
-  </Link>
-)
-
-const SearchSuccess = ({
-  previousSearchTag,
-  playlists,
-}: {
-  previousSearchTag: string
-  playlists: Playlist[]
-}) => (
-  <>
-    <h3 className="success-tag">검색 태그 : {previousSearchTag}</h3>
-    <ul className="search-success">
-      {playlists.map((playlist) => (
-        <PlaylistItem key={playlist.id} playlist={playlist} />
-      ))}
-    </ul>
-  </>
-)
+import RecommendSearch from '@/components/search/RecommendSearch'
+import SearchFail from '@/components/search/SearchFail'
+import SearchSuccess from '@/components/search/SearchSuccess'
 
 const SearchPage = () => {
   const [searchTag, setSearchTag] = useState('')
@@ -108,10 +51,7 @@ const SearchPage = () => {
       </div>
       <div className="search-result">
         {!hasSearched ? (
-          <RecommendedSearch
-            recommendedKeywords={recommendedKeywords}
-            setSearchTag={setSearchTag}
-          />
+          <RecommendSearch recommendedKeywords={recommendedKeywords} setSearchTag={setSearchTag} />
         ) : playlists.length === 0 ? (
           <SearchFail previousSearchTag={previousSearchTag} />
         ) : (
