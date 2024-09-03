@@ -2,6 +2,7 @@ import { db } from '@/firebase/firebaseConfig'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 
 export interface Playlist {
+  thumbnails: string[]
   id: string
   title: string
   tags: string[]

@@ -4,6 +4,7 @@ export const colors = {
   primaryPurple: '#612FF1',
   primaryPurpleHover: '#5C33D0',
   lightPurPle: 'rgba(97, 47, 241, 0.1)',
+  mediumPurple: '#987bef',
   lightestGray: '#F7F7F7',
   brightGray: '#EEEEEE',
   brightGrayHover: '#E4E4E4',

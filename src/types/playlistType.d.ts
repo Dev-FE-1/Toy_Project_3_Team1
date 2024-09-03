@@ -6,6 +6,7 @@ export interface showplaylistProps {
 }
 
 export interface videoListProps extends showplaylistProps {
+  id?: Key | null | undefined
   url: string
   channelTitle: string
   uploadDate?: string
