@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
-import { auth } from '@/firebase/firebaseConfig'
 import { PATH } from '@/constants/path'
 import logo from '@/assets/myidoru_logo.svg'
 import { fontSize } from '@/constants/font'
@@ -11,13 +9,17 @@ import ButtonImage from '@/components/common/Button/ButtonImage'
 import Input from '@/components/common/Input/Input'
 import { colors } from '@/constants/color'
 import { MESSAGES } from '@/constants/messages'
+import login from '@/service/auth/login'
+import { useNavigate } from 'react-router-dom'
+import googleLogin from '@/service/auth/googleLogin'
 
 const LoginPage = () => {
   const [loginInfo, setLoginInfo] = useState({
     email: '',
     password: '',
   })
-  const [loginSuccess, setLoginSuccess] = useState(true)
+  const [isLoginError, setIsLoginError] = useState(false)
+  const navigate = useNavigate()
   //TODO: 이메일, 비밀번호 유효성 검사하기
   const isValid = loginInfo.email && loginInfo.password
 
@@ -32,23 +34,21 @@ const LoginPage = () => {
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { email, password } = loginInfo
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      localStorage.setItem('userData', JSON.stringify(userCredential.user))
-      setLoginSuccess(true)
-    } catch (error) {
+    const isLoginSuccess = await login(email, password)
+
+    if (isLoginSuccess) {
+      navigate('/')
+    } else {
+      setIsLoginError(true)
       setLoginInfo({
         email: '',
         password: '',
       })
-      setLoginSuccess(false)
     }
   }
 
   const handleGoogleLogin = async () => {
-    const provider = new GoogleAuthProvider()
-    const res = await signInWithPopup(auth, provider)
-    localStorage.setItem('userData', JSON.stringify(res.user))
+    await googleLogin()
   }
 
   return (
@@ -73,7 +73,7 @@ const LoginPage = () => {
             value={loginInfo.password}
             onChange={handleChange}
           />
-          {!loginSuccess && <span className="login-notice">{MESSAGES.LOGIN.FAIL}</span>}
+          {isLoginError && <span className="login-notice">{MESSAGES.LOGIN.FAIL}</span>}
           <Button disabled={!isValid}>로그인</Button>
         </form>
         <ButtonLink size={'small'} variant="text" to={PATH.EDITPW}>

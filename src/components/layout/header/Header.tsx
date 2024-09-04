@@ -1,39 +1,26 @@
 import styled from '@emotion/styled'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { useLocation, Link } from 'react-router-dom'
 import logo from '@/assets/myidoru_logo.svg'
 import { PATH } from '@/constants/path'
 import { colors } from '@/constants/color'
+import BackHeader from '@/components/layout/header/BackHeader'
 
-interface HeaderProps {
-  onBack?: () => void
-}
-
-const Header: React.FC<HeaderProps> = ({ onBack }) => {
-  const navigate = useNavigate()
+const Header = () => {
   const location = useLocation()
   const pathDepth = location.pathname.split('/').filter(Boolean).length
 
-  const handleBack = () => {
-    if (onBack) {
-      onBack()
-    } else {
-      navigate(-1)
-    }
-  }
-
   return (
-    <Container>
+    <>
       {pathDepth < 2 ? (
-        <Link to={PATH.HOME}>
-          <img className="logo-myidoru" src={logo} alt="logo" />
-        </Link>
+        <Container>
+          <Link to={PATH.HOME}>
+            <img className="logo-myidoru" src={logo} alt="logo" />
+          </Link>
+        </Container>
       ) : (
-        <button className="button-back" onClick={handleBack} aria-label="Go back">
-          <ArrowLeft />
-        </button>
+        <BackHeader />
       )}
-    </Container>
+    </>
   )
 }
 
