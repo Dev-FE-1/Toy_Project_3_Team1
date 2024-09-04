@@ -1,12 +1,20 @@
+import logout from '@/service/auth/logout'
 import styled from '@emotion/styled'
-import useLogout from '@/hooks/useLogout'
+import { useNavigate } from 'react-router-dom'
 
 const EditProfilePage = () => {
-  const logout = useLogout()
+  const navigate = useNavigate()
+
+  const logoutBtnHandler = async () => {
+    const isLogoutSuccess = await logout()
+
+    if (isLogoutSuccess) navigate('/login')
+  }
+
   return (
     <div>
       EditProfile
-      <LogoutButton onClick={logout}>로그아웃</LogoutButton>
+      <LogoutButton onClick={logoutBtnHandler}>로그아웃</LogoutButton>
     </div>
   )
 }
