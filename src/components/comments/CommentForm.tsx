@@ -23,7 +23,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ playlistId, onCommentAdded })
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newComment = e.target.value
-    if (newComment.length > 400) {
+    if (newComment.length >= 400) {
       setWarning('400자까지 입력할 수 있습니다.')
     } else {
       setWarning('')
