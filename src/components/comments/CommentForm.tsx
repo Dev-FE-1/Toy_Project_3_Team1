@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { addComment } from '@/api/comment/addComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
+import { MESSAGES } from '@/constants/messages'
 
 interface CommentFormProps {
   playlistId: string
@@ -24,7 +25,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ playlistId, onCommentAdded })
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newComment = e.target.value
     if (newComment.length >= 400) {
-      setWarning('400자까지 입력할 수 있습니다.')
+      setWarning(MESSAGES.COMMNET_OVER)
     } else {
       setWarning('')
       setComment(newComment)
