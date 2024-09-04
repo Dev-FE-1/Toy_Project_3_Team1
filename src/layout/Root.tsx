@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import Header from '@/components/layout/Header'
+import Header from '@/components/layout/header/Header'
 import Navbar from '@/components/layout/Navbar'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
