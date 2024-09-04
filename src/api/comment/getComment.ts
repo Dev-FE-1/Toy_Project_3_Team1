@@ -5,8 +5,8 @@ import np_logo from '@/assets/np_logo.svg'
 
 const userCache: Record<string, { name: string; img: string }> = {}
 
-export const getComment = async (): Promise<CommentType[]> => {
-  const q = query(collection(db, `PLAYLISTS/playlistId/COMMENTS`), orderBy('createdAt', 'desc'))
+export const getComment = async (playlistId: string): Promise<CommentType[]> => {
+  const q = query(collection(db, `PLAYLISTS/${playlistId}/COMMENTS`), orderBy('createdAt', 'desc'))
 
   const snapshot = await getDocs(q)
 
