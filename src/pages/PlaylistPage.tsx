@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { colors } from '@/constants/color'
 import Button from '@/components/common/Button/Button'
 import { usePlaylistdetail } from '@/hooks/usePlaylistDetail'
+import Comments from '@/components/comments/Comments'
+import LikeButton from '@/components/LikeButton'
 
 const PlaylistPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>()
@@ -31,7 +33,7 @@ const PlaylistPage = () => {
 
   const renderComments = () => (
     <CommentList>
-      <div className="comment-item">댓글 들어가야함</div>
+      <Comments playlistId={playlistId ?? ''} />
     </CommentList>
   )
 
@@ -59,7 +61,9 @@ const PlaylistPage = () => {
                 <div className="info-date">{selectedVideo?.uploadDate}</div>
               </div>
             </div>
-            <div className="info-likes">❤️ 좋아요수</div>
+            <div className="info-likes">
+              <LikeButton playlistId={playlistId || ''} />
+            </div>
           </div>
         </div>
       </div>
