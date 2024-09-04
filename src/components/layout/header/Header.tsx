@@ -8,10 +8,11 @@ import BackHeader from '@/components/layout/header/BackHeader'
 const Header = () => {
   const location = useLocation()
   const pathDepth = location.pathname.split('/').filter(Boolean).length
+  const isUserProfilePath = /^\/profile\/[^/]+$/.test(location.pathname)
 
   return (
     <>
-      {pathDepth < 2 ? (
+      {pathDepth < 2 || isUserProfilePath ? (
         <Container>
           <Link to={PATH.HOME}>
             <img className="logo-myidoru" src={logo} alt="logo" />
