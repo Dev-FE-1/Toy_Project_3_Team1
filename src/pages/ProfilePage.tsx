@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
@@ -12,7 +12,7 @@ import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
 import useUserId from '@/hooks/useUserId'
 import { getUserIdFromUID } from '@/api/profile/profileInfo'
-import PlaylistThumbnails from '@/components/search/PlaylistThumbnails'
+import MusicItem from '@/components/playlist/MusicItem'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
@@ -21,6 +21,7 @@ const ProfilePage = () => {
   const playlistData = usePlaylistData(userId)
   const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
   const [filter, setFilter] = useState<filterPlaylist>('all')
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const handleFilterChange = (newFilter: filterPlaylist) => {
     setFilter(newFilter)
@@ -65,6 +66,12 @@ const ProfilePage = () => {
       value: userData.playlistLength,
     },
   ]
+
+  const displayedLists = isOpen ? filteredLists : filteredLists.slice(0, 4)
+
+  const handleToggleOpen = () => {
+    setIsOpen((prev) => !prev)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,23 +134,16 @@ const ProfilePage = () => {
           </div>
         )}
       </div>
-      {filteredLists.map((playlist, idx) => (
-        <div className="title-playlist" key={idx}>
-          <Link to={`/playlist/${playlist.playlistId}`}>
-            <div className="title-thumbnail">
-              <PlaylistThumbnails playlistId={playlist.playlistId || ''} />
-            </div>
-            <div className="title-video">
-              {playlist.title}
-              {playlist.isPrivate && <div className="tag-private">비공개</div>}
-            </div>
-          </Link>
-        </div>
-      ))}
-      {userData.playlistLength > 5 && (
-        <ButtonLink to={PATH.HOME} variant="secondary">
+      <MusicItem videoList={displayedLists} variant="profilePL" />
+      {filteredLists.length > 4 && !isOpen && (
+        <Button variant="text" onClick={handleToggleOpen}>
           플레이리스트 모두 보기
-        </ButtonLink>
+        </Button>
+      )}
+      {isOpen && (
+        <Button variant="text" onClick={handleToggleOpen}>
+          플레이리스트 모두 접기
+        </Button>
       )}
     </Container>
   )
@@ -165,14 +165,13 @@ const Container = styled.div`
     padding: 10px 20px 20px 20px;
   }
 
-  .user-bio {
+  .user-bio,
+  .title-playlist {
     font-size: ${fontSize.md};
     font-weight: ${fontWeight.semiBold};
   }
-
   .section-info,
   .section-head,
-  .title-playlist,
   .section-playlist,
   .section-btn {
     font-size: ${fontSize.md};
@@ -221,48 +220,5 @@ const Container = styled.div`
 
   .section-playlist {
     padding: 20px 20px 0;
-  }
-
-  .title-playlist {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    height: 77px;
-    padding: 20px;
-
-    a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
-    .tag-private {
-      background-color: ${colors.lightPurPle};
-      width: 54px;
-      border-radius: 15px;
-      text-align: center;
-    }
-  }
-
-  .title-playlist:hover {
-    background-color: ${colors.lightestGray};
-  }
-
-  .title-thumbnail {
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .title-video {
-    width: 310px;
-  }
-
-  .text-playlist {
-    font-size: ${fontSize.lg};
-    margin-bottom: 20px;
   }
 `

@@ -10,7 +10,7 @@ import TagList from '@/components/TagList'
 import { MESSAGES } from '@/constants/messages'
 import useTags from '@/hooks/useTags'
 import usePLItem from '@/hooks/usePLItem'
-import MusicItem from '@/components/MusicItem'
+import MusicItem from '@/components/playlist/MusicItem'
 
 const CreatePlaylistPage = () => {
   const [title, setTitle] = useState('')
@@ -55,7 +55,7 @@ const CreatePlaylistPage = () => {
         </div>
         {videoList.length > 0 ? (
           <div className="list-music">
-            <MusicItem videoList={videoList} onItemDelete={handleDelete} />
+            <MusicItem videoList={videoList} onItemDelete={handleDelete} variant="createPL" />
           </div>
         ) : (
           <div className="list-music">

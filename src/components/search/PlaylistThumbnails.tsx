@@ -18,8 +18,8 @@ const PlaylistThumbnails = ({ playlistId }: { playlistId: string }) => {
 
   return (
     <Container count={thumbnails.length}>
-      {thumbnails.map((video) => (
-        <img key={video.id} src={video.thumbnail} alt={video.title} />
+      {thumbnails.map((video, idx) => (
+        <img key={idx} src={video.thumbnail} alt={video.title} />
       ))}
     </Container>
   )
