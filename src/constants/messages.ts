@@ -9,6 +9,6 @@ export const MESSAGES = {
   COMMNET_OVER: '댓글은 최대 400자까지 입력할 수 있습니다.',
   CREATE_PL: {
     YOUTUBE: '유튜브 링크를 입력해주세요.',
-    TAG_FAIL: '태그는 최대 6개, 각 태그는 최대 6글자까지 입력할 수 있습니다.',
+    TAG_FAIL: '태그는 최대 6개, 각 6글자 이내로 입력해 주세요.',
   },
 }

@@ -16,7 +16,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
   return (
     <Container variant={variant}>
       {videoList.map((item, idx) => (
-        <div key={item.playlistId} className="item-video">
+        <div key={idx} className="item-video">
           {variant === 'profilePL' ? (
             <Link to={`/playlist/${item.playlistId}`} className="thumbnail-list">
               <div className="thumbnail">

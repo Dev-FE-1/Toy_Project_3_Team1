@@ -55,5 +55,9 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     flex-shrink: 0;
+
+    @media (min-width: 400px) {
+      font-size: ${fontSize.sm};
+    }
   }
 `

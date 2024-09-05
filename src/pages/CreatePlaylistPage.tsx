@@ -158,10 +158,14 @@ const Container = styled.div`
   .list-music {
     padding: 20px 0;
     display: flex;
-    height: 380px;
+    height: 210px;
+    max-height: 380px;
     flex-direction: column;
-    gap: 16px;
+    gap: 15px;
     overflow-y: auto;
+    @media (min-width: 400px) {
+      height: 420px;
+    }
 
     .pl-notice {
       display: flex;
@@ -174,7 +178,7 @@ const Container = styled.div`
     .pl-logo {
       width: 73px;
       height: 73px;
-      margin: 60px 0 26px 0;
+      margin: 20px 0 20px 0;
     }
   }
 
