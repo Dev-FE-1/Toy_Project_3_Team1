@@ -10,13 +10,13 @@ import Profile from '@/assets/profile_logo.jpg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
-import useUserId from '@/hooks/useUserId'
 import { getUserIdFromUID } from '@/api/profile/profileInfo'
 import MusicItem from '@/components/playlist/MusicItem'
+import { getLoggedInUserUID } from '@/utils/userDataUtils'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
-  const currentUser = useUserId()
+  const currentUser = getLoggedInUserUID()
   const userData = useUserData(userId)
   const playlistData = usePlaylistData(userId)
   const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
@@ -87,7 +87,7 @@ const ProfilePage = () => {
       }
     }
     fetchData()
-  }, [currentUser, userData.userId])
+  }, [currentUser, userData.userId, userId])
 
   return (
     <Container>

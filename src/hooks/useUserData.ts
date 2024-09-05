@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { userInfo } from '@/api/profile/profileInfo'
 import Profile from '@/assets/profile_logo.jpg'
-import useUserId from './useUserId'
 
 export const useUserData = (userId?: string) => {
-  const currentUser = useUserId(userId)
   const [userData, setUserData] = useState({
     userName: '',
     userId: '',
@@ -18,7 +16,7 @@ export const useUserData = (userId?: string) => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const data = await userInfo(currentUser)
+      const data = await userInfo(userId)
       if (data) {
         setUserData({
           userName: data?.userName || '사용자',
@@ -33,10 +31,10 @@ export const useUserData = (userId?: string) => {
       }
     }
 
-    if (currentUser) {
+    if (userId) {
       fetchUserData()
     }
-  }, [currentUser])
+  }, [userId])
 
   return userData
 }
