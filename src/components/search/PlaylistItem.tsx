@@ -10,9 +10,9 @@ const PlaylistItem = ({ playlist }: { playlist: Playlist }) => (
       <div className="success-img">
         <PlaylistThumbnails playlistId={playlist.id} />
       </div>
-      <li className="success-title" key={playlist.id}>
-        <h4>{playlist.title}</h4>
-      </li>
+      <div className="success-title" key={playlist.id}>
+        {playlist.title}
+      </div>
     </Link>
   </Container>
 )
@@ -41,10 +41,12 @@ const Container = styled.div`
     padding: 10px 5px;
     margin-bottom: 20px;
     width: 100%;
-    height: 50px;
+    height: 53px;
     display: -webkit-box;
     overflow: hidden;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    font-size: ${fontSize.md};
+    font-weight: ${fontWeight.medium};
   }
 `

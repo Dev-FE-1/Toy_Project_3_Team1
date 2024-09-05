@@ -76,7 +76,6 @@ const FormContainer = styled.div`
   }
 
   .warning-text {
-    text-align: center;
     color: red;
     margin-top: -10px;
     margin-bottom: 10px;

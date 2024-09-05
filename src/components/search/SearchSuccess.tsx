@@ -12,11 +12,11 @@ const SearchSuccess = ({
 }) => (
   <Container>
     <h3 className="success-tag">검색 태그 : {previousSearchTag}</h3>
-    <ul className="search-success">
+    <div className="search-success">
       {playlists.map((playlist) => (
         <PlaylistItem key={playlist.id} playlist={playlist} />
       ))}
-    </ul>
+    </div>
   </Container>
 )
 
