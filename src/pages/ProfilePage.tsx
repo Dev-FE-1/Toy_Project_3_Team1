@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
@@ -12,6 +12,7 @@ import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
 import useUserId from '@/hooks/useUserId'
 import { getUserIdFromUID } from '@/api/profile/profileInfo'
+import MusicItem from '@/components/playlist/MusicItem'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
@@ -20,6 +21,7 @@ const ProfilePage = () => {
   const playlistData = usePlaylistData(userId)
   const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
   const [filter, setFilter] = useState<filterPlaylist>('all')
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const handleFilterChange = (newFilter: filterPlaylist) => {
     setFilter(newFilter)
@@ -49,6 +51,27 @@ const ProfilePage = () => {
       value: 'private' as filterPlaylist,
     },
   ]
+
+  const infoItems = [
+    {
+      label: '플리',
+      value: userData.playlistLength,
+    },
+    {
+      label: '팔로워',
+      value: userData.playlistLength,
+    },
+    {
+      label: '팔로잉',
+      value: userData.playlistLength,
+    },
+  ]
+
+  const displayedLists = isOpen ? filteredLists : filteredLists.slice(0, 4)
+
+  const handleToggleOpen = () => {
+    setIsOpen((prev) => !prev)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,20 +105,15 @@ const ProfilePage = () => {
             <img className="img-profile" src={userData.userImg || Profile} alt="이미지" />
           </div>
           <div className="section-info">
-            <div className="playlist">
-              <div className="playlist-length">{userData.playlistLength}</div>
-              플리
-            </div>
-            <div className="follower">
-              <div className="follower-length">{userData.followerLength}</div>
-              팔로워
-            </div>
-            <div className="following">
-              <div className="following-length">{userData.followingLength}</div>팔로잉
-            </div>
+            {infoItems.map((item, index) => (
+              <div key={index} className="info-item">
+                <div className="info-value">{item.value}</div>
+                {item.label}
+              </div>
+            ))}
           </div>
         </div>
-        <div className="user-bio">[{userData.userBio}]</div>
+        <div className="user-bio">{userData.userBio}</div>
         {!isMyProfile && <Button size="small">팔로우</Button>}
       </div>
       <div className="divider" />
@@ -104,30 +122,28 @@ const ProfilePage = () => {
         {isMyProfile && (
           <div className="section-btn">
             {filterBtns.map((btn) => (
-              <Button key={btn.value} size="small" onClick={() => handleFilterChange(btn.value)}>
+              <Button
+                key={btn.value}
+                size="small"
+                onClick={() => handleFilterChange(btn.value)}
+                variant={btn.value === filter ? 'outline' : 'primary'}
+              >
                 {btn.label}
               </Button>
             ))}
           </div>
         )}
-        {filteredLists.map((playlist, idx) => (
-          <div className="title-playlist" key={idx}>
-            <div className="title-thumbnail">
-              <Link to={`/playlist/${playlist.playlistId}`}>
-                <img src={playlist.thumbnail} alt={playlist.title} />
-              </Link>
-            </div>
-            <div className="title-video">
-              {playlist.title}
-              {playlist.isPrivate && <div className="tag-private">비공개</div>}
-            </div>
-          </div>
-        ))}
       </div>
-      {!isMyProfile && (
-        <ButtonLink to={PATH.HOME} variant="secondary">
+      <MusicItem videoList={displayedLists} variant="profilePL" />
+      {filteredLists.length > 4 && !isOpen && (
+        <Button variant="text" onClick={handleToggleOpen}>
           플레이리스트 모두 보기
-        </ButtonLink>
+        </Button>
+      )}
+      {isOpen && (
+        <Button variant="text" onClick={handleToggleOpen}>
+          플레이리스트 모두 접기
+        </Button>
       )}
     </Container>
   )
@@ -149,10 +165,15 @@ const Container = styled.div`
     padding: 10px 20px 20px 20px;
   }
 
-  .playlist,
-  .follower,
-  .following,
-  .user-bio {
+  .user-bio,
+  .title-playlist {
+    font-size: ${fontSize.md};
+    font-weight: ${fontWeight.semiBold};
+  }
+  .section-info,
+  .section-head,
+  .section-playlist,
+  .section-btn {
     font-size: ${fontSize.md};
     font-weight: ${fontWeight.bold};
   }
@@ -166,8 +187,8 @@ const Container = styled.div`
 
   .section-img {
     display: flex;
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
 
     .img-profile {
       border-radius: 50px;
@@ -175,8 +196,9 @@ const Container = styled.div`
   }
 
   .section-info {
-    gap: 55px;
+    gap: 50px;
     display: flex;
+    padding: 0 10px;
   }
 
   .user-bio {
@@ -192,48 +214,11 @@ const Container = styled.div`
   .section-btn {
     display: flex;
     gap: 5px;
-    width: 200px;
+    width: 230px;
     margin: 20px 0;
   }
 
   .section-playlist {
-    padding: 20px;
-    font-size: ${fontSize.md};
-    font-weight: ${fontWeight.bold};
-  }
-
-  .title-playlist {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .tag-private {
-      background-color: ${colors.lightPurPle};
-      width: 54px;
-      border-radius: 15px;
-      text-align: center;
-    }
-  }
-
-  .title-thumbnail {
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .title-thumbnail img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-  }
-
-  .title-video {
-    width: 320px;
-  }
-
-  .text-playlist {
-    font-size: ${fontSize.lg};
+    padding: 20px 20px 0;
   }
 `
