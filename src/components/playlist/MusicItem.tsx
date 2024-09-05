@@ -23,7 +23,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
                 <PlaylistThumbnails playlistId={item.playlistId || ''} />
               </div>
               <div className="text-content">
-                <p>{item.title.length > 30 ? item.title.slice(0, 30) + '...' : item.title}</p>
+                <p>{item.title}</p>
                 {item.isPrivate && <div className="tag-private">비공개</div>}
               </div>
             </Link>
@@ -31,7 +31,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
             <>
               <img src={item.thumbnail} alt={`${item.title}`} />
               <div className="text-content">
-                <p>{item.title.length > 30 ? item.title.slice(0, 30) + '...' : item.title}</p>
+                <p>{item.title}</p>
                 <span>{item.channelTitle}</span>
               </div>
               <button
@@ -55,7 +55,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
 
 export default MusicItem
 
-export const Container = styled.div<{ variant: 'profilePL' | 'createPL' }>`
+export const Container = styled.div<{ variant: 'profilePL' | 'createPL'; isPrivate?: boolean }>`
   .item-video {
     display: flex;
     align-items: center;
@@ -104,6 +104,7 @@ export const Container = styled.div<{ variant: 'profilePL' | 'createPL' }>`
     flex-direction: column;
     width: ${(props) => (props.variant === 'createPL' ? '210px' : '280px')};
     margin-right: 14px;
+    line-height: 20px;
 
     .tag-private {
       background-color: ${colors.lightPurPle};
@@ -118,6 +119,10 @@ export const Container = styled.div<{ variant: 'profilePL' | 'createPL' }>`
   .text-content p {
     font-size: ${fontSize.md};
     font-weight: bold;
+    -webkit-line-clamp: ${({ isPrivate }) => (isPrivate ? '1' : '2')};
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
     margin: 0;
     color: ${colors.black};
   }
