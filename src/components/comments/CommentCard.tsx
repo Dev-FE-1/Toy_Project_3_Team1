@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { Trash2 } from 'lucide-react'
 import { auth } from '@/firebase/firebaseConfig'
@@ -6,6 +6,9 @@ import { deleteComment } from '@/api/comment/deleteComment'
 import formatDate from '@/utils/formatDate'
 import { CommentType } from '@/types/commentType'
 import { colors } from '@/constants/color'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '@/firebase/firebaseConfig'
+import { Link } from 'react-router-dom'
 
 interface CommentCardProps {
   comment: CommentType
@@ -15,6 +18,7 @@ interface CommentCardProps {
 
 const CommentCard: React.FC<CommentCardProps> = ({ comment, playlistId, onCommentDeleted }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [userId, setUserId] = useState<string>('')
 
   const isCurrentUserComment = auth.currentUser?.uid === comment.userRef.split('/')[1]
 
@@ -29,12 +33,30 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment, playlistId, onCommen
     setIsExpanded(!isExpanded)
   }
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const uid = comment.userRef.split('/').pop()
+      if (uid) {
+        const userDocRef = doc(db, 'USERS', uid)
+        const userDocSnap = await getDoc(userDocRef)
+        const userData = userDocSnap.data()
+        setUserId(userData?.id)
+      }
+    }
+
+    fetchUserId()
+  }, [comment.userRef])
+
   return (
     <CardContainer>
-      <img className="profile-img" src={comment.userImg} alt="User Image" />
+      <Link to={`/profile/${userId}`}>
+        <img className="profile-img" src={comment.userImg} alt="User Image" />
+      </Link>
       <div className="comment-content">
         <div className="comment-header">
-          <span className="user-name">{comment.userName}</span>
+          <Link to={`/profile/${userId}`}>
+            <span className="user-name">{comment.userName}</span>
+          </Link>
           <span className="comment-date">{formatDate(comment.createdAt)}</span>
           {isCurrentUserComment && (
             <button className="delete-button" onClick={handleDeleteComment}>
