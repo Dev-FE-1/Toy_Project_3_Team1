@@ -11,14 +11,18 @@ const PlaylistPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>()
   const [view, setView] = useState<'videos' | 'comments'>('videos')
   const { videos, selectedVideo, setSelectedVideo } = usePlaylistdetail(playlistId)
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number>(0)
 
   const renderVideos = () => (
     <VideoList>
       {videos.map((video, idx) => (
         <div
-          className={`video-item ${selectedVideo?.url === video.url ? 'active' : ''}`}
+          className={`video-item ${selectedVideoIndex === idx ? 'active' : ''}`}
           key={idx}
-          onClick={() => setSelectedVideo(video)}
+          onClick={() => {
+            setSelectedVideoIndex(idx)
+            setSelectedVideo(videos[idx])
+          }}
         >
           <img
             src={`https://img.youtube.com/vi/${video.url.split('v=')[1]?.split('&')[0]}/hqdefault.jpg`}
@@ -44,6 +48,7 @@ const PlaylistPage = () => {
           <iframe
             width="560"
             height="200"
+            key={`${selectedVideo.url}-${Date.now()}`}
             src={`https://www.youtube.com/embed/${selectedVideo?.url.split('v=')[1]?.split('&')[0]}?autoplay=1`}
             title="Selected Video"
             allowFullScreen
