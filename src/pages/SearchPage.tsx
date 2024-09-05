@@ -3,8 +3,8 @@ import { Playlist, SearchTag } from '@/api/playlist/searchTag'
 import styled from '@emotion/styled'
 import Input from '@/components/common/Input/Input'
 import { colors } from '@/constants/color'
-import { fontSize, fontWeight } from '@/constants/font'
 import RecommendSearch from '@/components/search/RecommendSearch'
+import { Keywords } from '@/components/search/RecommendKeyword'
 import SearchFail from '@/components/search/SearchFail'
 import SearchSuccess from '@/components/search/SearchSuccess'
 
@@ -24,16 +24,7 @@ const SearchPage = () => {
     setSearchTag('')
   }
 
-  const recommendedKeywords = [
-    '뉴진스',
-    '르쎄라핌',
-    '데이식스',
-    '김민태',
-    '에스파',
-    '(여자)아이들',
-    '이무진',
-    '방탄소년단',
-  ]
+  const recommendedKeywords = Keywords
 
   return (
     <Container>
@@ -85,58 +76,5 @@ const Container = styled.div`
     border-radius: 15px;
     margin-bottom: 5px;
     cursor: pointer;
-  }
-  .recomand-search {
-    padding: 15% 3% 0 3%;
-  }
-  .recomand-keyword {
-    padding-top: 5%;
-    cursor: pointer;
-  }
-  .search-fail {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: calc(80vh - 100px);
-    min-height: 300px;
-    text-align: center;
-  }
-  .fail-title {
-    padding: 15% 0;
-    font-size: ${fontSize.xl};
-  }
-  .fail-text {
-    font-size: ${fontSize.lg};
-    font-weight: ${fontWeight.medium};
-    line-height: 2;
-  }
-  .success-tag {
-    padding-top: 5%;
-    font-size: ${fontSize.xl};
-    font-weight: ${fontWeight.bold};
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .search-success {
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 10px;
-  }
-  .success-img {
-    display: flex;
-    justify-content: center;
-  }
-  .success-title {
-    padding: 10px 5px;
-    margin-bottom: 20px;
-    width: 100%;
-    height: 50px;
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
 `
