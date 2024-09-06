@@ -31,3 +31,7 @@ docker.yml
 *.sw?
 
 .env
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
