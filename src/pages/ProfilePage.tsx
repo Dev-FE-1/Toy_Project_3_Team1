@@ -212,6 +212,7 @@ const Container = styled.div`
 
   .user-bio {
     margin: 12px 0;
+    width: 100%;
   }
 
   .divider {
