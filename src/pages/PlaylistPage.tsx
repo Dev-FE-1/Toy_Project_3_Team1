@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useState } from 'react'
 import { colors } from '@/constants/color'
 import Button from '@/components/common/Button/Button'
@@ -60,9 +60,13 @@ const PlaylistPage = () => {
           <div className="playlist-title">{selectedVideo?.playlistTitle}</div>
           <div className="info-details">
             <div className="info-left">
-              <img className="author-image" src={selectedVideo?.authorImg} alt="Uploader" />
+              <Link to={`/profile/${selectedVideo?.author}`}>
+                <img className="author-image" src={selectedVideo?.authorImg} alt="Uploader" />
+              </Link>
               <div className="info-author-date">
-                <div className="info-author">{selectedVideo?.author}</div>
+                <Link to={`/profile/${selectedVideo?.author}`}>
+                  <div className="info-author">{selectedVideo?.author}</div>
+                </Link>
                 <div className="info-date">{selectedVideo?.uploadDate}</div>
               </div>
             </div>
@@ -74,10 +78,18 @@ const PlaylistPage = () => {
       </div>
       <div className="divider" />
       <div className="section-btn">
-        <Button size="small" onClick={() => setView('videos')}>
+        <Button
+          size="small"
+          onClick={() => setView('videos')}
+          variant={view === 'videos' ? 'outline' : 'primary'}
+        >
           영상
         </Button>
-        <Button size="small" onClick={() => setView('comments')}>
+        <Button
+          size="small"
+          onClick={() => setView('comments')}
+          variant={view === 'comments' ? 'outline' : 'primary'}
+        >
           댓글
         </Button>
       </div>
@@ -112,6 +124,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 0 20px 10px;
+    margin-top: 10px;
 
     iframe {
       max-width: 100%;
@@ -139,6 +152,11 @@ export const Container = styled.div`
           display: flex;
           align-items: center;
           gap: 10px;
+
+          a {
+            text-decoration: none;
+            display: flex;
+          }
         }
 
         .author-image {

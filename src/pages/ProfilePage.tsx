@@ -119,11 +119,12 @@ const ProfilePage = () => {
         )}
       </div>
       <MusicItem videoList={displayedLists} variant="profilePL" />
-      {filteredLists.length > 4 && !isOpen ? (
+      {filteredLists.length > 4 && !isOpen && (
         <Button variant="text" onClick={handleToggleOpen}>
           플레이리스트 모두 보기
         </Button>
-      ) : (
+      )}
+      {isOpen && (
         <Button variant="text" onClick={handleToggleOpen}>
           플레이리스트 모두 접기
         </Button>
