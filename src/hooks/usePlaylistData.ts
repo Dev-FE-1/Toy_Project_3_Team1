@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react'
-import { getPlayList } from '@/api/playlist/getPlayList'
 import { showplaylistProps } from '@/types/playlistType'
-import useUserId from './useUserId'
+import getPlaylists from '@/service/playlist/getUserPlaylists'
+import { getUIDFromUserId } from '@/api/profile/profileInfo'
 
 export const usePlaylistData = (userId?: string) => {
-  const currentUser = useUserId(userId)
   const [playlistData, setPlayListData] = useState<showplaylistProps[]>([])
 
   useEffect(() => {
     const fetchPlayListData = async () => {
-      const data = await getPlayList(currentUser)
-      if (data) {
-        setPlayListData(data)
+      try {
+        const userData = await getUIDFromUserId(userId)
+        const data = await getPlaylists(userData)
+        if (data) {
+          setPlayListData(data)
+        }
+      } catch (error) {
+        console.error('Error fetching playlist data:', error)
       }
     }
 
-    if (currentUser) {
+    if (userId) {
       fetchPlayListData()
     }
-  }, [currentUser])
+  }, [userId])
 
   return playlistData
 }

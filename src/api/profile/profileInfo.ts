@@ -17,7 +17,7 @@ export interface FollowingProps {
   img: string | null
 }
 
-export const getUIDFromUserId = async (userId: string) => {
+export const getUIDFromUserId = async (userId?: string) => {
   const userQuery = query(collection(db, 'USERS'), where('id', '==', userId))
   const querySnapshot = await getDocs(userQuery)
 

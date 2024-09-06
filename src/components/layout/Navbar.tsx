@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { CircleUserRound, House, MessageCircleMore, Search, SquarePlus } from 'lucide-react'
 import { colors } from '@/constants/color'
-import useUserId from '@/hooks/useUserId'
 import { getUserIdFromUID } from '@/api/profile/profileInfo'
 import { useState, useEffect } from 'react'
+import { getLoggedInUserUID } from '@/utils/userDataUtils'
 
 interface IconLinks {
   path: string
@@ -13,8 +13,7 @@ interface IconLinks {
 }
 
 const Navbar = () => {
-  const uid = useUserId()
-
+  const uid = getLoggedInUserUID()
   const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -29,7 +28,7 @@ const Navbar = () => {
       }
     }
     fetchUserId()
-  }, [uid])
+  }, [uid, userId])
 
   const menu: Array<IconLinks> = [
     { path: PATH.HOME, icon: <House /> },
