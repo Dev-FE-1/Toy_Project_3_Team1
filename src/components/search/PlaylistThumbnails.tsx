@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { videoListProps } from '@/types/playlistType'
 import styled from '@emotion/styled'
-import { getPlayListDetails } from '@/api/playlist/getPlayList'
+import getUserPlaylistDetails from '@/service/playlist/getUserPlaylistDetails'
 
 const PlaylistThumbnails = ({ playlistId }: { playlistId: string }) => {
   const [videos, setVideos] = useState<videoListProps[]>([])
 
   useEffect(() => {
     const fetchThumbnails = async () => {
-      const fetchedVideos = await getPlayListDetails(playlistId)
+      const fetchedVideos = await getUserPlaylistDetails(playlistId)
       setVideos(fetchedVideos)
     }
     fetchThumbnails()
