@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PATH } from '@/constants/path'
 import logo from '@/assets/myidoru_logo.svg'
 import { fontSize } from '@/constants/font'
@@ -12,6 +12,7 @@ import { MESSAGES } from '@/constants/messages'
 import login from '@/service/auth/login'
 import { useNavigate } from 'react-router-dom'
 import googleLogin from '@/service/auth/googleLogin'
+import checkAuth from '@/service/auth/checkAuth'
 
 const LoginPage = () => {
   const [loginInfo, setLoginInfo] = useState({
@@ -22,6 +23,7 @@ const LoginPage = () => {
   const navigate = useNavigate()
   //TODO: 이메일, 비밀번호 유효성 검사하기
   const isValid = loginInfo.email && loginInfo.password
+  const isAuthenticated = checkAuth()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -48,8 +50,17 @@ const LoginPage = () => {
   }
 
   const handleGoogleLogin = async () => {
-    await googleLogin()
+    const isLoginSuccess = await googleLogin()
+    if (isLoginSuccess) {
+      navigate('/')
+    }
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated])
 
   return (
     <Container>
