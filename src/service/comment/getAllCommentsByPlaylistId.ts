@@ -5,10 +5,11 @@ import { collection, query, getDocs, getDoc, orderBy } from 'firebase/firestore'
 interface User {
   id: string
   img: string
+  name: string
 }
 
 // 주어진 플레이리스트 ID에 대한 댓글 목록을 가져오는 함수
-const getCommentsByPlaylistId = async (playlistId: string) => {
+const getAllCommentsByPlaylistId = async (playlistId: string) => {
   try {
     const commentsRef = collection(db, `PLAYLISTS/${playlistId}/COMMENTS`)
     const q = query(commentsRef, orderBy('createdAt', 'desc'))
@@ -27,7 +28,7 @@ const getCommentsByPlaylistId = async (playlistId: string) => {
 
           const userData = userSnapshot.exists()
             ? (userSnapshot.data() as User)
-            : { id: 'Unknown', img: '' }
+            : { id: 'Unknown', img: '', name: 'Unknown user' }
 
           return {
             id: commentDoc.id,
@@ -35,6 +36,7 @@ const getCommentsByPlaylistId = async (playlistId: string) => {
             createdAt: createdAt,
             userId: userData.id || 'Unknown user',
             userImg: userData.img || '',
+            userName: userData.name || 'Unknown user',
           }
         } catch (error) {
           console.error(`Error fetching user data for comment ${commentDoc.id}:`, error)
@@ -44,6 +46,7 @@ const getCommentsByPlaylistId = async (playlistId: string) => {
             createdAt: 'Unknown',
             userId: 'Unknown user',
             userImg: '',
+            userName: 'Unknown user',
           }
         }
       })
@@ -56,4 +59,4 @@ const getCommentsByPlaylistId = async (playlistId: string) => {
   }
 }
 
-export default getCommentsByPlaylistId
+export default getAllCommentsByPlaylistId

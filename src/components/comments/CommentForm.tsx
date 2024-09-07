@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { addComment } from '@/api/comment/addComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
 import { MESSAGES } from '@/constants/messages'
+import createComment from '@/service/comment/createComment'
 
 interface CommentFormProps {
   playlistId: string
@@ -16,7 +16,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ playlistId, onCommentAdded })
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
-      await addComment(playlistId, comment)
+      await createComment(playlistId, comment)
       setComment('')
       onCommentAdded()
     }
