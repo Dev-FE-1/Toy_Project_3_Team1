@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Trash2 } from 'lucide-react'
-import { auth } from '@/firebase/firebaseConfig'
 import { CommentType } from '@/types/commentType'
 import { colors } from '@/constants/color'
 import { Link } from 'react-router-dom'
 import deleteComment from '@/service/comment/deleteComment'
 import NPProfile from '@/assets/np_logo.svg'
+import { useIsMyProfile } from '@/hooks/useIsMyProfile'
 
 interface CommentCardProps {
   comment: CommentType
@@ -16,8 +16,7 @@ interface CommentCardProps {
 
 const CommentCard: React.FC<CommentCardProps> = ({ comment, playlistId, onCommentDeleted }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-
-  const isCurrentUserComment = auth.currentUser?.uid === comment.userId
+  const { data: isCurrentUserComment } = useIsMyProfile(comment.userId)
 
   const handleDeleteComment = async () => {
     if (window.confirm('삭제하시겠습니까?')) {
