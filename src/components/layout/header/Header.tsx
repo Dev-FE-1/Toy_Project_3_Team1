@@ -13,20 +13,25 @@ const Header = () => {
   const isMyProfile = useIsMyProfile(userId)
   const pathDepth = location.pathname.split('/').filter(Boolean).length
   const isUserProfilePath = /^\/profile\/[^/]+$/.test(location.pathname)
+  const isPlaylistPath = /^\/playlist\/[^/]+$/.test(location.pathname)
 
   return (
     <>
-      {pathDepth < 2 || !isUserProfilePath ? (
+      {pathDepth < 2 || (!isUserProfilePath && !isPlaylistPath) ? (
         <Container>
           <Link to={PATH.HOME}>
             <img className="logo-myidoru" src={logo} alt="logo" />
           </Link>
         </Container>
-      ) : isMyProfile ? (
-        <LogoutHeader userId={userId || ''} />
-      ) : (
+      ) : isPlaylistPath ? (
         <BackHeader />
-      )}
+      ) : isUserProfilePath ? (
+        isMyProfile ? (
+          <LogoutHeader userId={userId || ''} />
+        ) : (
+          <BackHeader />
+        )
+      ) : null}
     </>
   )
 }
