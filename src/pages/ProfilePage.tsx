@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
 import { colors } from '@/constants/color'
-import Profile from '@/assets/profile_logo.jpg'
+import NPProfile from '@/assets/np_logo.svg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
@@ -82,7 +82,7 @@ const ProfilePage = () => {
       <div className="section-userinfo">
         <div className="profile">
           <div className="section-img">
-            <img className="img-profile" src={userData?.userImg || Profile} alt="이미지" />
+            <img className="img-profile" src={userData?.userImg || NPProfile} alt="이미지" />
           </div>
           <div className="section-info">
             {infoItems.map((item, index) => (
