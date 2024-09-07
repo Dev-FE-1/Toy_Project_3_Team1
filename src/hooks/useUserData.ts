@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { userInfo } from '@/api/profile/profileInfo'
 import Profile from '@/assets/profile_logo.jpg'
+import { useNavigate } from 'react-router-dom'
 
 export const useUserData = (userId?: string) => {
+  const navigate = useNavigate()
   const [userData, setUserData] = useState({
     userName: '',
     userId: '',
@@ -28,6 +30,8 @@ export const useUserData = (userId?: string) => {
           followingLength: data?.followingLength || 0,
           playlistLength: data?.playlistLength || 0,
         })
+      } else {
+        navigate('/Page404')
       }
     }
 

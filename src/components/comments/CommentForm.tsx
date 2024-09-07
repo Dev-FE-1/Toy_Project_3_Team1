@@ -61,14 +61,23 @@ const FormContainer = styled.div`
     padding: 10px;
     height: 40px;
     border: none;
-    resize: vertical;
+    border-bottom: 1px solid ${colors.lightGray};
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    ::placeholder {
+      color: ${colors.gray};
+    }
   }
 
   .comment-form button {
     height: 40px;
     margin-left: 10px;
     padding: 0 10px;
-    background-color: ${colors.mediumPurple};
+    background-color: ${colors.primaryPurple};
     color: white;
     border: none;
     border-radius: 15px;

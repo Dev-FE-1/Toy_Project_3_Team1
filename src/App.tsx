@@ -2,7 +2,6 @@ import { PATH } from '@/constants/path'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
 
 import CreatePlaylistPage from '@/pages/CreatePlaylistPage'
-import EditProfilePage from '@/pages/EditProfilePage'
 import FollowPage from '@/pages/FollowPage'
 import LoginPage from '@/pages/LoginPage'
 import Page404 from '@/pages/Page404'
@@ -46,7 +45,6 @@ const router = createBrowserRouter([
           { path: PATH.PLAYLIST, element: <PlaylistPage /> },
           { path: PATH.USER_PROFILE, element: <ProfilePage /> },
           { path: PATH.CREATEPLAYLIST, element: <CreatePlaylistPage /> },
-          { path: PATH.EDITPROFILE, element: <EditProfilePage /> },
           { path: PATH.FOLLOW, element: <FollowPage /> },
           { path: PATH.CHAT, element: <ChatPage /> },
           {

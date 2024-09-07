@@ -1,26 +1,24 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
-import ButtonLink from '@/components/common/Button/ButtonLink'
 import { colors } from '@/constants/color'
 import Profile from '@/assets/profile_logo.jpg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
-import { getUserIdFromUID } from '@/api/profile/profileInfo'
 import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
 import { useFollowButton } from '@/hooks/useFollowStatus'
+import useIsMyProfile from '@/hooks/useIsMyProfile'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
   const currentUser = getLoggedInUserUID()
   const userData = useUserData(userId)
   const playlistData = usePlaylistData(userId)
-  const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
+  const isMyProfile = useIsMyProfile(userId)
   const [filter, setFilter] = useState<filterPlaylist>('all')
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const { isFollowing, toggleFollow, followerCount } = useFollowButton(
@@ -78,32 +76,9 @@ const ProfilePage = () => {
     setIsOpen((prev) => !prev)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (currentUser && userData.userId) {
-        try {
-          const currentUserId = await getUserIdFromUID(currentUser)
-          if (currentUserId === userData.userId) {
-            setIsMyProfile(true)
-          }
-        } catch (error) {
-          console.error('Failed to fetch user ID:', error)
-        }
-      }
-    }
-    fetchData()
-  }, [currentUser, userData.userId, userId])
-
   return (
     <Container>
-      <div className="section-head">
-        {userData.userId}
-        {isMyProfile && (
-          <ButtonLink to={PATH.EDITPROFILE} size="small" buttonWidth="15%" variant="secondary">
-            설정
-          </ButtonLink>
-        )}
-      </div>
+      <div className="section-head">{!isMyProfile && userData.userId}</div>
       <div className="section-userinfo">
         <div className="profile">
           <div className="section-img">
@@ -168,6 +143,8 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0 20px;
+    font-size: ${fontSize.lg};
+    font-weight: ${fontWeight.bold};
   }
 
   .section-userinfo {
@@ -180,7 +157,6 @@ const Container = styled.div`
     font-weight: ${fontWeight.semiBold};
   }
   .section-info,
-  .section-head,
   .section-playlist,
   .section-btn {
     font-size: ${fontSize.md};
