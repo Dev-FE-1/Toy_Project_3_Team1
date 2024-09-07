@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
 import { fontSize } from '@/constants/font'
-import { createPlayList } from '@/api/playlist/createPlayList'
 import Button from '@/components/common/Button/Button'
 import PLlogo from '@/assets/createlist_logo.svg'
 import LineInput from '@/components/common/Input/LineInput'
@@ -11,24 +10,45 @@ import { MESSAGES } from '@/constants/messages'
 import useTags from '@/hooks/useTags'
 import usePLItem from '@/hooks/usePLItem'
 import MusicItem from '@/components/playlist/MusicItem'
+import createNewPlaylist from '@/service/playlist/createNewPlaylist'
+import { useNavigate } from 'react-router-dom'
+import { getLoggedInUserUID, getUserIdFromUID } from '@/utils/userDataUtils'
 
 const CreatePlaylistPage = () => {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [isPrivate, setIsPrivate] = useState(false)
-  const { tags, currentTag, setCurrentTag, isTagValid, handleAddTag, handleDeleteTag, setTags } =
-    useTags()
+  const uid = getLoggedInUserUID()
+  const {
+    errorMessage,
+    tags,
+    currentTag,
+    setCurrentTag,
+    isTagValid,
+    handleAddTag,
+    handleDeleteTag,
+    setTags,
+  } = useTags()
   const { url, setVideoList, videoList, handleAddList, isValid, setUrl, handleDelete } = usePLItem()
 
   const handleUploadMusic = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await createPlayList(title, tags, videoList, isPrivate)
+      await createNewPlaylist(title, tags, videoList, isPrivate)
       setTitle('')
       setTags([])
       setUrl('')
       setVideoList([])
       setCurrentTag('')
       setIsPrivate(false)
+
+      if (uid) {
+        const id = await getUserIdFromUID(uid)
+
+        if (id) {
+          navigate(`/profile/${id}`)
+        }
+      }
     } catch (error) {
       console.error('Error adding playlist: ', error)
     }
@@ -95,7 +115,7 @@ const CreatePlaylistPage = () => {
           />
           <TagList tags={tags} onTagDelete={handleDeleteTag} />
         </div>
-        {!isTagValid && <span className="text-warning">{MESSAGES.CREATE_PL.TAG_FAIL}</span>}
+        {!isTagValid && <span className="text-warning">{errorMessage}</span>}
         <div className="pl-upload">
           <label className="check-private">
             <input type="checkbox" onChange={handlePrivate} checked={isPrivate} />

@@ -3,9 +3,8 @@ import { NavLink } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { CircleUserRound, House, MessageCircleMore, Search, SquarePlus } from 'lucide-react'
 import { colors } from '@/constants/color'
-import { getUserIdFromUID } from '@/api/profile/profileInfo'
 import { useState, useEffect } from 'react'
-import { getLoggedInUserUID } from '@/utils/userDataUtils'
+import { getLoggedInUserUID, getUserIdFromUID } from '@/utils/userDataUtils'
 
 interface IconLinks {
   path: string

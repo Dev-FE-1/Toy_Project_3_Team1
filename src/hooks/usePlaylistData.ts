@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { showplaylistProps } from '@/types/playlistType'
 import getPlaylists from '@/service/playlist/getUserPlaylists'
-import { getUIDFromUserId } from '@/api/profile/profileInfo'
+import { getUIDFromUserId } from '@/utils/userDataUtils'
 
 export const usePlaylistData = (userId?: string) => {
   const [playlistData, setPlayListData] = useState<showplaylistProps[]>([])
