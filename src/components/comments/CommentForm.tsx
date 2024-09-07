@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { addComment } from '@/api/comment/addComment'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
 import { MESSAGES } from '@/constants/messages'
+import createComment from '@/service/comment/createComment'
 
 interface CommentFormProps {
   playlistId: string
@@ -16,7 +16,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ playlistId, onCommentAdded })
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment.trim()) {
-      await addComment(playlistId, comment)
+      await createComment(playlistId, comment)
       setComment('')
       onCommentAdded()
     }
@@ -61,14 +61,23 @@ const FormContainer = styled.div`
     padding: 10px;
     height: 40px;
     border: none;
-    resize: vertical;
+    border-bottom: 1px solid ${colors.lightGray};
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    ::placeholder {
+      color: ${colors.gray};
+    }
   }
 
   .comment-form button {
     height: 40px;
     margin-left: 10px;
     padding: 0 10px;
-    background-color: ${colors.mediumPurple};
+    background-color: ${colors.primaryPurple};
     color: white;
     border: none;
     border-radius: 15px;

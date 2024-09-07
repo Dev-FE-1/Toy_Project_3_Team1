@@ -1,39 +1,42 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { PATH } from '@/constants/path'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
-import ButtonLink from '@/components/common/Button/ButtonLink'
 import { colors } from '@/constants/color'
-import Profile from '@/assets/profile_logo.jpg'
+import NPProfile from '@/assets/np_logo.svg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
-import { getUserIdFromUID } from '@/api/profile/profileInfo'
 import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
+import { useFollowButton } from '@/hooks/useFollowStatus'
+import { useIsMyProfile } from '@/hooks/useIsMyProfile'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
   const currentUser = getLoggedInUserUID()
-  const userData = useUserData(userId)
-  const playlistData = usePlaylistData(userId)
-  const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
+  const { data: userData } = useUserData(userId)
+  const { data: playlistData = [] } = usePlaylistData(userId)
+  const { data: isMyProfile } = useIsMyProfile(userId)
   const [filter, setFilter] = useState<filterPlaylist>('all')
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const { isFollowing, toggleFollow, followerCount } = useFollowButton(
+    userData?.userId || '',
+    currentUser || ''
+  )
 
   const handleFilterChange = (newFilter: filterPlaylist) => {
     setFilter(newFilter)
   }
 
-  const filteredMap = {
+  const filteredMap: Record<filterPlaylist, (playlistData: showplaylistProps) => boolean> = {
     all: () => true,
-    public: (playlistData: showplaylistProps) => !playlistData.isPrivate,
-    private: (playlistData: showplaylistProps) => playlistData.isPrivate,
+    public: (playlistData) => !playlistData.isPrivate,
+    private: (playlistData) => !!playlistData.isPrivate,
   }
 
-  const filteredLists = playlistData.filter((playlistData) => {
+  const filteredLists = playlistData.filter((playlistData: showplaylistProps) => {
     return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
   })
 
@@ -55,15 +58,15 @@ const ProfilePage = () => {
   const infoItems = [
     {
       label: '플리',
-      value: userData.playlistLength,
+      value: userData?.playlistLength,
     },
     {
       label: '팔로워',
-      value: userData.playlistLength,
+      value: followerCount,
     },
     {
       label: '팔로잉',
-      value: userData.playlistLength,
+      value: userData?.followingLength,
     },
   ]
 
@@ -73,36 +76,13 @@ const ProfilePage = () => {
     setIsOpen((prev) => !prev)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (currentUser && userData.userId) {
-        try {
-          const currentUserId = await getUserIdFromUID(currentUser)
-          if (currentUserId === userData.userId) {
-            setIsMyProfile(true)
-          }
-        } catch (error) {
-          console.error('Failed to fetch user ID:', error)
-        }
-      }
-    }
-    fetchData()
-  }, [currentUser, userData.userId, userId])
-
   return (
     <Container>
-      <div className="section-head">
-        {userData.userId}
-        {isMyProfile && (
-          <ButtonLink to={PATH.EDITPROFILE} size="small" buttonWidth="15%" variant="secondary">
-            설정
-          </ButtonLink>
-        )}
-      </div>
+      <div className="section-head">{!isMyProfile && userData?.userId}</div>
       <div className="section-userinfo">
         <div className="profile">
           <div className="section-img">
-            <img className="img-profile" src={userData.userImg || Profile} alt="이미지" />
+            <img className="img-profile" src={userData?.userImg || NPProfile} alt="이미지" />
           </div>
           <div className="section-info">
             {infoItems.map((item, index) => (
@@ -113,8 +93,12 @@ const ProfilePage = () => {
             ))}
           </div>
         </div>
-        <div className="user-bio">{userData.userBio}</div>
-        {!isMyProfile && <Button size="small">팔로우</Button>}
+        <div className="user-bio">{userData?.userBio}</div>
+        {!isMyProfile && (
+          <Button size="small" onClick={toggleFollow} variant={isFollowing ? 'outline' : 'primary'}>
+            {isFollowing ? '팔로잉' : '팔로우'}
+          </Button>
+        )}
       </div>
       <div className="divider" />
       <div className="section-playlist">
@@ -159,6 +143,8 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0 20px;
+    font-size: ${fontSize.lg};
+    font-weight: ${fontWeight.bold};
   }
 
   .section-userinfo {
@@ -171,7 +157,6 @@ const Container = styled.div`
     font-weight: ${fontWeight.semiBold};
   }
   .section-info,
-  .section-head,
   .section-playlist,
   .section-btn {
     font-size: ${fontSize.md};
@@ -203,6 +188,7 @@ const Container = styled.div`
 
   .user-bio {
     margin: 12px 0;
+    width: 100%;
   }
 
   .divider {

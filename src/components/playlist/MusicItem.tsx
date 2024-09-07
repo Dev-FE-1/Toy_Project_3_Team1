@@ -102,9 +102,13 @@ export const Container = styled.div<{ variant: 'profilePL' | 'createPL'; isPriva
   .text-content {
     display: flex;
     flex-direction: column;
-    width: ${(props) => (props.variant === 'createPL' ? '210px' : '280px')};
+    width: ${(props) => (props.variant === 'createPL' ? '210px' : '100%')};
     margin-right: 14px;
     line-height: 20px;
+
+    @media (max-width: 390px) {
+      width: ${(props) => (props.variant === 'profilePL' ? '280px' : 'auto')};
+    }
 
     .tag-private {
       background-color: ${colors.lightPurPle};

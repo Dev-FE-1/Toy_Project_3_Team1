@@ -1,40 +1,39 @@
-import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { userInfo } from '@/api/profile/profileInfo'
-import Profile from '@/assets/profile_logo.jpg'
+import NPProfile from '@/assets/np_logo.svg'
+
+interface UserData {
+  userName: string
+  userId: string
+  userImg: string
+  userEmail: string
+  userBio: string
+  followerLength: number
+  followingLength: number
+  playlistLength: number
+}
+
+const fetchUserData = async (userId?: string): Promise<UserData> => {
+  const data = await userInfo(userId)
+  if (!data) {
+    throw new Error('User not found')
+  }
+  return {
+    userName: data.userName || '사용자',
+    userId: data.userId || 'Unknown',
+    userImg: data.userImg || NPProfile,
+    userEmail: data.userEmail || 'Unknown',
+    userBio: data.userBio || '안녕하세요.',
+    followerLength: data.followerLength || 0,
+    followingLength: data.followingLength || 0,
+    playlistLength: data.playlistLength || 0,
+  }
+}
 
 export const useUserData = (userId?: string) => {
-  const [userData, setUserData] = useState({
-    userName: '',
-    userId: '',
-    userImg: '',
-    userEmail: '',
-    userBio: '',
-    followerLength: 0,
-    followingLength: 0,
-    playlistLength: 0,
+  return useQuery<UserData, Error>({
+    queryKey: ['userData', userId],
+    queryFn: () => fetchUserData(userId),
+    enabled: !!userId,
   })
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await userInfo(userId)
-      if (data) {
-        setUserData({
-          userName: data?.userName || '사용자',
-          userId: data?.userId || 'Unknown',
-          userImg: data?.userImg || Profile,
-          userEmail: data?.userEmail || 'Unknown',
-          userBio: data?.userBio || '안녕하세요.',
-          followerLength: data?.followerLength || 0,
-          followingLength: data?.followingLength || 0,
-          playlistLength: data?.playlistLength || 0,
-        })
-      }
-    }
-
-    if (userId) {
-      fetchUserData()
-    }
-  }, [userId])
-
-  return userData
 }
