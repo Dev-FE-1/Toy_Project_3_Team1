@@ -15,5 +15,6 @@ export const MESSAGES = {
     TAG_COUNT_FAIL: `태그는 최대 ${MAX_TAG_COUNT}개까지 입력 가능합니다.`,
     TAG_LENGTH_FAIL: `태그는 최대 ${MAX_TAG_LENGTH - 1}자까지 가능합니다.`,
     YOUTUBE: '유효한 유튜브 링크를 입력하세요.',
+    DUPLICATION: '중복된 링크입니다.',
   },
 }

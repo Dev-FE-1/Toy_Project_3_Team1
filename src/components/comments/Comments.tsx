@@ -96,7 +96,6 @@ const Comments: React.FC<CommentsProps> = ({ playlistId }) => {
         </div>
         <div ref={observerRef} style={{ height: '50px', backgroundColor: 'transparent' }}></div>
         {isFetching && <p>Loading more comments...</p>}
-        {!hasMore && <p>No more comments</p>}
       </div>
     </div>
   )

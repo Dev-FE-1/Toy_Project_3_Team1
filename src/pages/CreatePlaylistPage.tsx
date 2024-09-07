@@ -29,7 +29,8 @@ const CreatePlaylistPage = () => {
     handleDeleteTag,
     setTags,
   } = useTags()
-  const { url, setVideoList, videoList, handleAddList, isValid, setUrl, handleDelete } = usePLItem()
+  const { url, setVideoList, videoList, handleAddList, isValid, setUrl, handleDelete, validType } =
+    usePLItem()
 
   const handleUploadMusic = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,7 +103,13 @@ const CreatePlaylistPage = () => {
             곡 추가
           </button>
         </div>
-        {!isValid && <span className="text-warning">{MESSAGES.CREATE_PL.YOUTUBE}</span>}
+        {!isValid &&
+          validType.length > 0 &&
+          (validType === 'Youtube' ? (
+            <span className="text-warning">{MESSAGES.CREATE_PL.YOUTUBE}</span>
+          ) : (
+            <span className="text-warning">{MESSAGES.CREATE_PL.DUPLICATION}</span>
+          ))}
         <div className="section-upload">
           <LineInput
             className="input-tag"
