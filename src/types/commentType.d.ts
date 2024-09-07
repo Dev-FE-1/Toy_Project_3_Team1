@@ -1,8 +1,8 @@
 export interface CommentType {
+  userId: string
   id: string
   comment: string
-  createdAt: number
-  userRef: string
+  createdAt: Timestamp | number | Date
   userName: string
   userImg: string
 }
