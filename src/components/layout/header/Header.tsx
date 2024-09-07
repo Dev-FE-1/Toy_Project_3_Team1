@@ -5,12 +5,12 @@ import { PATH } from '@/constants/path'
 import { colors } from '@/constants/color'
 import BackHeader from '@/components/layout/header/BackHeader'
 import LogoutHeader from '@/components/layout/header/LogoutHeader'
-import useIsMyProfile from '@/hooks/useIsMyProfile'
+import { useIsMyProfile } from '@/hooks/useIsMyProfile'
 
 const Header = () => {
   const location = useLocation()
   const { userId } = useParams<{ userId: string }>()
-  const isMyProfile = useIsMyProfile(userId)
+  const { data: isMyProfile } = useIsMyProfile(userId)
   const pathDepth = location.pathname.split('/').filter(Boolean).length
   const isUserProfilePath = /^\/profile\/[^/]+$/.test(location.pathname)
   const isPlaylistPath = /^\/playlist\/[^/]+$/.test(location.pathname)
