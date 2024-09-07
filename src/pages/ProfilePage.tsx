@@ -4,25 +4,25 @@ import { useParams } from 'react-router-dom'
 import { fontSize, fontWeight } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
 import { colors } from '@/constants/color'
-import Profile from '@/assets/profile_logo.jpg'
+import NPProfile from '@/assets/np_logo.svg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
 import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
 import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
 import { useFollowButton } from '@/hooks/useFollowStatus'
-import useIsMyProfile from '@/hooks/useIsMyProfile'
+import { useIsMyProfile } from '@/hooks/useIsMyProfile'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
   const currentUser = getLoggedInUserUID()
-  const userData = useUserData(userId)
-  const playlistData = usePlaylistData(userId)
-  const isMyProfile = useIsMyProfile(userId)
+  const { data: userData } = useUserData(userId)
+  const { data: playlistData = [] } = usePlaylistData(userId)
+  const { data: isMyProfile } = useIsMyProfile(userId)
   const [filter, setFilter] = useState<filterPlaylist>('all')
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const { isFollowing, toggleFollow, followerCount } = useFollowButton(
-    userData.userId,
+    userData?.userId || '',
     currentUser || ''
   )
 
@@ -30,13 +30,13 @@ const ProfilePage = () => {
     setFilter(newFilter)
   }
 
-  const filteredMap = {
+  const filteredMap: Record<filterPlaylist, (playlistData: showplaylistProps) => boolean> = {
     all: () => true,
-    public: (playlistData: showplaylistProps) => !playlistData.isPrivate,
-    private: (playlistData: showplaylistProps) => playlistData.isPrivate,
+    public: (playlistData) => !playlistData.isPrivate,
+    private: (playlistData) => !!playlistData.isPrivate,
   }
 
-  const filteredLists = playlistData.filter((playlistData) => {
+  const filteredLists = playlistData.filter((playlistData: showplaylistProps) => {
     return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
   })
 
@@ -58,7 +58,7 @@ const ProfilePage = () => {
   const infoItems = [
     {
       label: '플리',
-      value: userData.playlistLength,
+      value: userData?.playlistLength,
     },
     {
       label: '팔로워',
@@ -66,7 +66,7 @@ const ProfilePage = () => {
     },
     {
       label: '팔로잉',
-      value: userData.followingLength,
+      value: userData?.followingLength,
     },
   ]
 
@@ -78,11 +78,11 @@ const ProfilePage = () => {
 
   return (
     <Container>
-      <div className="section-head">{!isMyProfile && userData.userId}</div>
+      <div className="section-head">{!isMyProfile && userData?.userId}</div>
       <div className="section-userinfo">
         <div className="profile">
           <div className="section-img">
-            <img className="img-profile" src={userData.userImg || Profile} alt="이미지" />
+            <img className="img-profile" src={userData?.userImg || NPProfile} alt="이미지" />
           </div>
           <div className="section-info">
             {infoItems.map((item, index) => (
@@ -93,7 +93,7 @@ const ProfilePage = () => {
             ))}
           </div>
         </div>
-        <div className="user-bio">{userData.userBio}</div>
+        <div className="user-bio">{userData?.userBio}</div>
         {!isMyProfile && (
           <Button size="small" onClick={toggleFollow} variant={isFollowing ? 'outline' : 'primary'}>
             {isFollowing ? '팔로잉' : '팔로우'}

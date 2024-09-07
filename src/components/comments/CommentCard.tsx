@@ -6,7 +6,7 @@ import { CommentType } from '@/types/commentType'
 import { colors } from '@/constants/color'
 import { Link } from 'react-router-dom'
 import deleteComment from '@/service/comment/deleteComment'
-import Profile from '@/assets/profile_logo.jpg'
+import NPProfile from '@/assets/np_logo.svg'
 
 interface CommentCardProps {
   comment: CommentType
@@ -33,7 +33,7 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment, playlistId, onCommen
   return (
     <CardContainer>
       <Link to={`/profile/${comment.userId}`}>
-        <img className="profile-img" src={comment.userImg || Profile} alt="User Image" />
+        <img className="profile-img" src={comment.userImg || NPProfile} alt="User Image" />
       </Link>
       <div className="comment-content">
         <div className="comment-header">

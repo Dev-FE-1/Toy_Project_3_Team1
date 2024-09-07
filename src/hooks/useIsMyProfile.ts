@@ -1,20 +1,17 @@
+import { useQuery } from '@tanstack/react-query'
 import { getLoggedInUserUID, getUIDFromUserId } from '@/utils/userDataUtils'
-import { useState, useEffect } from 'react'
 
-const useIsMyProfile = (userId?: string) => {
-  const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const currentUser = await getLoggedInUserUID()
-      if (userId) {
-        const uidFromUserId = await getUIDFromUserId(userId)
-        setIsMyProfile(uidFromUserId === currentUser)
-      }
-    }
-    fetchProfileData()
-  }, [userId])
-  return isMyProfile
+const fetchProfileData = async (userId?: string) => {
+  const currentUser = await getLoggedInUserUID()
+  if (!userId) return false
+  const uidFromUserId = await getUIDFromUserId(userId)
+  return uidFromUserId === currentUser
 }
 
-export default useIsMyProfile
+export const useIsMyProfile = (userId?: string) => {
+  return useQuery<boolean, Error>({
+    queryKey: ['isMyProfile', userId],
+    queryFn: () => fetchProfileData(userId),
+    enabled: !!userId,
+  })
+}
