@@ -18,6 +18,7 @@ const Comments: React.FC<CommentsProps> = ({ playlistId }) => {
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [isFetching, setIsFetching] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [trigger, setTrigger] = useState(0)
   const observerRef = useRef<HTMLDivElement>(null)
 
   const loadMoreComments = async () => {
@@ -53,12 +54,12 @@ const Comments: React.FC<CommentsProps> = ({ playlistId }) => {
     setComments([])
     setLastDoc(null)
     setHasMore(true)
-    loadMoreComments()
+    setTrigger((trigger) => trigger + 1)
   }
 
   useEffect(() => {
     loadMoreComments()
-  }, [])
+  }, [trigger])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
