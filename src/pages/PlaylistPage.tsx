@@ -48,7 +48,6 @@ const PlaylistPage = () => {
           <iframe
             width="560"
             height="200"
-            key={`${selectedVideo.url}-${Date.now()}`}
             src={`https://www.youtube.com/embed/${selectedVideo?.url.split('v=')[1]?.split('&')[0]}?autoplay=1`}
             title="Selected Video"
             allowFullScreen
