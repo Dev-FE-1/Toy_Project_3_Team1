@@ -3,17 +3,31 @@ import { videoListProps } from '@/types/playlistType'
 
 const usePLItem = () => {
   const [isValid, setIsValid] = useState(true)
+  const [validType, setValidType] = useState('')
   const [videoList, setVideoList] = useState<videoListProps[]>([])
   const [url, setUrl] = useState('')
 
   const handleAddList = async () => {
-    const isValidYoutubeUrl = (url: string) => {
+    const isValidYoutubeUrl = (url: string): boolean => {
       const regex = /^(https?:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/
       return regex.test(url)
     }
 
+    const isUniqueUrl = (url: string): boolean => {
+      if (videoList.length === 0) {
+        return true
+      }
+
+      return !videoList.some((video) => video.url === url)
+    }
+
     if (!isValidYoutubeUrl(url)) {
       setIsValid(false)
+      setValidType('Youtube')
+      return
+    } else if (!isUniqueUrl(url)) {
+      setIsValid(false)
+      setValidType('Duplication')
       return
     }
     setIsValid(true)
@@ -53,6 +67,7 @@ const usePLItem = () => {
     isValid,
     setUrl,
     handleDelete,
+    validType,
   }
 }
 
