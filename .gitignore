@@ -13,13 +13,9 @@ dist-ssr
 *.local
 
 # Firebase
-.firebase/*
+.firebase/
 
-Dockerfile
-docker.js
-docker.yml
-
-.screenshot/
+screenshots/
 
 # Editor directories and files
 .vscode/*

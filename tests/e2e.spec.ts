@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('E2E', async ({ page }) => {
+test('Basic E2E', async ({ page }) => {
   let screenshotCount = 0
   const takeScreenshot = async () => {
     screenshotCount++
@@ -26,6 +26,7 @@ test('E2E', async ({ page }) => {
 
   // 검색 페이지
   await page.click('nav a >> nth=1')
+  await expect(page).toHaveURL('http://localhost:5173/search')
   await expect(page.locator('text="추천 검색어"')).toBeVisible()
   await page.click('p:has-text("뉴진스")')
   await takeScreenshot()
@@ -40,16 +41,21 @@ test('E2E', async ({ page }) => {
 
   // 플레이리스트 등록
   await page.click('nav a >> nth=2')
+  await expect(page).toHaveURL('http://localhost:5173/createplaylist')
+
   await expect(page.locator('text="등록하기"')).toBeVisible()
   await takeScreenshot()
 
   // 채팅 페이지
   await page.click('nav a >> nth=3')
+  await expect(page).toHaveURL('http://localhost:5173/chat')
+
   await expect(page.locator('text="서비스 준비 중 입니다."')).toBeVisible()
   await takeScreenshot()
 
   // 프로필
   await page.click('nav a >> nth=4')
+  // await expect(page).toHaveURL(`http://localhost:5173/profile/${userId}`)
   await expect(page.locator('text="플레이리스트"')).toBeVisible()
   await takeScreenshot()
 
