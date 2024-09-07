@@ -7,6 +7,13 @@ const usePLItem = () => {
   const [videoList, setVideoList] = useState<videoListProps[]>([])
   const [url, setUrl] = useState('')
 
+  const getVideoIdFromUrl = (url: string): string | null => {
+    const regex =
+      /(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    const match = url.match(regex)
+    return match ? match[1] : null
+  }
+
   const handleAddList = async () => {
     const isValidYoutubeUrl = (url: string): boolean => {
       const regex = /^(https?:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/
@@ -14,11 +21,9 @@ const usePLItem = () => {
     }
 
     const isUniqueUrl = (url: string): boolean => {
-      if (videoList.length === 0) {
-        return true
-      }
-
-      return !videoList.some((video) => video.url === url)
+      const videoId = getVideoIdFromUrl(url)
+      if (!videoId) return false
+      return !videoList.some((video) => getVideoIdFromUrl(video.url) === videoId)
     }
 
     if (!isValidYoutubeUrl(url)) {
@@ -33,7 +38,7 @@ const usePLItem = () => {
     setIsValid(true)
 
     const youtubeKey = import.meta.env.VITE_YOUTUBE_API_KEY
-    const videoId = url.split('v=')[1]?.split('&')[0]
+    const videoId = getVideoIdFromUrl(url)
     const videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${youtubeKey}`
 
     try {
