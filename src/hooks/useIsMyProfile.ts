@@ -1,5 +1,4 @@
-import { getUIDFromUserId } from '@/api/profile/profileInfo'
-import { getLoggedInUserUID } from '@/utils/userDataUtils'
+import { getLoggedInUserUID, getUIDFromUserId } from '@/utils/userDataUtils'
 import { useState, useEffect } from 'react'
 
 const useIsMyProfile = (userId?: string) => {

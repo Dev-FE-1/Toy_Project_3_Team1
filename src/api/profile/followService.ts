@@ -1,5 +1,5 @@
-import { getUIDFromUserId } from './profileInfo'
 import { db } from '@/firebase/firebaseConfig'
+import { getUIDFromUserId } from '@/utils/userDataUtils'
 import { doc, updateDoc, arrayRemove, arrayUnion, onSnapshot } from 'firebase/firestore'
 
 export const followUser = async (

@@ -1,6 +1,7 @@
 import { auth, db } from '@/firebase/firebaseConfig'
 import { collection, doc, getDocs, getDoc, query, where } from 'firebase/firestore'
 import { UserType } from '@/types/userType'
+import { getUIDFromUserId } from '@/utils/userDataUtils'
 
 export interface ProfileProps extends UserType {
   followers: FollowerProps[]
@@ -15,27 +16,6 @@ export interface FollowerProps {
 export interface FollowingProps {
   userId: string
   img: string | null
-}
-
-export const getUIDFromUserId = async (userId?: string) => {
-  const userQuery = query(collection(db, 'USERS'), where('id', '==', userId))
-  const querySnapshot = await getDocs(userQuery)
-
-  if (!querySnapshot.empty) {
-    return querySnapshot.docs[0].id
-  }
-  throw new Error('User not found')
-}
-
-export const getUserIdFromUID = async (uid: string) => {
-  const userRef = doc(db, 'USERS', uid)
-  const userDoc = await getDoc(userRef)
-
-  if (!userDoc.exists()) {
-    throw new Error('User document not found')
-  }
-  const userData = userDoc.data()
-  return userData?.id
 }
 
 export const userInfo = async (userId?: string) => {
