@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "prepare": "husky install",
     "preview": "vite preview --port=5173",
+    "prepare": "husky install",
     "test": "playwright test"
   },
   "husky": {
