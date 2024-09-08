@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { showplaylistProps, videoListProps } from '@/types/playlistType'
+import { BasicVideoProps, showplaylistProps } from '@/types/playlistType'
 import { Trash2 } from 'lucide-react'
 import { colors } from '@/constants/color'
 import { fontSize } from '@/constants/font'
@@ -7,12 +7,12 @@ import PlaylistThumbnails from '@/components/search/PlaylistThumbnails'
 import { Link } from 'react-router-dom'
 
 interface MusicItemProps {
-  videoList: videoListProps[] | showplaylistProps[]
+  videoList: BasicVideoProps[] | showplaylistProps[]
   onItemDelete?: (id: number) => void | ''
   variant: 'profilePL' | 'createPL'
 }
 
-const isVideoListProps = (item: showplaylistProps | videoListProps): item is videoListProps => {
+const isVideoListProps = (item: showplaylistProps | BasicVideoProps): item is BasicVideoProps => {
   return 'channelTitle' in item
 }
 
@@ -21,7 +21,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
     <Container variant={variant}>
       {videoList.map((item, idx) => (
         <div key={idx} className="item-video">
-          {variant === 'profilePL' ? (
+          {variant === 'profilePL' && 'playlistId' in item ? (
             <Link to={`/playlist/${item.playlistId}`} className="thumbnail-list">
               <div className="thumbnail">
                 <PlaylistThumbnails playlistId={item.playlistId || ''} />

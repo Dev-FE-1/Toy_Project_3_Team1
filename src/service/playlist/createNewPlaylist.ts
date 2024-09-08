@@ -1,12 +1,12 @@
 import { db } from '@/firebase/firebaseConfig'
-import { videoListProps } from '@/types/playlistType'
+import { BasicVideoProps } from '@/types/playlistType'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
 import { addDoc, collection, getDoc, doc } from 'firebase/firestore'
 
 const createNewPlaylist = async (
   title: string,
   tags: string[],
-  videoList: videoListProps[],
+  videoList: BasicVideoProps[],
   isPrivate: boolean
 ) => {
   try {

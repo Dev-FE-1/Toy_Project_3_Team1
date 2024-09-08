@@ -37,9 +37,14 @@ const ProfilePage = () => {
     private: (playlistData) => !!playlistData.isPrivate,
   }
 
-  const filteredLists = playlistData.filter((playlistData: showplaylistProps) => {
-    return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
-  })
+  const filteredLists = playlistData
+    .filter((playlistData: showplaylistProps) => {
+      return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
+    })
+    .sort(
+      (a: showplaylistProps, b: showplaylistProps) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
 
   const filterBtns = [
     {
@@ -123,7 +128,7 @@ const ProfilePage = () => {
           플레이리스트 모두 보기
         </Button>
       )}
-      {isOpen && (
+      {filteredLists.length > 4 && isOpen && (
         <Button variant="text" onClick={handleToggleOpen}>
           플레이리스트 모두 접기
         </Button>
