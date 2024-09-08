@@ -5,7 +5,6 @@ import { fontSize } from '@/constants/font'
 import Button from '@/components/common/Button/Button'
 import PLlogo from '@/assets/createlist_logo.svg'
 import LineInput from '@/components/common/Input/LineInput'
-import TagList from '@/components/TagList'
 import { MESSAGES } from '@/constants/messages'
 import useTags from '@/hooks/useTags'
 import usePLItem from '@/hooks/usePLItem'
@@ -13,6 +12,7 @@ import MusicItem from '@/components/playlist/MusicItem'
 import createNewPlaylist from '@/service/playlist/createNewPlaylist'
 import { useNavigate } from 'react-router-dom'
 import { getLoggedInUserUID, getUserIdFromUID } from '@/utils/userDataUtils'
+import TagList from '@/components/playlist/TagList'
 
 const CreatePlaylistPage = () => {
   const navigate = useNavigate()
@@ -144,9 +144,12 @@ const Container = styled.div`
 
   .pl-upload {
     position: fixed;
-    bottom: 55px;
+    bottom: 51px;
     width: 100%;
     max-width: 430px;
+    button {
+      border-radius: 0px;
+    }
   }
 
   .list-music,

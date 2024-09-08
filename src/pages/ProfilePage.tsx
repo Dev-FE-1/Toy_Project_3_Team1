@@ -7,7 +7,7 @@ import { colors } from '@/constants/color'
 import NPProfile from '@/assets/np_logo.svg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
-import { filterPlaylist, showplaylistProps } from '@/types/playlistType'
+import { filterPlaylist, PlaylistBaseProps } from '@/types/playlistType'
 import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
 import { useFollowButton } from '@/hooks/useFollowStatus'
@@ -31,18 +31,18 @@ const ProfilePage = () => {
     setFilter(newFilter)
   }
 
-  const filteredMap: Record<filterPlaylist, (playlistData: showplaylistProps) => boolean> = {
+  const filteredMap: Record<filterPlaylist, (playlistData: PlaylistBaseProps) => boolean> = {
     all: () => true,
     public: (playlistData) => !playlistData.isPrivate,
     private: (playlistData) => !!playlistData.isPrivate,
   }
 
   const filteredLists = playlistData
-    .filter((playlistData: showplaylistProps) => {
+    .filter((playlistData: PlaylistBaseProps) => {
       return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
     })
     .sort(
-      (a: showplaylistProps, b: showplaylistProps) =>
+      (a: PlaylistBaseProps, b: PlaylistBaseProps) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
 

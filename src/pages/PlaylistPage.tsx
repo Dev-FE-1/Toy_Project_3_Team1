@@ -5,9 +5,9 @@ import { colors } from '@/constants/color'
 import Button from '@/components/common/Button/Button'
 import { usePlaylistdetail } from '@/hooks/usePlaylistDetail'
 import Comments from '@/components/comments/Comments'
-import LikeButton from '@/components/LikeButton'
 import NPProfile from '@/assets/np_logo.svg'
 import Avatar from '@/components/common/Avatar'
+import LikeButton from '@/components/common/Button/LikeButton'
 
 const PlaylistPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>()
