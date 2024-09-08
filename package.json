@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "preview": "vite preview --port=5173 --host",
+    "test:e2e": "playwright test",
+    "test:e2e:ci": "start-server-and-test preview http://localhost:5173 test:e2e"
   },
   "husky": {
     "hooks": {
@@ -60,6 +62,7 @@
     "husky": "^9.1.5",
     "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
+    "start-server-and-test": "^2.0.5",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   }

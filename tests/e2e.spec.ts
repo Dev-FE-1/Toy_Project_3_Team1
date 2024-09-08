@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test'
 
-test('Basic E2E', async ({ page }) => {
+test('Basic E2E', async ({ page }, testInfo) => {
+  const deviceName = testInfo.project.name
   let screenshotCount = 0
+
   const takeScreenshot = async () => {
     screenshotCount++
     await page.screenshot({
-      path: `screenshots/${screenshotCount.toString().padStart(2, '0')}.png`,
+      path: `screenshots/${deviceName}-${screenshotCount.toString().padStart(2, '0')}.png`,
     })
   }
 
@@ -18,6 +20,7 @@ test('Basic E2E', async ({ page }) => {
 
   // 메인 페이지
   await expect(page).toHaveURL('http://localhost:5173/')
+  await takeScreenshot()
   await expect(page.locator('img.logo-myidoru[alt="logo"]')).toBeVisible({ timeout: 5000 })
   await page.evaluate(() => {
     window.scrollTo(0, document.body.scrollHeight)
@@ -42,14 +45,12 @@ test('Basic E2E', async ({ page }) => {
   // 플레이리스트 등록
   await page.click('nav a >> nth=2')
   await expect(page).toHaveURL('http://localhost:5173/createplaylist')
-
   await expect(page.locator('text="등록하기"')).toBeVisible()
   await takeScreenshot()
 
   // 채팅 페이지
   await page.click('nav a >> nth=3')
   await expect(page).toHaveURL('http://localhost:5173/chat')
-
   await expect(page.locator('text="서비스 준비 중 입니다."')).toBeVisible()
   await takeScreenshot()
 
@@ -57,6 +58,7 @@ test('Basic E2E', async ({ page }) => {
   await page.click('nav a >> nth=4')
   // await expect(page).toHaveURL(`http://localhost:5173/profile/${userId}`)
   await expect(page.locator('text="플레이리스트"')).toBeVisible()
+  await expect(page.locator('.button-logout')).toBeVisible({ timeout: 5000 })
   await takeScreenshot()
 
   // 로그아웃
