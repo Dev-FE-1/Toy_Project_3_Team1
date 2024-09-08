@@ -6,7 +6,15 @@ import { getUIDFromUserId } from '@/utils/userDataUtils'
 const fetchPlaylistData = async (userId?: string) => {
   if (!userId) return []
   const userData = await getUIDFromUserId(userId)
-  return getPlaylists(userData)
+  const playlists = await getPlaylists(userData)
+
+  return playlists.map((playlist) => ({
+    playlistId: playlist.playlistId,
+    title: playlist.title,
+    thumbnail: playlist.thumbnails[0] || 'not valid thumbnail',
+    isPrivate: playlist.isPrivate,
+    createdAt: playlist.createdAt,
+  }))
 }
 
 export const usePlaylistData = (userId?: string) => {

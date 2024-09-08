@@ -1,10 +1,11 @@
 import { db } from '@/firebase/firebaseConfig'
 import { getUserRef } from '@/utils/userDataUtils'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs, doc as firestoreDoc, getDoc } from 'firebase/firestore'
 import formatDate from '@/utils/formatDate'
+import defaultThumbnail from '@/assets/default-thumbnail.png'
 
-// 특정 사용자 또는 로그인한 사용자의 플레이리스트을 가져오는 함수
-const getPlaylists = async (userId?: string) => {
+// 특정 사용자 또는 로그인한 사용자의 플레이리스트를 가져오는 함수
+const getUserPlaylists = async (userId?: string) => {
   try {
     let userRef
     if (userId) {
@@ -17,44 +18,54 @@ const getPlaylists = async (userId?: string) => {
     const playlistQuerySnapshot = await getDocs(playlistQuery)
 
     const playlistsArray = await Promise.all(
-      playlistQuerySnapshot.docs.map(async (doc) => {
+      playlistQuerySnapshot.docs.map(async (playlistDoc) => {
         try {
-          const playlistData = doc.data()
+          const playlistData = playlistDoc.data()
 
-          const videosRef = collection(doc.ref, 'videos')
+          if (playlistData.isPrivate) {
+            return null
+          }
+
+          const authorRef = firestoreDoc(db, 'USERS', playlistData.author.split('/')[2])
+          const authorSnapshot = await getDoc(authorRef)
+
+          const authorData = authorSnapshot.exists()
+            ? (authorSnapshot.data() as { img: string })
+            : { img: defaultThumbnail }
+
+          const videosRef = collection(playlistDoc.ref, 'videos')
           const videoSnapshot = await getDocs(videosRef)
 
-          const thumbnail = !videoSnapshot.empty
-            ? videoSnapshot.docs[0]?.data().thumbnail
-            : 'not valid thumbnail'
+          const thumbnails = videoSnapshot.docs.slice(0, 4).map((videoDoc) => {
+            return videoDoc.data().thumbnail || 'not valid thumbnail'
+          })
 
           const createdAt = playlistData.createdAt ? formatDate(playlistData.createdAt) : 'Unknown'
 
           return {
-            playlistId: doc.id,
+            playlistId: playlistDoc.id,
             title: playlistData.title || 'Untitled',
-            thumbnail: thumbnail,
-            isPrivate: playlistData.isPrivate,
+            thumbnails: thumbnails,
+            isPrivate: playlistData.isPrivate || false,
             createdAt: createdAt,
+            author: playlistData.author || 'Unknown',
+            authorName: playlistData.authorName || 'Unknown',
+            authorImg: authorData.img || 'default-image-url',
+            likers: playlistData.likers || [],
+            tags: playlistData.tags || [],
           }
         } catch (error) {
-          console.error(`Error fetching videos for playlist ${doc.id}:`, error)
-          return {
-            playlistId: doc.id,
-            title: 'Untitled',
-            thumbnail: 'not valid thumbnail',
-            isPrivate: false,
-            createdAt: 'Unknown',
-          }
+          console.error(`Error fetching videos for playlist ${playlistDoc.id}:`, error)
+          return null
         }
       })
     )
 
-    return playlistsArray
+    return playlistsArray.filter((playlist) => playlist !== null)
   } catch (error) {
     console.error(`Error fetching playlists for user ${userId || 'logged-in user'}:`, error)
     return []
   }
 }
 
-export default getPlaylists
+export default getUserPlaylists

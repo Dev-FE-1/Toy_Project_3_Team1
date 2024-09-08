@@ -12,6 +12,10 @@ interface MusicItemProps {
   variant: 'profilePL' | 'createPL'
 }
 
+const isVideoListProps = (item: showplaylistProps | videoListProps): item is videoListProps => {
+  return 'channelTitle' in item
+}
+
 const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
   return (
     <Container variant={variant}>
@@ -32,7 +36,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
               <img src={item.thumbnail} alt={`${item.title}`} />
               <div className="text-content">
                 <p>{item.title}</p>
-                <span>{item.channelTitle}</span>
+                {isVideoListProps(item) && <span>{item.channelTitle}</span>}
               </div>
               <button
                 className="btn-delete"
