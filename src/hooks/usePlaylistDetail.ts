@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { videoListProps } from '@/types/playlistType'
+import { ExtendedVideoProps } from '@/types/playlistType'
 import getUserPlaylistDetails from '@/service/playlist/getUserPlaylistDetails'
 
 export const usePlaylistdetail = (playlistId?: string) => {
-  const [videos, setVideos] = useState<videoListProps[]>([])
-  const [selectedVideo, setSelectedVideo] = useState<videoListProps>()
+  const [videos, setVideos] = useState<ExtendedVideoProps[]>([])
+  const [selectedVideo, setSelectedVideo] = useState<ExtendedVideoProps>()
   useEffect(() => {
     const fetchPlaylistDetails = async () => {
       if (playlistId) {

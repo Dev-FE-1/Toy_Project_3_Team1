@@ -1,10 +1,10 @@
+import { BasicVideoProps } from '@/types/playlistType'
 import { useState } from 'react'
-import { videoListProps } from '@/types/playlistType'
 
 const usePLItem = () => {
   const [isValid, setIsValid] = useState(true)
   const [validType, setValidType] = useState('')
-  const [videoList, setVideoList] = useState<videoListProps[]>([])
+  const [videoList, setVideoList] = useState<BasicVideoProps[]>([])
   const [url, setUrl] = useState('')
 
   const getVideoIdFromUrl = (url: string): string | null => {
@@ -52,7 +52,7 @@ const usePLItem = () => {
           url: `https://www.youtube.com/watch?v=${videoId}`,
           thumbnail: data.items[0].snippet.thumbnails.medium.url,
         }
-        setVideoList((prev: videoListProps[]) => [...prev, videoData])
+        setVideoList((prev: BasicVideoProps[]) => [...prev, videoData])
         setUrl('')
       }
     } catch (error) {
@@ -61,7 +61,7 @@ const usePLItem = () => {
   }
 
   const handleDelete = (id: number) => {
-    setVideoList((prev: videoListProps[]) => prev.filter((_, index) => index !== id))
+    setVideoList((prev: BasicVideoProps[]) => prev.filter((_, index) => index !== id))
   }
 
   return {

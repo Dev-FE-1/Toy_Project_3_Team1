@@ -37,14 +37,9 @@ const ProfilePage = () => {
     private: (playlistData) => !!playlistData.isPrivate,
   }
 
-  const filteredLists = playlistData
-    .filter((playlistData: showplaylistProps) => {
-      return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
-    })
-    .sort(
-      (a: showplaylistProps, b: showplaylistProps) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )
+  const filteredLists = playlistData.filter((playlistData: showplaylistProps) => {
+    return !isMyProfile && playlistData.isPrivate ? false : filteredMap[filter](playlistData)
+  })
 
   const filterBtns = [
     {
