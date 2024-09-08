@@ -1,12 +1,13 @@
 export interface showplaylistProps {
-  playlistId?: string
-  isPrivate?: boolean
+  playlistId: string
   title: string
   thumbnail: string
-  channelTitle?: string
+  isPrivate: boolean
+  createdAt: string
 }
 
 export interface videoListProps extends showplaylistProps {
+  channelTitle: string
   id?: Key | null | undefined
   url: string
   uploadDate?: string
