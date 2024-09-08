@@ -1,7 +1,7 @@
 import { Heart } from 'lucide-react'
-import { useLikeButton } from '@/api/playlist/likePlaylist'
 import styled from '@emotion/styled'
 import { colors } from '@/constants/color'
+import { useLikeButton } from '@/service/playlist/likePlaylist'
 
 type StyledHeartProps = {
   isLiked: boolean
