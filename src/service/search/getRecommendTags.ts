@@ -15,7 +15,7 @@ const getRecommendTags = async (): Promise<string[]> => {
 
     querySnapshot.forEach((doc) => {
       const data = doc.data()
-      if (data.tags && Array.isArray(data.tags)) {
+      if (data.isPrivate === false && data.tags && Array.isArray(data.tags)) {
         allTags = allTags.concat(data.tags)
       }
     })
