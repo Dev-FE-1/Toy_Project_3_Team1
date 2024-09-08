@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { userInfo } from '@/api/profile/profileInfo'
+import { userInfo } from '@/service/profile/profileInfo'
 import NPProfile from '@/assets/np_logo.svg'
 
 interface UserData {

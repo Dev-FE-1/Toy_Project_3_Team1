@@ -9,7 +9,7 @@ export interface Playlist {
 }
 
 export const SearchTag = async (tag: string): Promise<Playlist[]> => {
-  const formattedTag = `#${tag.trim()}`
+  const formattedTag = `${tag.trim()}`
   const playlistsRef = collection(db, 'PLAYLISTS')
   const q = query(playlistsRef, where('tags', 'array-contains', formattedTag))
 

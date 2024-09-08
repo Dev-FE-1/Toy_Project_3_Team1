@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { followUser, followStatus } from '@/api/profile/followService'
+import { followUser, followStatus } from '@/service/profile/followService'
 
 export const useFollowButton = (targetUserId: string, currentUID: string) => {
   const [followData, setfollowData] = useState({
