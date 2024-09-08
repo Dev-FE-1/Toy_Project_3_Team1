@@ -4,34 +4,15 @@ on: workflow_dispatch
 
 jobs:
   test:
-    name: Run tests on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-2019, windows-2022]
-        node-version: [16.x]
-
+    name: Run tests
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Restore npm cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-
-      - name: Restore Playwright browsers cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.OS }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          node-version: '20'
 
       - name: Install dependencies
         run: npm ci
@@ -39,27 +20,36 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Save npm cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Save Playwright browsers cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.OS }}-playwright-${{ hashFiles('**/package-lock.json') }}
-
       - name: Build the app
         run: npm run build
 
-      - name: Run Playwright tests
-        run: npm run test:e2e:ci
+      - name: Start the app
+        run: npm run preview &
+        env:
+          PORT: 5173
 
-      - uses: actions/upload-artifact@v2
+      - name: Wait for app to be ready
+        run: |
+          timeout=60
+          while ! nc -z localhost 5173; do
+            if [ $timeout -le 0 ]; then
+              echo "Timed out waiting for app to start"
+              exit 1
+            fi
+            echo "Waiting for app to start..."
+            sleep 1
+            timeout=$((timeout - 1))
+          done
+          echo "App is ready!"
+
+      - name: Run Playwright tests
+        run: npm run test
+        env:
+          CI: true
+
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-screenshots-${{ matrix.os }}
-          path: screenshots/
+          name: playwright-report
+          path: playwright-report/
           retention-days: 30
