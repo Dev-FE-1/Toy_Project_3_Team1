@@ -1,4 +1,4 @@
-import { Playlist } from '@/api/playlist/searchTag'
+import { Playlist } from '@/service/search/searchTag'
 import PlaylistItem from '@/components/search/PlaylistItem'
 import { fontSize, fontWeight } from '@/constants/font'
 import styled from '@emotion/styled'
@@ -11,7 +11,9 @@ const SearchSuccess = ({
   playlists: Playlist[]
 }) => (
   <Container>
-    <h3 className="success-tag">검색 태그 : {previousSearchTag}</h3>
+    <h3 className="success-tag">
+      {!previousSearchTag.startsWith('#') ? `#${previousSearchTag}` : previousSearchTag}
+    </h3>
     <div className="search-success">
       {playlists.map((playlist) => (
         <PlaylistItem key={playlist.id} playlist={playlist} />

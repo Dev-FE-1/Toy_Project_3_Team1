@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Playlist, SearchTag } from '@/api/playlist/searchTag'
+import { Playlist, SearchTag } from '@/service/search/searchTag'
 import styled from '@emotion/styled'
 import Input from '@/components/common/Input/Input'
 import { colors } from '@/constants/color'
@@ -15,16 +15,20 @@ const SearchPage = () => {
   const [hasSearched, setHasSearched] = useState(false)
 
   const handleSearch = async () => {
-    if (!searchTag.trim()) return
+    if (!searchTag.trim()) {
+      setHasSearched(false)
+      return
+    }
 
-    const results = await SearchTag(searchTag)
+    const formattedSearchTag = !searchTag.startsWith('#') ? '#' + searchTag : searchTag
+    const results = await SearchTag(formattedSearchTag)
     setPlaylists(results)
     setHasSearched(true)
     setPreviousSearchTag(searchTag)
     setSearchTag('')
   }
 
-  const recommendedKeywords = Keywords
+  const recommendedKeywords = Keywords()
 
   return (
     <Container>
