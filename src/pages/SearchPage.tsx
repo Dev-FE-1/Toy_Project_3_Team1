@@ -15,7 +15,10 @@ const SearchPage = () => {
   const [hasSearched, setHasSearched] = useState(false)
 
   const handleSearch = async () => {
-    if (!searchTag.trim()) return
+    if (!searchTag.trim()) {
+      setHasSearched(false)
+      return
+    }
 
     const formattedSearchTag = !searchTag.startsWith('#') ? '#' + searchTag : searchTag
     const results = await SearchTag(formattedSearchTag)

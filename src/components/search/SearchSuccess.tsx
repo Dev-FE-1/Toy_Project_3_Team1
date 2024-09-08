@@ -12,7 +12,7 @@ const SearchSuccess = ({
 }) => (
   <Container>
     <h3 className="success-tag">
-      검색 태그 :{!previousSearchTag.startsWith('#') ? `#${previousSearchTag}` : previousSearchTag}
+      {!previousSearchTag.startsWith('#') ? `#${previousSearchTag}` : previousSearchTag}
     </h3>
     <div className="search-success">
       {playlists.map((playlist) => (
