@@ -22,10 +22,6 @@ const getUserPlaylists = async (userId?: string) => {
         try {
           const playlistData = playlistDoc.data()
 
-          if (playlistData.isPrivate) {
-            return null
-          }
-
           const authorRef = firestoreDoc(db, 'USERS', playlistData.author.split('/')[2])
           const authorSnapshot = await getDoc(authorRef)
 
