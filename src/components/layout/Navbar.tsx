@@ -58,6 +58,7 @@ const Navbar = () => {
 export default Navbar
 
 const StyledMenuContainer = styled.div`
+  z-index: 99;
   position: fixed;
   left: 0;
   right: 0;
