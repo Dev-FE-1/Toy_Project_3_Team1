@@ -12,6 +12,7 @@ import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
 import { useFollowButton } from '@/hooks/useFollowStatus'
 import { useIsMyProfile } from '@/hooks/useIsMyProfile'
+import Avatar from '@/components/common/Avatar'
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
@@ -81,9 +82,7 @@ const ProfilePage = () => {
       <div className="section-head">{!isMyProfile && userData?.userId}</div>
       <div className="section-userinfo">
         <div className="profile">
-          <div className="section-img">
-            <img className="img-profile" src={userData?.userImg || NPProfile} alt="이미지" />
-          </div>
+          <Avatar src={userData?.userImg || NPProfile} size="large" />
           <div className="section-info">
             {infoItems.map((item, index) => (
               <div key={index} className="info-item">
@@ -168,16 +167,6 @@ const Container = styled.div`
     justify-content: space-between;
     text-align: center;
     height: 52px;
-  }
-
-  .section-img {
-    display: flex;
-    width: 52px;
-    height: 52px;
-
-    .img-profile {
-      border-radius: 50px;
-    }
   }
 
   .section-info {

@@ -5,8 +5,8 @@ import { CommentType } from '@/types/commentType'
 import { colors } from '@/constants/color'
 import { Link } from 'react-router-dom'
 import deleteComment from '@/service/comment/deleteComment'
-import NPProfile from '@/assets/np_logo.svg'
 import { useIsMyProfile } from '@/hooks/useIsMyProfile'
+import Avatar from '@/components/common/Avatar'
 
 interface CommentCardProps {
   comment: CommentType
@@ -32,7 +32,8 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment, playlistId, onCommen
   return (
     <CardContainer>
       <Link to={`/profile/${comment.userId}`}>
-        <img className="profile-img" src={comment.userImg || NPProfile} alt="User Image" />
+        <Avatar src={comment.userImg} />
+        {/* <img className="profile-img" src={comment.userImg || NPProfile} alt="User Image" /> */}
       </Link>
       <div className="comment-content">
         <div className="comment-header">
@@ -75,13 +76,6 @@ const CardContainer = styled.div`
   gap: 15px;
   padding: 5px;
   padding-bottom: 15px;
-
-  .profile-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
 
   .comment-content {
     flex-grow: 1;

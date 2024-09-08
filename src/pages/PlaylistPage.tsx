@@ -7,6 +7,7 @@ import { usePlaylistdetail } from '@/hooks/usePlaylistDetail'
 import Comments from '@/components/comments/Comments'
 import LikeButton from '@/components/LikeButton'
 import NPProfile from '@/assets/np_logo.svg'
+import Avatar from '@/components/common/Avatar'
 
 const PlaylistPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>()
@@ -61,11 +62,7 @@ const PlaylistPage = () => {
           <div className="info-details">
             <div className="info-left">
               <Link to={`/profile/${selectedVideo?.author}`}>
-                <img
-                  className="author-image"
-                  src={selectedVideo?.authorImg || NPProfile}
-                  alt="Uploader"
-                />
+                <Avatar src={selectedVideo?.authorImg || NPProfile} />
               </Link>
               <div className="info-author-date">
                 <Link to={`/profile/${selectedVideo?.author}`}>
@@ -161,13 +158,6 @@ export const Container = styled.div`
             text-decoration: none;
             display: flex;
           }
-        }
-
-        .author-image {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
         }
 
         .info-author-date {
