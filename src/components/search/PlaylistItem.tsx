@@ -4,18 +4,20 @@ import { Playlist } from '@/service/search/searchTag'
 import styled from '@emotion/styled'
 import { fontSize, fontWeight } from '@/constants/font'
 
-const PlaylistItem = ({ playlist }: { playlist: Playlist }) => (
-  <Container>
-    <Link to={`/playlist/${playlist.id}`}>
-      <div className="success-img">
-        <PlaylistThumbnails playlistId={playlist.id} />
-      </div>
-      <div className="success-title" key={playlist.id}>
-        {playlist.title}
-      </div>
-    </Link>
-  </Container>
-)
+const PlaylistItem = ({ playlist }: { playlist: Playlist }) => {
+  return (
+    <Container>
+      <Link to={`/playlist/${playlist.id}`}>
+        <div className="success-img">
+          <PlaylistThumbnails playlistId={playlist.id} />
+        </div>
+        <div className="success-title" key={playlist.id}>
+          {playlist.title}
+        </div>
+      </Link>
+    </Container>
+  )
+}
 
 export default PlaylistItem
 const Container = styled.div`

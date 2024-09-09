@@ -1,3 +1,4 @@
+export type filterPlaylist = 'all' | 'public' | 'private'
 export interface BasicVideoProps {
   title: string
   channelTitle: string
@@ -14,14 +15,23 @@ export interface ExtendedVideoProps extends BasicVideoProps {
   likes?: number
 }
 
-export interface showplaylistProps {
+export interface PlaylistBaseProps {
   playlistId: string
   title: string
-  thumbnail: string
+  thumbnail: string[]
   isPrivate: boolean
   createdAt: string
 }
 
-export interface videoListProps extends showplaylistProps, ExtendedVideoProps {}
+export interface videoListProps extends PlaylistBaseProps, ExtendedVideoProps {}
 
-export type filterPlaylist = 'all' | 'public' | 'private'
+export interface FollowedPlaylist extends PlaylistBaseProps {
+  thumbnails: string[]
+  authorName: string
+  authorImg?: string
+  authorId?: string
+}
+
+export interface FollowedUserPlaylists {
+  playlists: Playlist[]
+}

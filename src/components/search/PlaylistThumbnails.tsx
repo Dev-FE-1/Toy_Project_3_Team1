@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ExtendedVideoProps } from '@/types/playlistType'
 import styled from '@emotion/styled'
 import getUserPlaylistDetails from '@/service/playlist/getUserPlaylistDetails'
+import defaultThumbnail from '@/assets/default-thumbnail.png'
 
 const PlaylistThumbnails = ({ playlistId }: { playlistId: string }) => {
   const [videos, setVideos] = useState<ExtendedVideoProps[]>([])
@@ -16,10 +17,19 @@ const PlaylistThumbnails = ({ playlistId }: { playlistId: string }) => {
 
   const thumbnails = videos.slice(0, 4)
 
+  const displayThumbnails: (ExtendedVideoProps | string)[] = [...thumbnails]
+  if (thumbnails.length === 3) {
+    displayThumbnails.push(defaultThumbnail)
+  }
+
   return (
-    <Container count={thumbnails.length}>
-      {thumbnails.map((video, idx) => (
-        <img key={idx} src={video.thumbnail} alt={video.title} />
+    <Container count={displayThumbnails.length}>
+      {displayThumbnails.map((video, idx) => (
+        <img
+          key={idx}
+          src={typeof video === 'string' ? video : video.thumbnail}
+          alt={typeof video === 'string' ? 'Default thumbnail' : video.title}
+        />
       ))}
     </Container>
   )

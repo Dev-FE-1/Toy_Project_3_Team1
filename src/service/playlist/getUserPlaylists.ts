@@ -3,6 +3,7 @@ import { getUserRef } from '@/utils/userDataUtils'
 import { collection, query, where, getDocs, doc as firestoreDoc, getDoc } from 'firebase/firestore'
 import formatDate from '@/utils/formatDate'
 import defaultThumbnail from '@/assets/default-thumbnail.png'
+import NPProfile from '@/assets/np_logo.svg'
 
 // 특정 사용자 또는 로그인한 사용자의 플레이리스트를 가져오는 함수
 const getUserPlaylists = async (userId?: string) => {
@@ -22,13 +23,17 @@ const getUserPlaylists = async (userId?: string) => {
         try {
           const playlistData = playlistDoc.data()
 
-          const authorRef = firestoreDoc(db, 'USERS', playlistData.author.split('/')[2])
+          const authorId = playlistData.author.split('/')[2]
+
+          const authorRef = firestoreDoc(db, 'USERS', authorId)
           const authorSnapshot = await getDoc(authorRef)
 
           const authorData = authorSnapshot.exists()
-            ? (authorSnapshot.data() as { img: string })
-            : { img: defaultThumbnail }
-
+            ? {
+                img: authorSnapshot.data()?.img || defaultThumbnail, // Default if img doesn't exist
+                id: authorSnapshot.data()?.id || 'Unknown', // Default if id doesn't exist
+              }
+            : { img: defaultThumbnail, id: 'Unknown' }
           const videosRef = collection(playlistDoc.ref, 'videos')
           const videoSnapshot = await getDocs(videosRef)
 
@@ -44,9 +49,9 @@ const getUserPlaylists = async (userId?: string) => {
             thumbnails: thumbnails,
             isPrivate: playlistData.isPrivate || false,
             createdAt: createdAt,
-            author: playlistData.author || 'Unknown',
+            authorId: authorData.id || 'Unknown',
             authorName: playlistData.authorName || 'Unknown',
-            authorImg: authorData.img || 'default-image-url',
+            authorImg: authorData.img || NPProfile,
             likers: playlistData.likers || [],
             tags: playlistData.tags || [],
           }

@@ -38,30 +38,29 @@ const Navbar = () => {
   ]
 
   return (
-    <nav>
-      <StyledMenuContainer>
-        {menu.map(({ path, icon }) => (
-          <StyledMenuItem key={path}>
-            <NavLink
-              to={path}
-              className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')}
-            >
-              {icon}
-            </NavLink>
-          </StyledMenuItem>
-        ))}
-      </StyledMenuContainer>
-    </nav>
+    <StyledMenuContainer>
+      {menu.map(({ path, icon }) => (
+        <NavLink
+          key={path}
+          to={path}
+          className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')}
+        >
+          {icon}
+        </NavLink>
+      ))}
+    </StyledMenuContainer>
   )
 }
 
 export default Navbar
 
-const StyledMenuContainer = styled.div`
+const StyledMenuContainer = styled.nav`
+  z-index: 99;
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
+
   display: flex;
   justify-content: space-around;
   width: 100%;
@@ -70,11 +69,41 @@ const StyledMenuContainer = styled.div`
   height: 52px;
   border-top: 1px solid ${colors.gray};
   background-color: ${colors.white};
-`
 
-const StyledMenuItem = styled.div`
-  padding: 10px 20px;
+  .nav-link-active,
+  .nav-link {
+    padding-bottom: 5px;
+    width: calc(100% / 5);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid ${colors.red}; */
+  }
+
   .nav-link {
     color: ${colors.gray};
   }
 `
+
+// const StyledMenuItem = styled.div`
+//   width: calc(100% / 5);
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: lime;
+
+//   .nav-link-active,
+//   .nav-link {
+//     width: calc(100% / 5);
+//     height: 100%;
+//     display: flex;
+//     justify-content: center;
+//     background-color: ${colors.red};
+//   }
+
+//   .nav-link {
+//     color: ${colors.gray};
+//   }
+// `
