@@ -27,7 +27,7 @@ const MusicItem = ({ videoList, onItemDelete, variant }: MusicItemProps) => {
             {variant === 'profilePL' && 'playlistId' in item ? (
               <Link to={`/playlist/${item.playlistId}`} className="thumbnail-list">
                 <div className="thumbnail">
-                  <ImageGrid thumbnails={thumbnails} />
+                  <ImageGrid thumbnails={thumbnails} size="small" />
                 </div>
                 <div className="text-content">
                   <p>{item.title}</p>

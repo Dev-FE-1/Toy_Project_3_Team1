@@ -9,7 +9,7 @@ interface ImageGridProps {
   size?: ImageGridSize
 }
 
-const ImageGrid: React.FC<ImageGridProps> = ({ thumbnails, size = 'small' }) => {
+const ImageGrid: React.FC<ImageGridProps> = ({ thumbnails, size = 'large' }) => {
   const displayThumbnails = [...thumbnails]
   if (thumbnails.length === 3) {
     displayThumbnails.push(defaultThumbnail)
@@ -29,8 +29,8 @@ const ImageGrid: React.FC<ImageGridProps> = ({ thumbnails, size = 'small' }) => 
 export default ImageGrid
 
 const sizeStyles = {
-  small: '70px',
-  large: '52px',
+  large: '70px',
+  small: '52px',
 }
 
 const Container = styled.div<{ count: number; size: ImageGridSize }>`
