@@ -7,6 +7,7 @@ import RecommendSearch from '@/components/search/RecommendSearch'
 import { Keywords } from '@/components/search/RecommendKeyword'
 import SearchFail from '@/components/search/SearchFail'
 import SearchSuccess from '@/components/search/SearchSuccess'
+import { SearchIcon } from 'lucide-react'
 
 const SearchPage = () => {
   const [searchTag, setSearchTag] = useState('')
@@ -39,10 +40,9 @@ const SearchPage = () => {
           value={searchTag}
           onChange={(e) => setSearchTag(e.target.value)}
           placeholder="플레이리스트 관련 태그 검색"
+          button={<SearchIcon />}
+          onClick={handleSearch}
         />
-        <button className="search-btn" type="button" onClick={handleSearch}>
-          검색
-        </button>
       </div>
       <div className="search-result">
         {!hasSearched ? (
@@ -66,19 +66,11 @@ const Container = styled.div`
     gap: 10px;
   }
   .search-input {
+    position: relative;
     width: 100%;
     margin-bottom: 5px;
     padding: 16px 18px;
     border: 1px solid ${colors.lightGray};
-    border-radius: 5px;
-  }
-  .search-btn {
-    width: 100px;
-    border: 1px solid ${colors.lightGray};
-    color: ${colors.white};
-    background-color: ${colors.primaryPurple};
-    border-radius: 15px;
-    margin-bottom: 5px;
-    cursor: pointer;
+    border-radius: 10px;
   }
 `

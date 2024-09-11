@@ -14,10 +14,11 @@ const Header = () => {
   const pathDepth = location.pathname.split('/').filter(Boolean).length
   const isUserProfilePath = /^\/profile\/[^/]+$/.test(location.pathname)
   const isPlaylistPath = /^\/playlist\/[^/]+$/.test(location.pathname)
+  const isSearchPath = /^\/search\/[^/]+$/.test(location.pathname)
 
   return (
     <>
-      {pathDepth < 2 || (!isUserProfilePath && !isPlaylistPath) ? (
+      {pathDepth < 2 || (!isUserProfilePath && !isPlaylistPath && !isSearchPath) ? (
         <Container>
           <Link to={PATH.HOME}>
             <img className="logo-myidoru" src={logo} alt="logo" />

@@ -1,17 +1,19 @@
 import styled from '@emotion/styled'
 import { fontSize, fontWeight } from '@/styles/font'
+import { colors } from '@/styles/colors'
 
 const SearchFail = ({ previousSearchTag }: { previousSearchTag: string }) => (
   <Container>
     <div className="search-fail">
-      <h3 className="fail-title">검색 태그 : {previousSearchTag}</h3>
-      <div className="fail-text">
-        죄송합니다.
-        <br />
-        &quot;{previousSearchTag}&quot; 에 <br />
-        해당하는 플레이리스트를 <br />
-        찾을 수 없습니다.
+      <div className="fail-title">
+        {' '}
+        &quot;{previousSearchTag}&quot; 에 대한 검색된 플레이리스트를 찾을 수 없습니다. <br />{' '}
       </div>
+      <ul className="fail-text">
+        <li>단어의 철자가 정확한지 확인해 주세요.</li>
+        <li>검색어의 단어 수를 줄이거나, 다른 검색어로 검색해 보세요.</li>
+        <li>보다 일반적인 검색어로 다시 검색해 보세요.</li>
+      </ul>
     </div>
   </Container>
 )
@@ -21,19 +23,20 @@ const Container = styled.div`
   .search-fail {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     height: calc(80vh - 100px);
     min-height: 300px;
-    text-align: center;
+    color: ${colors.darkGray};
   }
   .fail-title {
-    padding: 15% 0;
+    padding: 5% 0;
     font-size: ${fontSize.xl};
+    font-weight: ${fontWeight.medium};
   }
   .fail-text {
     font-size: ${fontSize.lg};
-    font-weight: ${fontWeight.medium};
-    line-height: 2;
+    font-weight: ${fontWeight.regular};
+    line-height: 1.7;
+    list-style-type: disc;
+    padding: 0 30px;
   }
 `

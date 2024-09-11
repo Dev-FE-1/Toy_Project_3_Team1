@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { colors } from '@/styles/colors'
 import getRecommendTags from '@/service/search/getRecommendTags'
+import { fontSize, fontWeight } from '@/styles/font'
 
 interface RecommendedKeywordProps {
   keyword: string
@@ -27,11 +28,12 @@ export const RecommendedKeyword: React.FC<RecommendedKeywordProps> = ({ keyword,
 
 const Keyword = styled.p`
   display: inline-block;
-  padding: 10px;
+  padding: 8px;
   margin: 5px;
-  border: 1px solid ${colors.mediumPurple};
-  color: ${colors.white};
-  background-color: ${colors.mediumPurple};
+  color: ${colors.primaryPurple};
+  background-color: ${colors.lightPurPle};
+  font-weight: ${fontWeight.semiBold};
+  font-size: ${fontSize.md};
   border-radius: 20px;
   cursor: pointer;
 `

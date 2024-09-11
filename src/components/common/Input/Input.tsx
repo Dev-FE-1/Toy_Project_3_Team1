@@ -7,12 +7,14 @@ export interface InputProps {
   value: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent) => void
+  onClick?: (event: React.MouseEvent) => void
   name?: string
   inputWidth?: CSSProperties['width']
   placeholder?: string
   type?: 'text' | 'password' | 'date'
   disabled?: boolean
   className?: string
+  button?: React.ReactNode
 }
 
 type InputComponentProps = Pick<InputProps, 'inputWidth'>
@@ -30,29 +32,52 @@ const Input = React.memo(
         type = 'text',
         disabled = false,
         className,
+        button,
+        onClick,
       },
       ref
     ) => (
-      <InputComponent
-        value={value}
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        name={name}
-        inputWidth={inputWidth}
-        placeholder={placeholder}
-        type={type}
-        disabled={disabled}
-        className={className}
-        ref={ref}
-      />
+      <InputWrapper inputWidth={inputWidth}>
+        <InputComponent
+          value={value}
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          name={name}
+          placeholder={placeholder}
+          type={type}
+          disabled={disabled}
+          className={className}
+          ref={ref}
+        />
+        {button && (
+          <div className="icon-btn" onClick={onClick}>
+            {button}
+          </div>
+        )}
+      </InputWrapper>
     )
   )
 )
 
-const InputComponent = styled.input<InputComponentProps>`
+const InputWrapper = styled.div<InputComponentProps>`
+  position: relative;
   width: ${(props) => props.inputWidth};
+
+  .icon-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: ${colors.black};
+    border: none;
+    cursor: pointer;
+  }
+`
+
+const InputComponent = styled.input<InputComponentProps>`
+  width: 100%;
   height: 50px;
   padding: 12px;
+  padding-right: 40px;
   border: 1px solid ${colors.lightGray};
   border-radius: 8px;
   color: ${colors.black};
