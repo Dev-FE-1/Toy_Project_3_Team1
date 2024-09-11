@@ -11,7 +11,7 @@ import SearchPage from '@/pages/SearchPage'
 import RootLayout from '@/layout/Root'
 import ChatPage from '@/pages/ChatPage'
 import HomePage from '@/pages/HomePage'
-import EditPwPage from '@/pages/EditPwPage'
+import ResetPwPage from '@/pages/ResetPwPage'
 import SignUpPage from '@/pages/SignUpPage'
 import checkAuth from '@/service/auth/checkAuth'
 
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         element: <SignUpPage />,
       },
 
-      { path: PATH.EDITPW, element: <EditPwPage /> },
+      { path: PATH.EDITPW, element: <ResetPwPage /> },
       {
         element: <PrivateRoute />,
         children: [

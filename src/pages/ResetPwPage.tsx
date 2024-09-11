@@ -8,17 +8,21 @@ import Input from '@/components/common/Input/Input'
 import Button from '@/components/common/Button/Button'
 import { MESSAGES } from '@/constants/messages'
 
-const EditPwPage = () => {
+const ResetPwPage = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState<boolean | null>(null)
-  //TODO: 이메일 유효성 검사하기
-  const isValid = email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const isValid = emailRegex.test(email)
 
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      await sendPasswordResetEmail(auth, email)
-      setMessage(true)
+      if (isValid) {
+        await sendPasswordResetEmail(auth, email)
+        setMessage(true)
+      } else {
+        setMessage(false)
+      }
     } catch (error) {
       setMessage(false)
       setEmail('')
@@ -40,12 +44,9 @@ const EditPwPage = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        {message !== null &&
-          (message ? (
-            <span className="success message">{MESSAGES.RESET_PASSWORD.SUCCESS}</span>
-          ) : (
-            <span className="failed message">{MESSAGES.RESET_PASSWORD.FAIL}</span>
-          ))}
+        {message !== null && message && (
+          <span className="success message">{MESSAGES.RESET_PASSWORD.SUCCESS}</span>
+        )}
 
         <Button disabled={!isValid}>비밀번호 재설정 링크 보내기</Button>
       </form>
@@ -53,7 +54,7 @@ const EditPwPage = () => {
   )
 }
 
-export default EditPwPage
+export default ResetPwPage
 
 const Container = styled.div`
   padding: 62px 20px;
