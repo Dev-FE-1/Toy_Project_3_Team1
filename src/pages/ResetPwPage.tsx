@@ -10,7 +10,7 @@ import { MESSAGES } from '@/constants/messages'
 
 const ResetPwPage = () => {
   const [email, setEmail] = useState('')
-  const [message, setMessage] = useState<boolean | null>(null)
+  const [message, setMessage] = useState<string>('')
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   const isValid = emailRegex.test(email)
 
@@ -19,12 +19,10 @@ const ResetPwPage = () => {
     try {
       if (isValid) {
         await sendPasswordResetEmail(auth, email)
-        setMessage(true)
-      } else {
-        setMessage(false)
+        setMessage(MESSAGES.RESET_PASSWORD.SUCCESS)
       }
     } catch (error) {
-      setMessage(false)
+      setMessage(MESSAGES.RESET_PASSWORD.FAIL)
       setEmail('')
     }
   }
@@ -44,8 +42,10 @@ const ResetPwPage = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        {message !== null && message && (
-          <span className="success message">{MESSAGES.RESET_PASSWORD.SUCCESS}</span>
+        {message !== null && message === MESSAGES.RESET_PASSWORD.SUCCESS ? (
+          <span className="success">{message}</span>
+        ) : (
+          <span className="failed">{message}</span>
         )}
 
         <Button disabled={!isValid}>비밀번호 재설정 링크 보내기</Button>
