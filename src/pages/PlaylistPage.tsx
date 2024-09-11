@@ -11,18 +11,16 @@ import LikeButton from '@/components/common/Button/LikeButton'
 
 const PlaylistPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>()
-  const [view, setView] = useState<'videos' | 'comments'>('videos')
+  const [tab, setTab] = useState<'videos' | 'comments'>('videos')
   const { videos, selectedVideo, setSelectedVideo } = usePlaylistdetail(playlistId)
-  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number>(0)
 
   const renderVideos = () => (
     <VideoList>
       {videos.map((video, idx) => (
         <div
-          className={`video-item ${selectedVideoIndex === idx ? 'active' : ''}`}
+          className={`video-item ${selectedVideo === video.playlistTitle ? 'active' : ''}`}
           key={idx}
           onClick={() => {
-            setSelectedVideoIndex(idx)
             setSelectedVideo(videos[idx])
           }}
         >
@@ -81,20 +79,20 @@ const PlaylistPage = () => {
       <div className="section-btn">
         <Button
           size="small"
-          onClick={() => setView('videos')}
-          variant={view === 'videos' ? 'outline' : 'primary'}
+          onClick={() => setTab('videos')}
+          variant={tab === 'videos' ? 'outline' : 'primary'}
         >
           영상
         </Button>
         <Button
           size="small"
-          onClick={() => setView('comments')}
-          variant={view === 'comments' ? 'outline' : 'primary'}
+          onClick={() => setTab('comments')}
+          variant={tab === 'comments' ? 'outline' : 'primary'}
         >
           댓글
         </Button>
       </div>
-      {view === 'videos' ? renderVideos() : renderComments()}
+      {tab === 'videos' ? renderVideos() : renderComments()}
     </Container>
   )
 }

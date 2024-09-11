@@ -149,7 +149,9 @@ export const Container = styled.div<{ variant: 'profilePL' | 'createPL'; isPriva
     font-weight: bold;
     -webkit-line-clamp: ${({ isPrivate }) => (isPrivate ? '1' : '2')};
     display: -webkit-box;
+    text-overflow: ellipsis;
     overflow: hidden;
+    word-break: break-word;
     -webkit-box-orient: vertical;
     margin: 0;
     color: ${colors.black};
