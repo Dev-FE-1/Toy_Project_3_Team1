@@ -140,6 +140,12 @@ export const Container = styled.div`
       .playlist-title {
         font-weight: bold;
         font-size: 18px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-word;
+        -webkit-box-orient: vertical;
       }
 
       .info-details {
