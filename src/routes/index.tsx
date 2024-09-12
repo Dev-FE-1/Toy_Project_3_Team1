@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import CreatePlaylistPage from '@/pages/CreatePlaylistPage'
 import FollowPage from '@/pages/FollowPage'
 import LoginPage from '@/pages/LoginPage'
-import Page404 from '@/pages/Page404'
+import NotFoundPage from '@/pages/NotFoundPage'
 import PlaylistPage from '@/pages/PlaylistPage'
 import ProfilePage from '@/pages/ProfilePage'
 import SearchPage from '@/pages/SearchPage'
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
   {
     path: PATH.HOME,
     element: <RootLayout />,
-    errorElement: <Page404 />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         path: PATH.LOGIN,
