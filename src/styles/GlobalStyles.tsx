@@ -1,6 +1,6 @@
 import { Global, css } from '@emotion/react'
 import 'normalize.css'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 
 const GlobalStyles = () => (
   <Global

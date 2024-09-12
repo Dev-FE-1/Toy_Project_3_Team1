@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import { CSSProperties } from 'react'
 
 export interface InputProps {

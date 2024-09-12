@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import PlaylistThumbnails from '@/components/search/PlaylistThumbnails'
 import { Playlist } from '@/service/search/searchTag'
 import styled from '@emotion/styled'
-import { fontSize, fontWeight } from '@/constants/font'
+import { fontSize, fontWeight } from '@/styles/font'
 
 const PlaylistItem = ({ playlist }: { playlist: Playlist }) => {
   return (

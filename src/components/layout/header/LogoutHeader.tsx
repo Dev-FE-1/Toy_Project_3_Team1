@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import { LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import logout from '@/service/auth/logout'
-import { fontSize } from '@/constants/font'
-import { fontWeight } from '@/constants/font'
+import { fontSize } from '@/styles/font'
+import { fontWeight } from '@/styles/font'
 
 interface LogoutHeaderProps {
   userId: string

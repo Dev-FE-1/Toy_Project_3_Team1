@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import Avatar from '@/components/common/Avatar'
-import { fontSize, fontWeight } from '@/constants/font'
+import { fontSize, fontWeight } from '@/styles/font'
 import NPProfile from '@/assets/np_logo.svg'
 
 interface UserInfoProps {

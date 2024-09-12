@@ -1,6 +1,6 @@
 import { Playlist } from '@/service/search/searchTag'
 import PlaylistItem from '@/components/search/PlaylistItem'
-import { fontSize, fontWeight } from '@/constants/font'
+import { fontSize, fontWeight } from '@/styles/font'
 import styled from '@emotion/styled'
 
 const SearchSuccess = ({

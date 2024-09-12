@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useParams, Link } from 'react-router-dom'
 import { useState } from 'react'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import Button from '@/components/common/Button/Button'
 import { usePlaylistdetail } from '@/hooks/usePlaylistDetail'
 import Comments from '@/components/comments/Comments'

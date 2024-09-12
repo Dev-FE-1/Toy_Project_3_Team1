@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import getRecommendTags from '@/service/search/getRecommendTags'
 
 interface RecommendedKeywordProps {
