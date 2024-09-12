@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "prepare": "husky install"
+    "preview": "vite preview --port=5173",
+    "prepare": "husky install",
+    "test": "playwright test"
   },
   "husky": {
     "hooks": {
@@ -39,8 +40,10 @@
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.12.0",
+    "@playwright/test": "^1.47.0",
     "@tanstack/eslint-plugin-query": "^5.52.0",
     "@tanstack/react-query-devtools": "^5.52.2",
+    "@types/node": "^22.5.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/uuid": "^10.0.0",

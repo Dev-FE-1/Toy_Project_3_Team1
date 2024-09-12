@@ -13,11 +13,7 @@ dist-ssr
 *.local
 
 # Firebase
-.firebase/*
-
-Dockerfile
-docker.js
-docker.yml
+.firebase/
 
 # Editor directories and files
 .vscode/*
@@ -31,3 +27,7 @@ docker.yml
 *.sw?
 
 .env
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
