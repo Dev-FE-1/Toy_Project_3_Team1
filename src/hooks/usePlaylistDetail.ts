@@ -16,7 +16,7 @@ export const usePlaylistdetail = (playlistId?: string) => {
       }
     }
     fetchPlaylistDetails()
-  }, [playlistId])
+  }, [])
 
   return { videos, selectedVideo, setSelectedVideo }
 }

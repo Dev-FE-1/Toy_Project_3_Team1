@@ -6,7 +6,7 @@ export const MESSAGES = {
   },
   RESET_PASSWORD: {
     SUCCESS: '비밀번호 재설정 링크가 이메일로 전송되었습니다.',
-    FAIL: '비밀번호 재설정 링크 전송에 실패했습니다. 다시 시도해주세요.',
+    FAIL: '올바른 이메일 형식을 입력하세요.',
   },
   COMMNET_OVER: '댓글은 최대 400자까지 입력할 수 있습니다.',
   CREATE_PL: {

@@ -115,7 +115,7 @@ const CreatePlaylistPage = () => {
             className="input-tag"
             type="text"
             lineType="none"
-            placeholder="태그를 입력하세요."
+            placeholder="태그 입력 후 Enter를 눌러 추가하세요."
             value={currentTag}
             onChange={(e) => setCurrentTag(e.target.value)}
             onKeyDown={handleAddTag}

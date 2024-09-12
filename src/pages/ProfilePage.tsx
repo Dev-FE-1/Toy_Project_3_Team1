@@ -14,6 +14,21 @@ import { useFollowButton } from '@/hooks/useFollowStatus'
 import { useIsMyProfile } from '@/hooks/useIsMyProfile'
 import Avatar from '@/components/common/Avatar'
 
+const filterBtns = [
+  {
+    label: '전체',
+    value: 'all' as filterPlaylist,
+  },
+  {
+    label: '공개',
+    value: 'public' as filterPlaylist,
+  },
+  {
+    label: '비공개',
+    value: 'private' as filterPlaylist,
+  },
+]
+
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>()
   const currentUser = getLoggedInUserUID()
@@ -46,20 +61,11 @@ const ProfilePage = () => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
 
-  const filterBtns = [
-    {
-      label: '전체',
-      value: 'all' as filterPlaylist,
-    },
-    {
-      label: '공개',
-      value: 'public' as filterPlaylist,
-    },
-    {
-      label: '비공개',
-      value: 'private' as filterPlaylist,
-    },
-  ]
+  const displayedLists = isOpen ? filteredLists : filteredLists.slice(0, 4)
+
+  const handleToggleOpen = () => {
+    setIsOpen((prev) => !prev)
+  }
 
   const infoItems = [
     {
@@ -75,12 +81,6 @@ const ProfilePage = () => {
       value: userData?.followingLength,
     },
   ]
-
-  const displayedLists = isOpen ? filteredLists : filteredLists.slice(0, 4)
-
-  const handleToggleOpen = () => {
-    setIsOpen((prev) => !prev)
-  }
 
   return (
     <Container>
@@ -123,14 +123,9 @@ const ProfilePage = () => {
         )}
       </div>
       <MusicItem videoList={displayedLists} variant="profilePL" />
-      {filteredLists.length > 4 && !isOpen && (
+      {filteredLists.length > 4 && (
         <Button variant="text" onClick={handleToggleOpen}>
-          플레이리스트 모두 보기
-        </Button>
-      )}
-      {filteredLists.length > 4 && isOpen && (
-        <Button variant="text" onClick={handleToggleOpen}>
-          플레이리스트 모두 접기
+          {isOpen ? '플레이리스트 모두 접기' : '플레이리스트 모두 보기'}
         </Button>
       )}
     </Container>
