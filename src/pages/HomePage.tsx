@@ -10,6 +10,7 @@ import { colors } from '@/styles/colors'
 import { fontSize, fontWeight } from '@/styles/font'
 import { useNavigate } from 'react-router-dom'
 import { FollowedPlaylist, FollowedUserPlaylists } from '@/types/playlistType'
+import Loading from '@/components/common/Loading'
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -72,7 +73,7 @@ const HomePage = () => {
   return (
     <Container>
       {isLoading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : allPlaylists.length > 0 ? (
         <ul>
           {allPlaylists.map(

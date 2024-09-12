@@ -5,17 +5,23 @@ import styled from '@emotion/styled'
 import { colors } from '@/styles/colors'
 import { PATH } from '@/constants/path'
 import BackHeader from '@/components/layout/header/BackHeader'
-import checkAuth from '@/service/auth/checkAuth'
+import useAuth from '@/hooks/useAuth'
+import Loading from '@/components/common/Loading'
 
 const RootLayout = () => {
+  const { isAuthenticated, isLoading } = useAuth()
   const location = useLocation()
   const showBackButton = location.pathname === PATH.SIGNUP || location.pathname === PATH.EDITPW
+
+  if (isLoading) {
+    return <Loading />
+  }
 
   return (
     <Container>
       <div className="background-overlay" />
       <div className="root">
-        {checkAuth() ? (
+        {isAuthenticated ? (
           <>
             <Header />
             <Outlet />

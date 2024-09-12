@@ -12,9 +12,10 @@ import { MESSAGES } from '@/constants/messages'
 import login from '@/service/auth/login'
 import { useNavigate } from 'react-router-dom'
 import googleLogin from '@/service/auth/googleLogin'
-import checkAuth from '@/service/auth/checkAuth'
+import useAuth from '@/hooks/useAuth'
 
 const LoginPage = () => {
+  const { isAuthenticated } = useAuth()
   const [loginInfo, setLoginInfo] = useState({
     email: '',
     password: '',
@@ -23,7 +24,6 @@ const LoginPage = () => {
   const navigate = useNavigate()
   //TODO: 이메일, 비밀번호 유효성 검사하기
   const isValid = loginInfo.email && loginInfo.password
-  const isAuthenticated = checkAuth()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
