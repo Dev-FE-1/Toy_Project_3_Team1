@@ -1,5 +1,7 @@
+import { FIREBASE_SESSION_KEY } from '@/constants/firebaseKeys'
+
 const checkAuth = (): boolean => {
-  const sessionKey = `firebase:authUser:${import.meta.env.VITE_FIREBASE_API_KEY as string}:[DEFAULT]`
+  const sessionKey = FIREBASE_SESSION_KEY
   const isLogin = sessionStorage.getItem(sessionKey)
 
   return !!isLogin
