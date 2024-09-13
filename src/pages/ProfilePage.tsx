@@ -7,7 +7,7 @@ import { colors } from '@/styles/colors'
 import NPProfile from '@/assets/np_logo.svg'
 import { useUserData } from '@/hooks/useUserData'
 import { usePlaylistData } from '@/hooks/usePlaylistData'
-import { filterPlaylist, PlaylistBaseProps } from '@/types/playlistType'
+import type { filterPlaylist, PlaylistBaseProps } from '@/types/playlistType'
 import MusicItem from '@/components/playlist/MusicItem'
 import { getLoggedInUserUID } from '@/utils/userDataUtils'
 import { useFollowButton } from '@/hooks/useFollowStatus'
@@ -47,7 +47,7 @@ const ProfilePage = () => {
   }
 
   const filteredMap: Record<filterPlaylist, (playlistData: PlaylistBaseProps) => boolean> = {
-    all: () => true,
+    all: () => true as boolean,
     public: (playlistData) => !playlistData.isPrivate,
     private: (playlistData) => !!playlistData.isPrivate,
   }
