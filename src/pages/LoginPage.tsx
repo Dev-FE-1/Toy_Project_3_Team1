@@ -12,7 +12,7 @@ import { MESSAGES } from '@/constants/messages'
 import login from '@/service/auth/login'
 import { useNavigate } from 'react-router-dom'
 import googleLogin from '@/service/auth/googleLogin'
-import useAuth from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/auth/useAuth'
 
 const LoginPage = () => {
   const { isAuthenticated } = useAuth()

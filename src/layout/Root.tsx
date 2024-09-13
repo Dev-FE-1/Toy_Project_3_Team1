@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { colors } from '@/styles/colors'
 import { PATH } from '@/constants/path'
 import BackHeader from '@/components/layout/header/BackHeader'
-import useAuth from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/auth/useAuth'
 import Loading from '@/components/common/Loading'
 
 const RootLayout = () => {
