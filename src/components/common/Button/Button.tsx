@@ -1,8 +1,8 @@
 import { CSSProperties, FC, ReactNode } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
-import { fontSize, fontWeight } from '@/constants/font'
+import { colors } from '@/styles/colors'
+import { fontSize, fontWeight } from '@/styles/font'
 
 type ButtonSize = 'small' | 'normal'
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text'

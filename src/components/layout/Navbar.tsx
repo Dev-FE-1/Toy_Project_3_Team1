@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { NavLink } from 'react-router-dom'
 import { PATH } from '@/constants/path'
 import { CircleUserRound, House, MessageCircleMore, Search, SquarePlus } from 'lucide-react'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import { useState, useEffect } from 'react'
 import { getLoggedInUserUID, getUserIdFromUID } from '@/utils/userDataUtils'
 

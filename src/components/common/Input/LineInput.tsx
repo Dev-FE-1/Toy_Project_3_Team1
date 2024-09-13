@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 import styled from '@emotion/styled'
 import { InputProps } from './Input'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 
 export interface LineInputProps extends InputProps {
   lineType?: 'thin' | 'thick' | 'none'

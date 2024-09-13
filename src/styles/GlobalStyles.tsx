@@ -1,11 +1,10 @@
 import { Global, css } from '@emotion/react'
 import 'normalize.css'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 
 const GlobalStyles = () => (
   <Global
     styles={css`
-      @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
       * {
         margin: 0;
         padding: 0;

@@ -1,3 +1,4 @@
+import { FIREBASE_SESSION_KEY } from '@/constants/firebaseKeys'
 import { auth, db } from '@/firebase/firebaseConfig'
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
@@ -28,10 +29,7 @@ const googleLogin = async () => {
       })
     }
 
-    sessionStorage.setItem(
-      `firebase:authUser:${import.meta.env.VITE_FIREBASE_API_KEY as string}:[DEFAULT]`,
-      JSON.stringify(user)
-    )
+    sessionStorage.setItem(FIREBASE_SESSION_KEY, JSON.stringify(user))
 
     return true
   } catch (error) {

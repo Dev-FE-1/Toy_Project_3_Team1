@@ -6,10 +6,11 @@ import UserInfo from '@/components/playlist/UserInfo'
 import PlaylistThumbnailFeed from '@/components/playlist/PlaylistThumbnailFeed'
 import LikeButton from '@/components/common/Button/LikeButton'
 import { UserRoundPlus } from 'lucide-react'
-import { colors } from '@/constants/color'
-import { fontSize, fontWeight } from '@/constants/font'
+import { colors } from '@/styles/colors'
+import { fontSize, fontWeight } from '@/styles/font'
 import { useNavigate } from 'react-router-dom'
 import { FollowedPlaylist, FollowedUserPlaylists } from '@/types/playlistType'
+import Loading from '@/components/common/Loading'
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -72,7 +73,7 @@ const HomePage = () => {
   return (
     <Container>
       {isLoading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : allPlaylists.length > 0 ? (
         <ul>
           {allPlaylists.map(

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
-import { fontSize } from '@/constants/font'
+import { colors } from '@/styles/colors'
+import { fontSize } from '@/styles/font'
 import { X } from 'lucide-react'
 
 interface TagListProps {

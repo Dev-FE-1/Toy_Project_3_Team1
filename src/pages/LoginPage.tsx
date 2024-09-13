@@ -2,19 +2,20 @@ import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { PATH } from '@/constants/path'
 import logo from '@/assets/myidoru_logo.svg'
-import { fontSize } from '@/constants/font'
+import { fontSize } from '@/styles/font'
 import Button from '@/components/common/Button/Button'
 import ButtonLink from '@/components/common/Button/ButtonLink'
 import ButtonImage from '@/components/common/Button/ButtonImage'
 import Input from '@/components/common/Input/Input'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import { MESSAGES } from '@/constants/messages'
 import login from '@/service/auth/login'
 import { useNavigate } from 'react-router-dom'
 import googleLogin from '@/service/auth/googleLogin'
-import checkAuth from '@/service/auth/checkAuth'
+import { useAuth } from '@/hooks/auth/useAuth'
 
 const LoginPage = () => {
+  const { isAuthenticated } = useAuth()
   const [loginInfo, setLoginInfo] = useState({
     email: '',
     password: '',
@@ -23,7 +24,6 @@ const LoginPage = () => {
   const navigate = useNavigate()
   //TODO: 이메일, 비밀번호 유효성 검사하기
   const isValid = loginInfo.email && loginInfo.password
-  const isAuthenticated = checkAuth()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

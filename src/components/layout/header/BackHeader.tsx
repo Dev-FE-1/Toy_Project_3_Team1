@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { BasicVideoProps, PlaylistBaseProps } from '@/types/playlistType'
 import { Trash2 } from 'lucide-react'
-import { colors } from '@/constants/color'
-import { fontSize } from '@/constants/font'
+import { colors } from '@/styles/colors'
+import { fontSize } from '@/styles/font'
 import { Link } from 'react-router-dom'
 import ImageGrid from '@/components/common/ImageGrid'
 

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { fontSize, fontWeight } from '@/constants/font'
+import { fontSize, fontWeight } from '@/styles/font'
 
 const SearchFail = ({ previousSearchTag }: { previousSearchTag: string }) => (
   <Container>

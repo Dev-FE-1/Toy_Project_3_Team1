@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { colors } from '@/constants/color'
+import { colors } from '@/styles/colors'
 import { MESSAGES } from '@/constants/messages'
 import createComment from '@/service/comment/createComment'
 
