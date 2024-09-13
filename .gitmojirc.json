@@ -1,0 +1,8 @@
+{
+  "autoAdd": false,
+  "emojiFormat": "emoji",
+  "scopePrompt": false,
+  "messagePrompt": false,
+  "capitalizeTitle": false,
+  "gitmojisUrl": "https://gist.githubusercontent.com/seoyoonyi/8d8db43873ad4908a0fdb9c4f18737c4/raw/28cb248201e0001a035014c14a25f8d1636dee91/gitmoji.json"
+}

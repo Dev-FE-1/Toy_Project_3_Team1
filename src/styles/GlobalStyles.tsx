@@ -1,0 +1,56 @@
+import { Global, css } from '@emotion/react'
+import 'normalize.css'
+import { colors } from '@/styles/colors'
+
+const GlobalStyles = () => (
+  <Global
+    styles={css`
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body,
+      #root {
+        width: 100%;
+        height: 100%;
+        font-family:
+          'Pretendard Variable',
+          Pretendard,
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          Roboto,
+          'Helvetica Neue',
+          'Segoe UI',
+          'Apple SD Gothic Neo',
+          'Noto Sans KR',
+          'Malgun Gothic',
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          sans-serif;
+        line-height: 1.4;
+        letter-spacing: -0.14px;
+        background-color: ${colors.white};
+        color: ${colors.black};
+      }
+      #root {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      ol,
+      ul {
+        list-style: none;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    `}
+  />
+)
+
+export default GlobalStyles
