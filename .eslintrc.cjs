@@ -26,7 +26,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'no-console': 'warn',
-    'no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'error',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     '@tanstack/query/exhaustive-deps': 'error',
     '@tanstack/query/stable-query-client': 'error',
